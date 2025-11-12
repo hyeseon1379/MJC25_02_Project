@@ -1,0 +1,17 @@
+spring:
+  application:
+    name: fitMate
+  config:
+    import: classpath:application-secret.yml
+  profiles:
+    active: secret
+
+  logging:
+    level:
+      org:
+        hibernate:
+          SQL: debug
+          type:
+            descriptor:
+              sql:
+                BasicBinder: trace
