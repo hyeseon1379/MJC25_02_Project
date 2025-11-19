@@ -25,4 +25,6 @@ public class PostController {
         model.addAttribute("dto", dto);
         return "post-success"; // templates/post-success.html
     }
+
+    // 수정 기능 추가
 }
