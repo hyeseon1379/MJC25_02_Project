@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>Mind:ON</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        /* 상단 헤더 */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 40px;
+            background-color: white;
+            border-bottom: 1px solid #eee;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #ff6b81;
+        }
+
+        .menu a {
+            margin: 0 15px;
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+        }
+
+        .auth button {
+            margin-left: 10px;
+            padding: 8px 15px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+        }
+
+        .login {
+            background-color: #f1f1f1;
+        }
+
+        .signup {
+            background-color: #ff6b81;
+            color: white;
+        }
+
+        /* 메인 영역 */
+        .content {
+            min-height: 400px;
+            background-color: #fff5f7;
+            padding: 40px;
+        }
+
+        .box {
+            width: 600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 10px;
+            border-radius: 10px;
+            border: 1px solid #ddd;
+        }
+
+        textarea {
+            width: 100%;
+            height: 260px;
+            padding: 12px;
+            border-radius: 10px;
+            border: 1px solid #ddd;
+            resize: none;
+        }
+
+        /* 하단 푸터 */
+        .footer {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 20px 0;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+
+<!-- 상단 헤더 -->
+<header class="header">
+    <div class="logo">💗 ON</div>
+
+    <nav class="menu">
+        <a href="#">대화</a>
+        <a href="#">궁합</a>
+        <a href="#">MBTI</a>
+        <a href="#">고민 상담소</a>
+    </nav>
+
+    <div class="auth">
+        <button class="login">로그인</button>
+        <button class="signup">회원가입</button>
+    </div>
+</header>
+
+<!-- 메인 콘텐츠 -->
+<main class="content">
+    <div class="box">
+        <div class="emoji-bar">
+            <button class="emoji-btn active">💗 연애</button>
+            <button class="emoji-btn">😊 친구</button>
+            <button class="emoji-btn">💬 대화</button>
+            <button class="emoji-btn">💭 고민</button>
+        </div>
+
+        <input type="text" value="고백을 받았는데 어떻게 대답해야 할지 모르겠어요.">
+
+        <textarea>
+안녕하세요, 23살 여자입니다.
+
+어제 제가 친하게 지내던 3살 위 선배가 갑자기 저한테 고백을 했어요. 사실 선배에 대한 감정이 정확히 뭔지 모르겠어서 너무 당황스러웠어요.
+
+선배는 정말 좋은 사람이고, 항상 배려해주고 잘 도와주고, 같이 있으면 편하거든요. 그런데 그게 친구로서 편한 건지, 아니면 이성으로서의 감정인지 구분이 안 가요.
+
+고백을 받고 나서 며칠 생각할 시간을 달라고 했는데, 계속 생각해도 답이 안 나오네요. 거절하자니 그동안의 관계가 어색해질까 걱정되고, 받아주자니 제가 혹시 상처를 주게 될까 봐 고민돼요.
+        </textarea>
+    </div>
+</main>
+
+<!-- 하단 푸터 -->
+<footer class="footer">
+    <p>© 2024 Mind:ON. All rights reserved.</p>
+    <p>Relationship Temperature Analysis Service</p>
+</footer>
+
+</body>
+</html>

@@ -25,6 +25,8 @@ public class PostController {
         model.addAttribute("dto", dto);
         return "post-success"; // templates/post-success.html
     }
-
+    @GetMapping("/post/update")
+    public String updatePost(){
+        return "index";}
     // 수정 기능 추가
 }
