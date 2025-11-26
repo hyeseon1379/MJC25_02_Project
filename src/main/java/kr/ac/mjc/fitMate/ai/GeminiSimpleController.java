@@ -51,12 +51,6 @@ public class GeminiSimpleController {
         this.geminiService = geminiService;
     }
 
-    /**
-     * 사용자의 이미지와 텍스트를 받아 Gemini API로 전달하고 응답을 반환합니다.
-     * * @param prompt 사용자가 요청하는 텍스트 (예: "이 이미지를 설명해줘")
-     * @param imageFile 사용자가 업로드한 이미지 파일 (MultipartFile)
-     * @return Gemini API의 응답 텍스트
-     */
     @PostMapping("/api/text")
     public String text(@RequestParam("prompt") String prompt){
         return geminiService.getCompletion(prompt);
