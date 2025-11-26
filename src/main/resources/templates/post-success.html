@@ -5,8 +5,8 @@
     <title>등록 완료</title>
 </head>
 <body>
+<p th:text="${dto.category}"></p>
 <h2 th:text="${dto.title}"></h2>
-<p th:text="${dto.writer}"></p>
 <p th:text="${dto.content}"></p>
 <a href="/post/new">다시 등록하기</a>
 </body>
