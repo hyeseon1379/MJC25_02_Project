@@ -205,12 +205,10 @@
         .thermometer-bulb {
             width: 40px;
             height: 40px;
-            background: #FF6B6B;
             border-radius: 50%;
             position: absolute;
             bottom: 0;
             left: 10px;
-            box-shadow: 0 2px 10px rgba(255, 107, 107, 0.3);
         }
 
         .thermometer-tube {
@@ -236,7 +234,6 @@
 
         .temperature {
             font-size: 64px;
-            color: #FF6B6B;
             font-weight: 700;
             margin: 20px 0;
         }
@@ -496,26 +493,31 @@
     function getTemperatureStyle(temp) {
         const height = temp + '%';
         let background;
+        let bulb_background;
 
         if (temp <= 20) {
             // 0-20도: 하늘색
-            background = 'linear-gradient(to top, #87CEEB, #B0E0E6)';
+            background = 'linear-gradient(to top, #74C8FF, #9FD9FF, #C3E7FF)';
+            bulb_background = '#74C8FF';
         } else if (temp <= 50) {
             // 21-50도: 하늘색 → 노란색
-            background = 'linear-gradient(to top, #87CEEB 0%, #FFD700 70%, #FFA500 100%)';
+            background = 'linear-gradient(to top, #F4B572 0%, #F5C18A 50%, #F9D8B5 100%)';
+            bulb_background = '#F4B572';
         } else if (temp <= 80) {
             // 51-80도: 하늘색 → 노란색 → 주황색 → 연한 빨강
-            background = 'linear-gradient(to top, #87CEEB 0%, #FFD700 30%, #FFA500 60%, #FF6B6B 100%)';
+            background = 'linear-gradient(to top, #FF6762 0%, #FF8986 50%, #FFC3BD 100%)';
+            bulb_background = '#FF6762';
         } else {
             // 81-100도: 하늘색 → 노란색 → 주황색 → 빨강 → 진한 빨강
-            background = 'linear-gradient(to top, #87CEEB 0%, #FFD700 20%, #FFA500 40%, #FF6B6B 70%, #DC143C 100%)';
+            background = 'linear-gradient(to top, #F04245 0%, #F3676A 50%, #F69698 100%)';
+            bulb_background = '#F04245';
         }
 
-        return { height, background };
+        return { height, background, bulb_background };
     }
 
     function showResult() {
-        const temperature = 25; // 0-100 사이의 아무 값이나 가능
+        const temperature = 80; // 0-100 사이의 아무 값이나 가능
         const style = getTemperatureStyle(temperature);
 
         const resultHTML = `
@@ -524,9 +526,9 @@
                         <div class="thermometer-tube">
                             <div class="thermometer-fill" style="height: ${style.height}; background: ${style.background};"></div>
                         </div>
-                        <div class="thermometer-bulb"></div>
+                        <div class="thermometer-bulb" style="background: ${style.bulb_background}"></div>
                     </div>
-                    <div class="temperature">${temperature}°C</div>
+                    <div class="temperature" style="color: ${style.bulb_background}">${temperature}°C</div>
 
                     <div class="result-section">
                         <div class="result-title">💡 AI 총평</div>
