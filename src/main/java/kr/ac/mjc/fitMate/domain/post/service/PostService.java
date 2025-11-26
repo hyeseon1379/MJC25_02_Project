@@ -13,7 +13,7 @@ public class PostService {
     private final PostRepository postRepository;
 
     public void savePost(PostRequest dto) {
-        Post post = new Post(dto.getTitle(), dto.getContent(), dto.getWriter());
+        Post post = new Post(dto.getTitle(), dto.getContent(), dto.getCategory());
         postRepository.save(post);
     }
 }
