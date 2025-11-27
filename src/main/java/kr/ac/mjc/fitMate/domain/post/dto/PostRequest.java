@@ -7,4 +7,5 @@ public class PostRequest {
     private String title;
     private String content;
     private String writer;
+    private String category;
 }
