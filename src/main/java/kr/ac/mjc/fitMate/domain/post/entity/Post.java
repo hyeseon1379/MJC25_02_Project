@@ -22,11 +22,14 @@ public class Post {
 
     private String writer;
 
+    private String category;
+
     // 생성자 (편의상)
-    public Post(String title, String content, String writer) {
+    public Post(String title, String content, String writer, String category) {
         this.title = title;
         this.content = content;
         this.writer = writer;
+        this.category = category;
     }
 }
 

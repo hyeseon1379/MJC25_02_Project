@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="|${post.title} - Mind:ON|">Mind:ON - 게시글 상세</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <style>
+        /* 초기화 및 기본 설정 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Malgun Gothic', '맑은 고딕', 'Apple SD Gothic Neo', 'Nanum Gothic', sans-serif;
+        }
+
+        body { /* 전체 배경, 스크롤 영역 설정 */
+            background-color: #f4f6f9;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            color: #333;
+        }
+
+        a { /* 모든 링크 기본 스타일 */
+            text-decoration: none;
+            color: inherit;
+        }
+
+
+
+        /* 상단 헤더 */
+        header { /* 헤더 영역 배경 및 구분선 */
+            background-color: white;
+            border-bottom: 1px solid #eee;
+        }
+
+        .header { /* 헤더 내용 컨테이너 (로고, 메뉴, 로그인 버튼을 감쌈) */
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1080px;
+            margin: 0 auto;
+            padding: 15px 40px;
+        }
+
+        .logo { /* 로고 텍스트 스타일 */
+            font-size: 24px;
+            font-weight: bold;
+            color: black;
+        }
+
+        .menu a { /* 상단 메뉴 링크 스타일 */
+            margin: 0 15px;
+            padding: 10px;
+            color: #333;
+            font-weight: bold;
+            font-size: 0.95rem;
+        }
+
+        .auth button { /* 로그인/회원가입 버튼 공통 스타일 */
+            margin-left: 10px;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+
+        .login { /* 로그인 버튼 개별 스타일 */
+            background-color: white;
+            color: #ff9d9d;
+            border: 1px solid #ff9d9d;
+        }
+
+        .signup { /* 회원가입 버튼 개별 스타일 */
+            background-color: #ff9d9d;
+            color: white;
+            border: none;
+        }
+
+
+
+        /* 메인 영역 */
+        .content { /* 메인 콘텐츠 영역 (배경색) */
+            flex-grow: 1;
+            padding: 30px 20px 60px 20px;
+            background-color: #fff5f7;
+        }
+
+
+
+        /* 분리된 컨테이너 스타일 */
+        .content-container { /* 게시글 전체 박스(목록, 본문, 댓글)의 최대 너비 제한 */
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .box, .comment-box { /* 게시글 본문 및 댓글 박스의 흰색 배경, 그림자, 모서리 */
+            background: white;
+            border-radius: 20px;
+            padding: 30px 40px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            margin-bottom: 20px;
+        }
+
+
+        /* 개별 댓글 항목 컨테이너 스타일 */
+        .comment-list-item { /* 댓글 박스 */
+            background-color: #fcfcfc;
+            border-radius: 20px;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+            margin-bottom: 15px;
+            padding: 15px 25px;
+            border: 1px solid #eee;
+        }
+
+
+        /* 대댓글 박스 스타일 (댓글 박스 내부에 들어감) */
+        .reply-list-item {
+            background-color: white; /* 댓글 박스와 구분되는 흰색 배경 */
+            border-radius: 12px;
+            padding: 10px 15px;
+            margin-top: 15px;
+            border: 1px solid #f5f5f5;
+            box-shadow: 0 0 5px rgba(0,0,0,0.03);
+        }
+
+
+
+        /* 목록으로 버튼 섹션 */
+        .back-to-list-section { /* 목록 버튼을 감싸는 영역의 마진 */
+            margin-bottom: 30px;
+        }
+
+
+
+        /* ---------------------------------------------------- */
+
+        /* '목록으로' 버튼 타원형 스타일 */
+        .back-to-list-style { /* '목록으로' 버튼 스타일 */
+            display: inline-flex;
+            align-items: center;
+            padding: 6px 12px;
+            border-radius: 20px;
+            border-style: solid;
+            border-width: 0.1px;
+            border-color: lightgray;
+            background-color: white;
+            color: #444;
+            font-weight: 500;
+            font-size: 0.85rem;
+        }
+
+        .back-to-list-style i { /* '목록으로' 버튼 아이콘 마진 */
+            margin-right: 5px;
+        }
+
+
+
+        /* ---------------------------------------------------- */
+
+        /* --- 게시글 본문 스타일 --- */
+        .post-header { /* 제목, 메타 정보 영역의 하단 패딩 */
+            padding-bottom: 5px;
+            position: relative; /* 수정/삭제 버튼 배치를 위해 추가 */
+        }
+
+        /* [추가] 게시글 수정/삭제 버튼 컨테이너 (상단 우측 원형 버튼) */
+        .post-edit-delete-buttons {
+            position: absolute;
+            top: 25px;
+            right: 0;
+            display: flex;
+            gap: 5px;
+        }
+
+        /* 게시글 수정/삭제 버튼 공통 스타일 (원형 배경) */
+        .post-edit-delete-buttons a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            color: white; /* 아이콘 색상: 흰색 */
+            font-size: 0.9rem;
+            transition: opacity 0.2s;
+            cursor: pointer;
+        }
+
+        .post-edit-delete-buttons a:hover {
+            opacity: 0.8;
+        }
+
+        /* 수정 버튼 (파란색 원) */
+        .post-edit-delete-buttons .edit-btn {
+            background-color: #38a1f8;
+        }
+
+        /* 삭제 버튼 (빨간색 원) */
+        .post-edit-delete-buttons .delete-btn {
+            background-color: #ff5270;
+        }
+
+
+        .post-info-meta { /* 작성자, 시간, 조회수 등을 포함하는 메타 정보 영역 */
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            color: #999;
+            padding-top: 10px;
+        }
+
+
+
+        /* 1. 프로필 사진과 상세 정보를 가로로 배치 */
+        .post-meta-text { /* 프로필 사진(왼쪽)과 상세 정보(오른쪽)를 감싸는 컨테이너 */
+            display: flex;
+            align-items: center; /* 이미지와 텍스트를 수직 중앙 정렬 */
+            color: #888;
+        }
+
+
+
+        /* 2. 원형 프로필 이미지 스타일 */
+        .profile-img-small { /* 작성자 프로필 이미지 스타일 */
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+
+
+        /* 3. 작성자 이름과 날짜/시간을 수직으로 담는 컨테이너 */
+        .post-writer-details {
+            display: flex;
+            flex-direction: column; /* 세로 정렬 */
+            margin-left: 8px; /* 프로필 사진과의 간격 */
+        }
+
+
+
+        /* 4. 날짜와 작성 시간을 담는 컨테이너 */
+        .post-date-time {
+            display: flex;
+            margin-top: 2px; /* 작성자 이름과의 세로 간격 */
+            font-size: 0.8rem;
+            color: #999;
+        }
+
+        .post-date-time span { /* 날짜와 시간 항목 */
+            margin-right: 10px;
+        }
+
+
+
+        /* --- 기존에 쓰던 스타일 중 일부 --- */
+        .post-title-area { /* 뱃지, 제목 영역 */
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            margin-bottom: 5px;
+        }
+
+        .post-badge { /* 카테고리 뱃지 스타일 */
+            background-color: #ff9d9d;
+            color: white;
+            padding: 6px 18px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            margin-bottom: 10px;
+        }
+
+        .post-title { /* 게시글 제목 스타일 */
+            font-size: 1.35rem;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 0;
+        }
+
+        .post-counts span { /* 조회수, 댓글 수 아이콘 마진 */
+            margin-left: 6px;
+        }
+
+        .post-body { /* 게시글 본문 영역 (내용) */
+            padding-top: 20px;
+            line-height: 1.8;
+            font-size: 0.95rem;
+            border-top: 2px solid #e4e4e4;
+            margin-top: 20px;
+        }
+
+        .post-body p { /* 본문 문단 마진 */
+            margin-bottom: 1rem;
+        }
+
+
+
+        /* --- 댓글 영역 스타일 --- */
+        .comment-box { /* 댓글 전체 박스 스타일 */
+            padding: 20px 40px;
+        }
+
+        .comment-header { /* 댓글 수 제목 스타일 */
+            font-size: 1.1rem;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .comment-input-box { /* 새 댓글 입력 폼 박스 스타일 */
+            background-color: #fcfcfc;
+            border: 1px solid #eee;
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 40px;
+        }
+
+        textarea.comment-textarea { /* 댓글 입력 textarea 스타일 (따뜻한 조언 부분)*/
+            width: 100%;
+            height: 100px;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            resize: none;
+            margin-bottom: 10px;
+            font-size: 0.9rem;
+        }
+
+        textarea.reply-textarea-small { /* 답글 입력 textarea 스타일 */
+            width: 100%;
+            height: 50px; /* 높이 조정 */
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            resize: none;
+            margin-bottom: 10px;
+            font-size: 0.9rem;
+        }
+
+
+        .comment-btn-container { /* 댓글 작성 버튼 컨테이너 */
+            text-align: right;
+        }
+
+        .comment-submit-btn { /* 댓글 작성 버튼 스타일 */
+            background-color: #ff9d9d;
+            color: white;
+            border: none;
+            padding: 7px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 0.9rem;
+            cursor: pointer;
+        }
+
+        .reply-submit-btn-small { /* 답글 작성 버튼 스타일 */
+            background-color: #ff9d9d;
+            color: white;
+            border: none;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 0.85rem; /* 크기 조정 */
+            cursor: pointer;
+        }
+
+
+        /* 개별 댓글 항목 컨테이너 스타일 (추가) */
+        .comment-list-item {
+            background-color: #fcfcfc; /* 박스 배경색: fcfcfc로 수정 */
+            border-radius: 20px; /* 반경 20px로 수정 */
+            box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+            margin-bottom: 15px;
+            padding: 15px 25px;
+            border: 1px solid #eee; /* 테두리 #eee로 수정 */
+        }
+
+
+        /* 대댓글 박스 스타일 (댓글 박스 내부에 들어감) */
+        .reply-list-item {
+            background-color: white; /* 배경: 흰색 */
+            border-radius: 20px;
+            padding: 10px 15px;
+            margin-top: 15px;
+            border: 1px solid #f5f5f5;
+            box-shadow: -3px 0 0 0 #ff9d9d;
+        }
+
+
+        /* 각 항목의 내부 패딩/마진 조정 */
+        .comment-list-item .comment-item {
+            padding: 10px 0;
+            border-bottom: 1px solid #f0f0f0; /* 댓글과 답글 폼을 구분하기 위해 구분선 복구 */
+        }
+
+        .comment-list-item .comment-item:last-child {
+            border-bottom: none; /* 마지막 댓글만 구분선 제거 */
+        }
+
+        /* 대댓글 항목의 내부 패딩/마진 조정 */
+        .reply-list-item .reply-content {
+            padding: 5px 0;
+            border-bottom: none;
+        }
+
+
+        /* 개별 댓글 */
+        .comment-item { /* 개별 댓글 항목 구분선 */
+            padding: 15px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .comment-meta { /* 댓글 작성자 메타 정보 */
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+
+        /* 5. 댓글 프로필 이미지와 이름을 감싸는 컨테이너 (추가) */
+        .comment-writer-info {
+            display: flex;
+            align-items: center; /* 이미지와 이름을 수직 중앙 정렬 */
+        }
+
+
+
+        /* 6. 댓글 프로필 이미지 스타일 (추가) */
+        .profile-img-comment {
+            width: 30px; /* 게시글 본문보다 약간 작게 */
+            height: 30px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-right: 8px; /* 이름과의 간격 */
+        }
+
+        .comment-name { /* 댓글 작성자 이름 */
+            font-weight: bold;
+            font-size: 0.95rem;
+        }
+
+        .comment-date-action { /* 댓글 시간 */
+            font-size: 0.8rem;
+            color: #999;
+        }
+
+        .comment-body { /* 댓글 내용 */
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        /* [수정] 댓글/답글 좋아요/답글 버튼 컨테이너 (한 줄) */
+        .comment-actions {
+            text-align: right;
+            margin-top: 10px;
+            font-size: 0.8rem;
+            /* 수정/삭제 버튼을 별도 줄로 분리하기 위해 flex 속성 제거 */
+        }
+
+        .comment-actions a { /* 댓글 좋아요/답글 링크 스타일 */
+            color: #999;
+            margin-left: 15px;
+            cursor: pointer;
+            display: inline; /* 링크를 다시 인라인 요소로 설정 */
+        }
+
+        /* [추가] 댓글 수정/삭제 버튼을 담는 새로운 컨테이너 (새 줄) */
+        .edit-delete-actions {
+            text-align: right;
+            margin-top: 5px; /* 액션 버튼과의 간격 */
+            font-size: 0.8rem;
+            display: flex;
+            justify-content: flex-end; /* 오른쪽 정렬 */
+            align-items: center;
+            gap: 5px; /* 버튼 사이 간격 */
+        }
+
+        /* 댓글 수정/삭제 버튼 공통 스타일 (원형 배경) */
+        .edit-delete-actions a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            color: white; /* 아이콘 색상: 흰색 */
+            font-size: 0.75rem;
+            transition: opacity 0.2s;
+            cursor: pointer;
+        }
+
+        .edit-delete-actions a:hover {
+            opacity: 0.8;
+        }
+
+        /* 댓글 수정 버튼 (파란색 원) */
+        .edit-delete-actions .edit-btn {
+            background-color: #38a1f8; /* 파란색 */
+        }
+
+        /* 댓글 삭제 버튼 (빨간색 원) */
+        .edit-delete-actions .delete-btn {
+            background-color: #ff5270; /* 빨간색 */
+        }
+
+
+        /* 작성자 댓글 강조 */
+        .comment-writer-custom { /* 작성자가 쓴 댓글 이름 강조 */
+            color: #ff5270;
+            font-weight: bold;
+        }
+
+
+
+        /* 대댓글 */
+        .reply-item { /* 대댓글 들여쓰기 구분선 */
+            border-left: 2px solid #f0f0f0;
+            padding: 10px 0 0 15px;
+            margin-top: 15px;
+            margin-left: 15px;
+        }
+
+
+
+        /* 하단 푸터 */
+        .footer { /* 푸터 영역 스타일 */
+            background-color: #525252;
+            color: white;
+            text-align: center;
+            padding: 30px;
+            font-size: 0.7rem;
+        }
+
+        .footer p {
+            margin-bottom: 5px;
+        }
+
+        .footer-logo {
+            font-weight: bold;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="header">
+        <div class="logo">💗 ON</div>
+
+        <nav class="menu">
+            <a href="#">대화</a>
+            <a href="#">궁합</a>
+            <a href="#">MBTI</a>
+            <a href="#">고민 상담소</a>
+        </nav>
+
+        <div class="auth">
+            <button class="login">로그인</button>
+            <button class="signup">회원가입</button>
+        </div>
+    </div>
+</header>
+
+<main class="content">
+
+    <div class="content-container">
+
+        <div class="back-to-list-section">
+            <a th:href="@{/post}" class="back-to-list-style">
+                <i class="fas fa-arrow-left me-1"></i> 목록으로
+            </a>
+        </div>
+
+        <div class="box">
+            <div class="post-header">
+                <div class="post-title-area">
+                    <span class="post-badge" th:text="${post.category}">💕연애</span>
+                    <h1 class="post-title" th:text="${post.title}">고백을 받았는데 어떻게 대답해야 할지 모르겠어요.</h1>
+                </div>
+
+                <div class="post-info-meta">
+                    <div class="post-meta-text">
+                        <img class="profile-img-small" src="https://img.freepik.com/free-photo/photo-wall-texture-pattern_58702-15193.jpg?semt=ais_hybrid&w=740&q=80" alt="프로필 사진">
+
+                        <div class="post-writer-details">
+                            <span class="fw-bold" th:text="${post.writer}">익명의 나비</span>
+
+                            <div class="post-date-time">
+                                <span th:text="${#temporals.format(post.createdAt, 'yy.MM.dd')}">2025.11.23</span>
+                                <span>20분 전</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="post-counts">
+                        <span class="text-secondary"><i class="far fa-eye me-1"></i> <span th:text="${post.viewCount}">123</span></span>
+                        <span class="text-secondary"><i class="far fa-comment-dots me-1"></i> <span th:text="${post.commentCount}">57</span></span>
+                    </div>
+                </div>
+
+                <div class="post-edit-delete-buttons">
+                    <a href="#" onclick="alert('게시글 수정 기능 구현 예정')" class="edit-btn"><i class="fas fa-edit"></i></a>
+                    <a href="#" onclick="alert('게시글 삭제 기능 구현 예정')" class="delete-btn"><i class="fas fa-trash-alt"></i></a>
+                </div>
+            </div>
+
+            <div class="post-body">
+                <p th:utext="${post.content}">
+                    안녕하세요. 23살 여자입니다.
+                    <br><br>
+                    제가 하지도 않던 1살 위 선배가 갑자기 편하게 고백을 했어요. 사실 선배에 대한 감정이 뭔지 모르겠어서 일단 당황했습니다.
+                    <br><br>
+                    선배는 정말 좋은 사람이에요. 항상 배려해주고 매번도, 말 들어주고, 같이 있으면 편안하거든요. 그리고 친구분께서 분석한 결과, 어떤 이성에게든 감정만은 표현 안 해요.
+                    <br><br>
+                    그런데 제가 이 분과 당장 연애를 할 시간을 당장 이라는 시간을 가지고 있는 것도 아니고, 바쁘다면서 연애는 안된다고 하네요. 거절하자니 지금 놓치면 좋은 관계가 멀어질까봐 두렵고, 그렇다고 확실하지 않은 마음으로 사귀자고 하는 것도, 미안하게 될까봐 망설입니다.
+                    <br><br>
+                    비슷한 경험 있으신 분 계신가요? 어떻게 하면 좋을까요? 조언 부탁드립니다ㅠㅠ
+                </p>
+            </div>
+        </div>
+
+        <div class="comment-box">
+            <div class="comments-section">
+                <h5 class="comment-header"><i class="far fa-comment-dots me-2"></i> 댓글 <span style="color: #ff9d9d" th:text="${post.commentCount}">57</span></h5>
+
+                <div class="comment-input-box">
+                    <textarea class="comment-textarea" placeholder="따뜻한 조언을 남겨주세요. (익명으로 작성됩니다.)"></textarea>
+                    <div class="comment-btn-container">
+                        <button class="comment-submit-btn">댓글 작성</button>
+                    </div>
+                </div>
+
+                <div class="comment-list-item">
+                    <div class="comment-item">
+                        <div class="comment-meta">
+                            <div class="comment-writer-info">
+                                <img class="profile-img-comment" src="https://img.freepik.com/free-photo/photo-wall-texture-pattern_58702-15193.jpg?semt=ais_hybrid&w=740&q=80" alt="프로필 사진">
+                                <span class="comment-name">익명의 나무</span>
+                            </div>
+                            <div class="comment-date-action">
+                                <span class="me-2">3분 전</span>
+                            </div>
+                        </div>
+                        <p class="comment-body">저도 비슷한 경험이 있어요. 제 경우엔 일단 솔직하게 지금 감정이 명확하지 않다고 말씀드렸어요. 그리고 시간을 가지면서 데이트를 해 봤는데, 그러고 보니 제 감정을 더 명확하게 알 수 있었어요. 급하게 결정하시지 마시고 천천히 마음을 확인해보는 것도 좋을 것 같아요!</p>
+
+                        <div class="comment-actions">
+                            <a href="#"><i class="far fa-thumbs-up me-1"></i> 1</a>
+                            <a href="#"><i class="far fa-comment me-1"></i> 답글</a>
+                        </div>
+                        <div class="reply-list-item">
+                            <div class="comment-item">
+                                <div class="comment-meta">
+                                    <div class="comment-writer-info">
+                                        <img class="profile-img-comment" src="https://img.freepik.com/free-photo/photo-wall-texture-pattern_58702-15193.jpg?semt=ais_hybrid&w=740&q=80" alt="작성자 프로필 사진">
+                                        <span class="comment-name comment-writer-custom">익명의 나비 (작성자)</span>
+                                    </div>
+                                    <div class="comment-date-action">
+                                        <span class="me-2">3분 전</span>
+                                    </div>
+                                </div>
+                                <p class="comment-body">조언 감사합니다! 솔직하게 말해주는 게 맞는 것 같아요. 용기내서 얘기해볼게요 ㅎㅎ</p>
+
+                                <div class="comment-actions">
+                                    <a href="#"><i class="far fa-thumbs-up me-1"></i> 0</a>
+                                    <a href="#">답글</a>
+                                </div>
+
+                                <div class="edit-delete-actions">
+                                    <a href="#" onclick="alert('답글 수정 기능 구현 예정')" class="edit-btn"><i class="fas fa-edit"></i></a>
+                                    <a href="#" onclick="alert('답글 삭제 기능 구현 예정')" class="delete-btn"><i class="fas fa-trash-alt"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="comment-list-item">
+                    <div class="comment-item">
+                        <div class="comment-meta">
+                            <div class="comment-writer-info">
+                                <img class="profile-img-comment" src="https://img.freepik.com/free-photo/photo-wall-texture-pattern_58702-15193.jpg?semt=ais_hybrid&w=740&q=80" alt="프로필 사진">
+                                <span class="comment-name comment">익명의 꽃</span>
+                            </div>
+                            <div class="comment-date-action">
+                                <span class="me-2">5분 전</span>
+                            </div>
+                        </div>
+                        <p class="comment-body">저도 비슷한 경험이 있어요. 제 경우엔 일단 솔직하게 지금 감정이 명확하지 않다고 말씀드렸어요. 그리고 시간을 가지면서 데이트를 해 봤는데, 그러고 보니 제 감정을 더 명확하게 알 수 있었어요. 급하게 결정하시지 마시고 천천히 마음을 확인해보는 것도 좋을 것 같아요!</p>
+
+                        <div class="comment-actions">
+                            <a href="#"><i class="far fa-thumbs-up me-1"></i> 1</a>
+                            <a href="#"><i class="far fa-comment me-1"></i> 답글</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</main>
+
+<footer class="footer">
+    <div class="text-center py-3">
+        <p class="mb-0">© 2024 <span class="footer-logo">Mind:ON</span>. All rights reserved.</p>
+        <p class="mb-0">Relationship Temperature Analysis Service</p>
+    </div>
+</footer>
+
+</body>
+</html>
