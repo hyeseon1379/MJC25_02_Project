@@ -183,7 +183,7 @@
 <nav th:replace="~{layout/header :: header-fragment}"></nav>
 <div class="container">
     <form th:action="@{/post/new}" method="post" id="postForm">
-        <input type="hidden" id="categoryHidden" name="category" value="연애">
+        <input type="hidden" id="categoryHidden" name="trouble" value="연애">
     <div class="category-tabs">
         <button type="button" class="tab active" onclick="selectCategory(this, '연애')">
             <span class="emoji">❤️</span>
@@ -239,7 +239,7 @@
     const postForm = document.getElementById('postForm');
     const categoryHidden = document.getElementById('categoryHidden');
     // 카테고리 선택
-    function selectCategory(element, category) {
+    function selectCategory(element, trouble) {
         // 모든 탭에서 active 제거
         document.querySelectorAll('.tab').forEach(tab => {
             tab.classList.remove('active');
@@ -247,8 +247,8 @@
 
         // 선택된 탭에 active 추가
         element.classList.add('active');
-        selectedCategory = category;
-        categoryHidden.value = category;
+        selectedCategory = trouble;
+        categoryHidden.value = trouble;
     }
 
     // 글자 수 카운트

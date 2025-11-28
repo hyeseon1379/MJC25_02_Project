@@ -23,8 +23,7 @@ public class PostController {
     public String createPost(PostRequest dto, Model model) {
         postService.savePost(dto);
         model.addAttribute("dto", dto);
-        return "post-success"; // templates/post-success.html
+        return "post-success"; //"redirect:/post/{postId}"
     }
 
-    // 수정 기능 추가
 }
