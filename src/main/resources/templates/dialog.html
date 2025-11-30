@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>개인 호감도 분석</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+    <link rel="stylesheet" th:href="@{/css/header.css}">
+    <link rel="stylesheet" th:href="@{/css/footer.css}">
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            background:  linear-gradient(180deg, #FFE8E8 0%, #FFD4D4 100%);
+            padding: 15px 50px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            margin-left: 204px;
+            margin-right: 204px;
+        }
+
+
+        .back-btn {
+            font-size: 24px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #333;
+        }
+
+        .header-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #333;
+        }
+
+        .menu-btn {
+            font-size: 24px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #333;
+        }
+
+        .chat-container {
+            background: linear-gradient(180deg, #FFE8E8 0%, #FFD4D4 100%);
+            flex: 1;
+            padding: 20px 250px;
+            overflow-y: auto;
+            max-width: 1300px;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        @media (max-width: 1024px) {
+            .chat-container {
+                padding: 20px 100px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .chat-container {
+                padding: 20px;
+            }
+        }
+
+        .message {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            opacity: 0;
+            animation: fadeIn 0.5s forwards;
+        }
+
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+            }
+        }
+
+        .message.user {
+            flex-direction: row-reverse;
+        }
+
+        .avatar {
+            width: 45px;
+            height: 45px;
+            background: linear-gradient(135deg, #FFB8B8 0%, #FFA0A0 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            flex-shrink: 0;
+        }
+
+        .message-content {
+            max-width: 70%;
+        }
+
+        .bubble {
+            background: white;
+            padding: 15px 20px;
+            border-radius: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+            margin-bottom: 5px;
+            line-height: 1.6;
+            color: #333;
+        }
+
+        .message.user .bubble {
+            background: #FFB8B8;
+            color: white;
+        }
+
+        .image-preview {
+            width: 200px;
+            height: 250px;
+            background: linear-gradient(135deg, #FFB8B8 0%, #FF9999 100%);
+            border-radius: 15px;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+        }
+
+        .chat-screen {
+            width: 160px;
+            height: 210px;
+            background: #E8F4FF;
+            border-radius: 15px;
+            padding: 10px;
+            position: relative;
+        }
+
+        .chat-bubble {
+            background: white;
+            padding: 8px 12px;
+            border-radius: 12px;
+            margin-bottom: 8px;
+            font-size: 12px;
+            color: #333;
+        }
+
+        .chat-bubble.yellow {
+            background: #FFE082;
+            margin-left: 30px;
+        }
+
+        .typing {
+            display: flex;
+            gap: 5px;
+            padding: 15px;
+        }
+
+        .typing span {
+            width: 8px;
+            height: 8px;
+            background: #999;
+            border-radius: 50%;
+            animation: typing 1.4s infinite;
+        }
+
+        .typing span:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .typing span:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes typing {
+            0%, 60%, 100% {
+                transform: translateY(0);
+            }
+            30% {
+                transform: translateY(-10px);
+            }
+        }
+
+        .result-card {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .thermometer-container {
+            width: 60px;
+            height: 180px;
+            margin: 0 auto 20px;
+            position: relative;
+        }
+
+        .thermometer-bulb {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            position: absolute;
+            bottom: 0;
+            left: 10px;
+        }
+
+        .thermometer-tube {
+            width: 30px;
+            height: 150px;
+            background: #E0E0E0;
+            border-radius: 15px 15px 0 0;
+            position: absolute;
+            bottom: 30px;
+            left: 15px;
+            overflow: hidden;
+        }
+
+        .thermometer-fill {
+            width: 100%;
+            position: absolute;
+            bottom: 0;
+            border-radius: 15px 15px 0 0;
+            transition: height 1s ease, background 1s ease;
+        }
+
+        /* 온도에 따른 동적 스타일은 JavaScript에서 처리 */
+
+        .temperature {
+            font-size: 64px;
+            font-weight: 700;
+            margin: 20px 0;
+        }
+
+        .result-section {
+            text-align: left;
+            margin-top: 25px;
+            padding-top: 25px;
+            border-top: 1px solid #F0F0F0;
+        }
+
+        .result-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: #FF9999;
+            margin-bottom: 10px;
+        }
+
+        .result-text {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.8;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .btn {
+            padding: 10px 25px;
+            border-radius: 20px;
+            border: none;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-outline {
+            background: white;
+            color: #FF9999;
+            border: 2px solid #FF9999;
+        }
+
+        .btn-outline:hover {
+            background: #FFF0F0;
+        }
+
+        .btn-primary {
+            background: #FF9999;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #FF7777;
+        }
+
+        .input-area {
+            margin-left: 204px;
+            margin-right: 204px;
+            background: white;
+            padding: 15px 50px;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
+        }
+
+        @media (max-width: 1024px) {
+            .input-area {
+                padding: 15px 10px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .input-area {
+                padding: 15px 5px;
+            }
+        }
+
+        .upload-btn {
+            width: 40px;
+            height: 40px;
+            background: #F5F5F5;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+
+        .upload-btn:hover {
+            background: #FFE8E8;
+        }
+
+        .input-field {
+            flex: 1;
+            border: none;
+            outline: none;
+            font-size: 15px;
+            padding: 10px;
+            background: #F5F5F5;
+            border-radius: 20px;
+        }
+
+        .send-btn {
+            width: 40px;
+            height: 40px;
+            background: #FF9999;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            color: white;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+
+        .send-btn:hover {
+            background: #FF7777;
+            transform: scale(1.05);
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+<nav th:replace="~{layout/header :: header-fragment}"></nav>
+<div class="header">
+    <button class="back-btn">←</button>
+    <div class="header-title">개인 호감도 분석</div>
+    <button class="menu-btn">☰</button>
+</div>
+
+<div class="chat-container" id="chatContainer">
+    <!-- 메시지들이 여기에 추가됩니다 -->
+</div>
+
+<div class="input-area">
+    <button class="upload-btn" onclick="handleUpload()">+</button>
+    <input type="file" id="fileInput" class="hidden" accept="image/*">
+    <input type="text" class="input-field" placeholder="메시지 입력" disabled>
+    <button class="send-btn">➤</button>
+</div>
+
+<script>
+    const chatContainer = document.getElementById('chatContainer');
+    let currentStep = 0;
+
+    // 초기 메시지 표시
+    setTimeout(() => {
+        addBotMessage('안녕하세요! MIND:ON AI입니다 👋');
+    }, 500);
+
+    setTimeout(() => {
+        addBotMessage('대화 캡쳐 이미지를 업로드해주시면 상대방과의 호감도를 분석해드릴게요!');
+    }, 1500);
+
+    function addBotMessage(text) {
+        const messageDiv = document.createElement('div');
+        messageDiv.className = 'message';
+        messageDiv.innerHTML = `
+                <div class="avatar">🤖</div>
+                <div class="message-content">
+                    <div class="bubble">${text}</div>
+                </div>
+            `;
+        chatContainer.appendChild(messageDiv);
+        scrollToBottom();
+    }
+
+    function addUserMessage(content) {
+        const messageDiv = document.createElement('div');
+        messageDiv.className = 'message user';
+        messageDiv.innerHTML = `
+                <div class="avatar">👤</div>
+                <div class="message-content">
+                    ${content}
+                </div>
+            `;
+        chatContainer.appendChild(messageDiv);
+        scrollToBottom();
+    }
+
+    function addTypingIndicator() {
+        const messageDiv = document.createElement('div');
+        messageDiv.className = 'message';
+        messageDiv.id = 'typing';
+        messageDiv.innerHTML = `
+                <div class="avatar">🤖</div>
+                <div class="message-content">
+                    <div class="bubble">
+                        <div class="typing">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </div>
+                    </div>
+                </div>
+            `;
+        chatContainer.appendChild(messageDiv);
+        scrollToBottom();
+    }
+
+    function removeTypingIndicator() {
+        const typing = document.getElementById('typing');
+        if (typing) typing.remove();
+    }
+
+    function handleUpload() {
+        document.getElementById('fileInput').click();
+    }
+
+    document.getElementById('fileInput').addEventListener('change', function(e) {
+        if (e.target.files.length > 0) {
+            // 이미지 업로드 메시지
+            const imagePreview = `
+                    <div class="image-preview">
+                        <div class="chat-screen">
+                            <div class="chat-bubble">안녕하세요</div>
+                            <div class="chat-bubble yellow">안녕</div>
+                            <div class="chat-bubble">오늘 날씨 좋네요</div>
+                            <div class="chat-bubble yellow">그러게요</div>
+                        </div>
+                    </div>
+                `;
+            addUserMessage(imagePreview);
+
+            // 타이핑 인디케이터 표시
+            setTimeout(() => {
+                addTypingIndicator();
+            }, 1000);
+
+            // 분석 완료 메시지
+            setTimeout(() => {
+                removeTypingIndicator();
+                addBotMessage('분석이 완료되었습니다! 📊');
+            }, 3000);
+
+            // 결과 표시
+            setTimeout(() => {
+                showResult();
+            }, 3500);
+        }
+    });
+
+    function getTemperatureStyle(temp) {
+        const height = temp + '%';
+        let background;
+        let bulb_background;
+
+        if (temp <= 20) {
+            // 0-20도: 하늘색
+            background = 'linear-gradient(to top, #74C8FF, #9FD9FF, #C3E7FF)';
+            bulb_background = '#74C8FF';
+        } else if (temp <= 50) {
+            // 21-50도: 하늘색 → 노란색
+            background = 'linear-gradient(to top, #F4B572 0%, #F5C18A 50%, #F9D8B5 100%)';
+            bulb_background = '#F4B572';
+        } else if (temp <= 80) {
+            // 51-80도: 하늘색 → 노란색 → 주황색 → 연한 빨강
+            background = 'linear-gradient(to top, #FF6762 0%, #FF8986 50%, #FFC3BD 100%)';
+            bulb_background = '#FF6762';
+        } else {
+            // 81-100도: 하늘색 → 노란색 → 주황색 → 빨강 → 진한 빨강
+            background = 'linear-gradient(to top, #F04245 0%, #F3676A 50%, #F69698 100%)';
+            bulb_background = '#F04245';
+        }
+
+        return { height, background, bulb_background };
+    }
+
+    function showResult() {
+        const temperature = 80; // 0-100 사이의 아무 값이나 가능
+        const style = getTemperatureStyle(temperature);
+
+        const resultHTML = `
+                <div class="result-card">
+                    <div class="thermometer-container">
+                        <div class="thermometer-tube">
+                            <div class="thermometer-fill" style="height: ${style.height}; background: ${style.background};"></div>
+                        </div>
+                        <div class="thermometer-bulb" style="background: ${style.bulb_background}"></div>
+                    </div>
+                    <div class="temperature" style="color: ${style.bulb_background}">${temperature}°C</div>
+
+                    <div class="result-section">
+                        <div class="result-title">💡 AI 총평</div>
+                        <div class="result-text">
+                            전반적 관심 단계입니다. 대화의 주도권을 상대방이 쥐고 있으나,
+                            상대방의 반응은 긍정적입니다. 더 깊은 대화로 발전시킬 여지가 있습니다.
+                        </div>
+                    </div>
+
+                    <div class="result-section">
+                        <div class="result-title">💭 맞춤 조언</div>
+                        <div class="result-text">
+                            다른 대화는 공통 관심사를 주제로 먼저 시작하세요.
+                            상대방이 좋아할 만한 취미나 활동에 대해 물어보는 것을 추천합니다.
+                        </div>
+                    </div>
+
+                    <div class="action-buttons">
+                        <button class="btn btn-outline">자세히보기</button>
+                        <button class="btn btn-primary">홈으로</button>
+                    </div>
+                </div>
+            `;
+        addBotMessage(resultHTML);
+    }
+
+    function scrollToBottom() {
+        chatContainer.scrollTop = chatContainer.scrollHeight;
+    }
+</script>
+<div th:replace="layout/footer.html :: footer"></div>
+</body>
+</html>
