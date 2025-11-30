@@ -29,6 +29,8 @@ public class Post extends BaseEntity {
 
     private String writer; // 작성자 -> 익명 처리
 
+    private String category;
+
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;

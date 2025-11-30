@@ -8,4 +8,6 @@ public class PostRequest{
     private String trouble;
     private String title;
     private String content;
+    private String writer;
+    private String category;
 }
