@@ -5,9 +5,6 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class GeminiService {
-    public static final String GEMINI_PRO = "gemini-pro";
-    public static final String GEMINI_ULTIMATE = "gemini-ultimate";
-    public static final String GEMINI_PRO_VISION = "gemini-pro-vision";
     public static final String GEMINI_FLASH = "gemini-2.0-flash";
 
     private final GeminiInterface geminiInterface;
