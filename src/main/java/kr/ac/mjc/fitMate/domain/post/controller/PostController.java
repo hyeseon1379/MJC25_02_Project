@@ -21,12 +21,11 @@ public class PostController {
 
     @PostMapping("/post/new")
     public String createPost(PostRequest dto, Model model) {
+        //Long savedId = postService.savePost(dto);
         postService.savePost(dto);
         model.addAttribute("dto", dto);
-        return "post-success"; // templates/post-success.html
+        return "post-success";
+        //return "redirect:/post/" + savedId;
     }
-    @GetMapping("/post/update")
-    public String updatePost(){
-        return "index";}
-    // 수정 기능 추가
+
 }
