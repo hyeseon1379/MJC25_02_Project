@@ -44,9 +44,13 @@ public class PostService {
 
     // 게시글 조회 기능 - 지성재
     @Transactional
-    public PostResponse viewPostForm(final Long postId) {
+    public PostResponse viewPostForm(Long postId) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new RuntimeException("Post Not Found"));
+        int viewCount = post.getViewCount();
+        viewCount += 1;
+        post.setViewCount(viewCount);
+        postRepository.save(post);
         return new PostResponse(post);
     }
 }

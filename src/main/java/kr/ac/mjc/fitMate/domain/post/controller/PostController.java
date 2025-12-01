@@ -32,10 +32,10 @@ public class PostController {
 
     // 게시글 조회 기능 - 지성재
     @GetMapping("/post/{postId}")
-    public String viewPostForm(@PathVariable("postId") final Long postId, Model model) {
+    public String viewPostForm(@PathVariable("postId") Long postId, Model model) {
         PostResponse viewPost = postService.viewPostForm(postId);
         model.addAttribute("post", viewPost);
-        return "post-view";     // templates에 나중에 post-view.html 추가
+        return "post-view";// templates에 나중에 post-view.html 추가
     }
 
     // 수정 기능 추가
