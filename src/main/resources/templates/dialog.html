@@ -17,7 +17,7 @@
         }
 
         .header {
-            background:  linear-gradient(180deg, #FFE8E8 0%, #FFD4D4 100%);
+            background: linear-gradient(180deg, #FFE8E8 0%, #FFD4D4 100%);
             padding: 15px 50px;
             display: flex;
             align-items: center;
@@ -26,7 +26,6 @@
             margin-left: 204px;
             margin-right: 204px;
         }
-
 
         .back-btn {
             font-size: 24px;
@@ -58,6 +57,7 @@
             max-width: 1300px;
             width: 100%;
             margin: 0 auto;
+            min-height: 500px;
         }
 
         @media (max-width: 1024px) {
@@ -122,38 +122,15 @@
         }
 
         .image-preview {
-            width: 200px;
-            height: 250px;
-            background: linear-gradient(135deg, #FFB8B8 0%, #FF9999 100%);
+            max-width: 300px;
             border-radius: 15px;
-            padding: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
             box-shadow: 0 5px 20px rgba(0,0,0,0.15);
         }
 
-        .chat-screen {
-            width: 160px;
-            height: 210px;
-            background: #E8F4FF;
+        .image-preview img {
+            width: 100%;
+            height: auto;
             border-radius: 15px;
-            padding: 10px;
-            position: relative;
-        }
-
-        .chat-bubble {
-            background: white;
-            padding: 8px 12px;
-            border-radius: 12px;
-            margin-bottom: 8px;
-            font-size: 12px;
-            color: #333;
-        }
-
-        .chat-bubble.yellow {
-            background: #FFE082;
-            margin-left: 30px;
         }
 
         .typing {
@@ -230,8 +207,6 @@
             transition: height 1s ease, background 1s ease;
         }
 
-        /* 온도에 따른 동적 스타일은 JavaScript에서 처리 */
-
         .temperature {
             font-size: 64px;
             font-weight: 700;
@@ -256,6 +231,7 @@
             font-size: 14px;
             color: #666;
             line-height: 1.8;
+            white-space: pre-wrap;
         }
 
         .action-buttons {
@@ -335,6 +311,11 @@
             background: #FFE8E8;
         }
 
+        .upload-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
         .input-field {
             flex: 1;
             border: none;
@@ -368,6 +349,14 @@
         .hidden {
             display: none;
         }
+
+        .error-message {
+            background: #FFE8E8;
+            color: #D32F2F;
+            padding: 15px 20px;
+            border-radius: 20px;
+            border-left: 4px solid #D32F2F;
+        }
     </style>
 </head>
 <body>
@@ -383,7 +372,7 @@
 </div>
 
 <div class="input-area">
-    <button class="upload-btn" onclick="handleUpload()">+</button>
+    <button class="upload-btn" id="uploadBtn" onclick="handleUpload()">+</button>
     <input type="file" id="fileInput" class="hidden" accept="image/*">
     <input type="text" class="input-field" placeholder="메시지 입력" disabled>
     <button class="send-btn">➤</button>
@@ -391,7 +380,8 @@
 
 <script>
     const chatContainer = document.getElementById('chatContainer');
-    let currentStep = 0;
+    const uploadBtn = document.getElementById('uploadBtn');
+    let isProcessing = false;
 
     // 초기 메시지 표시
     setTimeout(() => {
@@ -406,11 +396,11 @@
         const messageDiv = document.createElement('div');
         messageDiv.className = 'message';
         messageDiv.innerHTML = `
-                <div class="avatar">🤖</div>
-                <div class="message-content">
-                    <div class="bubble">${text}</div>
-                </div>
-            `;
+            <div class="avatar">🤖</div>
+            <div class="message-content">
+                <div class="bubble">${text}</div>
+            </div>
+        `;
         chatContainer.appendChild(messageDiv);
         scrollToBottom();
     }
@@ -419,11 +409,11 @@
         const messageDiv = document.createElement('div');
         messageDiv.className = 'message user';
         messageDiv.innerHTML = `
-                <div class="avatar">👤</div>
-                <div class="message-content">
-                    ${content}
-                </div>
-            `;
+            <div class="avatar">👤</div>
+            <div class="message-content">
+                ${content}
+            </div>
+        `;
         chatContainer.appendChild(messageDiv);
         scrollToBottom();
     }
@@ -433,17 +423,17 @@
         messageDiv.className = 'message';
         messageDiv.id = 'typing';
         messageDiv.innerHTML = `
-                <div class="avatar">🤖</div>
-                <div class="message-content">
-                    <div class="bubble">
-                        <div class="typing">
-                            <span></span>
-                            <span></span>
-                            <span></span>
-                        </div>
+            <div class="avatar">🤖</div>
+            <div class="message-content">
+                <div class="bubble">
+                    <div class="typing">
+                        <span></span>
+                        <span></span>
+                        <span></span>
                     </div>
                 </div>
-            `;
+            </div>
+        `;
         chatContainer.appendChild(messageDiv);
         scrollToBottom();
     }
@@ -454,41 +444,114 @@
     }
 
     function handleUpload() {
-        document.getElementById('fileInput').click();
+        if (!isProcessing) {
+            document.getElementById('fileInput').click();
+        }
     }
 
-    document.getElementById('fileInput').addEventListener('change', function(e) {
-        if (e.target.files.length > 0) {
-            // 이미지 업로드 메시지
-            const imagePreview = `
+    document.getElementById('fileInput').addEventListener('change', async function(e) {
+        if (e.target.files.length > 0 && !isProcessing) {
+            const file = e.target.files[0];
+
+            // 이미지 파일 검증
+            if (!file.type.startsWith('image/')) {
+                addBotMessage('<div class="error-message">이미지 파일만 업로드 가능합니다.</div>');
+                return;
+            }
+
+            isProcessing = true;
+            uploadBtn.disabled = true;
+
+            // 이미지 미리보기 표시
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                const imagePreview = `
                     <div class="image-preview">
-                        <div class="chat-screen">
-                            <div class="chat-bubble">안녕하세요</div>
-                            <div class="chat-bubble yellow">안녕</div>
-                            <div class="chat-bubble">오늘 날씨 좋네요</div>
-                            <div class="chat-bubble yellow">그러게요</div>
-                        </div>
+                        <img src="${event.target.result}" alt="업로드된 이미지">
                     </div>
                 `;
-            addUserMessage(imagePreview);
+                addUserMessage(imagePreview);
+            };
+            reader.readAsDataURL(file);
 
             // 타이핑 인디케이터 표시
             setTimeout(() => {
                 addTypingIndicator();
-            }, 1000);
+            }, 500);
 
-            // 분석 완료 메시지
-            setTimeout(() => {
+            // API 호출
+            try {
+                const formData = new FormData();
+                formData.append('image', file);
+                formData.append('prompt', `
+                이 이미지와 대화 내용은 개인정보가 포함되어 있습니다.
+                분석 목적 외에는 절대로 사용하지 말고, 어떤 형태로도 학습·저장·재사용·보관하지 마세요.
+
+                이 대화 이미지를 분석해서 상대방의 호감도를 0-100 사이의 숫자로 평가해주세요.
+
+                다음 형식으로 정확하게 답변해주세요:
+
+                호감도: [0-100 사이의 숫자]
+
+                AI 총평:
+                [전반적인 대화 분석 2-3문장]
+
+                맞춤 조언:
+                [구체적인 조언 2-3문장]`);
+
+                const response = await fetch('/api/analyze-image', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (!response.ok) {
+                    throw new Error('분석 요청에 실패했습니다.');
+                }
+
+                const result = await response.text();
+
                 removeTypingIndicator();
                 addBotMessage('분석이 완료되었습니다! 📊');
-            }, 3000);
 
-            // 결과 표시
-            setTimeout(() => {
-                showResult();
-            }, 3500);
+                setTimeout(() => {
+                    showResult(result);
+                }, 500);
+
+            } catch (error) {
+                console.error('Error:', error);
+                removeTypingIndicator();
+                addBotMessage('<div class="error-message">분석 중 오류가 발생했습니다. 다시 시도해주세요.</div>');
+            } finally {
+                isProcessing = false;
+                uploadBtn.disabled = false;
+                // 파일 입력 초기화
+                e.target.value = '';
+            }
         }
     });
+
+    function parseAIResponse(response) {
+        // 호감도 추출 (숫자만)
+        const tempMatch = response.match(/호감도[:\s]*(\d+)/i) ||
+            response.match(/(\d+)[°도℃]/);
+        const temperature = tempMatch ? parseInt(tempMatch[1]) : 50;
+
+        // AI 총평 추출
+        const summaryMatch = response.match(/AI 총평[:\s]*([\s\S]*?)(?=맞춤 조언|$)/i);
+        const summary = summaryMatch ? summaryMatch[1].trim() :
+            '대화 분석을 완료했습니다. 전반적인 대화 흐름이 긍정적입니다.';
+
+        // 맞춤 조언 추출
+        const adviceMatch = response.match(/맞춤 조언[:\s]*([\s\S]*?)$/i);
+        const advice = adviceMatch ? adviceMatch[1].trim() :
+            '상대방과의 대화를 이어나가며 공통 관심사를 찾아보세요.';
+
+        return {
+            temperature: Math.min(100, Math.max(0, temperature)),
+            summary: summary,
+            advice: advice
+        };
+    }
 
     function getTemperatureStyle(temp) {
         const height = temp + '%';
@@ -496,19 +559,15 @@
         let bulb_background;
 
         if (temp <= 20) {
-            // 0-20도: 하늘색
             background = 'linear-gradient(to top, #74C8FF, #9FD9FF, #C3E7FF)';
             bulb_background = '#74C8FF';
         } else if (temp <= 50) {
-            // 21-50도: 하늘색 → 노란색
             background = 'linear-gradient(to top, #F4B572 0%, #F5C18A 50%, #F9D8B5 100%)';
             bulb_background = '#F4B572';
         } else if (temp <= 80) {
-            // 51-80도: 하늘색 → 노란색 → 주황색 → 연한 빨강
             background = 'linear-gradient(to top, #FF6762 0%, #FF8986 50%, #FFC3BD 100%)';
             bulb_background = '#FF6762';
         } else {
-            // 81-100도: 하늘색 → 노란색 → 주황색 → 빨강 → 진한 빨강
             background = 'linear-gradient(to top, #F04245 0%, #F3676A 50%, #F69698 100%)';
             bulb_background = '#F04245';
         }
@@ -516,43 +575,45 @@
         return { height, background, bulb_background };
     }
 
-    function showResult() {
-        const temperature = 80; // 0-100 사이의 아무 값이나 가능
-        const style = getTemperatureStyle(temperature);
+    function showResult(aiResponse) {
+        const parsed = parseAIResponse(aiResponse);
+        const style = getTemperatureStyle(parsed.temperature);
 
         const resultHTML = `
-                <div class="result-card">
-                    <div class="thermometer-container">
-                        <div class="thermometer-tube">
-                            <div class="thermometer-fill" style="height: ${style.height}; background: ${style.background};"></div>
-                        </div>
-                        <div class="thermometer-bulb" style="background: ${style.bulb_background}"></div>
+            <div class="result-card">
+                <div class="thermometer-container">
+                    <div class="thermometer-tube">
+                        <div class="thermometer-fill" style="height: ${style.height}; background: ${style.background};"></div>
                     </div>
-                    <div class="temperature" style="color: ${style.bulb_background}">${temperature}°C</div>
-
-                    <div class="result-section">
-                        <div class="result-title">💡 AI 총평</div>
-                        <div class="result-text">
-                            전반적 관심 단계입니다. 대화의 주도권을 상대방이 쥐고 있으나,
-                            상대방의 반응은 긍정적입니다. 더 깊은 대화로 발전시킬 여지가 있습니다.
-                        </div>
-                    </div>
-
-                    <div class="result-section">
-                        <div class="result-title">💭 맞춤 조언</div>
-                        <div class="result-text">
-                            다른 대화는 공통 관심사를 주제로 먼저 시작하세요.
-                            상대방이 좋아할 만한 취미나 활동에 대해 물어보는 것을 추천합니다.
-                        </div>
-                    </div>
-
-                    <div class="action-buttons">
-                        <button class="btn btn-outline">자세히보기</button>
-                        <button class="btn btn-primary">홈으로</button>
-                    </div>
+                    <div class="thermometer-bulb" style="background: ${style.bulb_background}"></div>
                 </div>
-            `;
+                <div class="temperature" style="color: ${style.bulb_background}">${parsed.temperature}°C</div>
+
+                <div class="result-section">
+                    <div class="result-title">💡 AI 총평</div>
+                    <div class="result-text">${parsed.summary}</div>
+                </div>
+
+                <div class="result-section">
+                    <div class="result-title">💭 맞춤 조언</div>
+                    <div class="result-text">${parsed.advice}</div>
+                </div>
+
+                <div class="action-buttons">
+                    <button class="btn btn-outline" onclick="analyzeAgain()">다시 분석하기</button>
+                    <button class="btn btn-primary" onclick="goHome()">홈으로</button>
+                </div>
+            </div>
+        `;
         addBotMessage(resultHTML);
+    }
+
+    function analyzeAgain() {
+        addBotMessage('새로운 대화 이미지를 업로드해주세요! 📸');
+    }
+
+    function goHome() {
+        window.location.href = '/';
     }
 
     function scrollToBottom() {
