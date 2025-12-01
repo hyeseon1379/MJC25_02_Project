@@ -1,6 +1,8 @@
 package kr.ac.mjc.fitMate.domain.post.service;
 
+import jakarta.transaction.Transactional;
 import kr.ac.mjc.fitMate.domain.post.dto.PostRequest;
+import kr.ac.mjc.fitMate.domain.post.dto.PostResponse;
 import kr.ac.mjc.fitMate.domain.post.entity.Post;
 import kr.ac.mjc.fitMate.domain.post.repository.PostRepository;
 import kr.ac.mjc.fitMate.domain.user.entity.User;
@@ -38,5 +40,17 @@ public class PostService {
     private String randomWriterName() {
         int randomNum = (int)(Math.random() * 9000) + 1000; // 1000~9999
         return "익명의 작성자 " + randomNum;
+    }
+
+    // 게시글 조회 기능 - 지성재
+    @Transactional
+    public PostResponse viewPostForm(Long postId) {
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new RuntimeException("Post Not Found"));
+        int viewCount = post.getViewCount();
+        viewCount += 1;
+        post.setViewCount(viewCount);
+        postRepository.save(post);
+        return new PostResponse(post);
     }
 }
