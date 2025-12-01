@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
@@ -37,8 +38,32 @@ public class PostController {
         model.addAttribute("post", viewPost);
         return "post-view";// templates에 나중에 post-view.html 추가
     }
+
     @GetMapping("/post/update")
-    public String updatePost(){
-        return "index";}
-    // 수정 기능 추가
+    public String updatePost() {
+        return "index";
+    }
+
+    /**
+     * 수정 페이지 이동
+     */
+    @GetMapping("/post/{id}/edit")
+    public String editPage(@PathVariable Long id, Model model) {
+        PostResponse post = postService.getPost(id);
+        model.addAttribute("post", post); // 기존 데이터 전달
+        return "index"; // 수정 화면
+    }
+
+    /**
+     * 수정 처리
+     */
+    @PostMapping("/post/{id}/edit")
+    public String update(
+            @PathVariable Long id,
+            @ModelAttribute PostRequest request
+    ) {
+        postService.updatePost(id, request);
+        return "redirect:/post/" + id; // 수정 후 상세 페이지로 이동
+    }
+
 }
