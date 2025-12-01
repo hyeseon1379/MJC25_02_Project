@@ -18,27 +18,17 @@ public class PostResponse {
     private LocalDateTime createdAt;    // 게시글 작성 시간
     private int viewCount;              // 게시글 조회수
     private int commentCount;           // 게시글 댓글수
-    private String category;            // 게시글 카테고리
+    private String trouble;            // 게시글 카테고리
 
-    /* public PostResponse(Post post) {
-        this.id = id;
-        this.title = title;
-        this.content = content;
-        this.writer = writer;
-        this.createdAt = null;
-        this.viewCount = 0;
-        this.commentCount = 0;
-    }
-     */
 
     public PostResponse(Post post) {
         this.id = post.getId();
         this.title = post.getTitle();
         this.content = post.getContent();
         this.writer = post.getWriter();
-        this.category = post.getCategory();
-        this.createdAt = LocalDateTime.now();
-        this.viewCount = 0;
+        this.trouble = post.getTrouble().getDisplayName();
+        this.createdAt = post.getCreateAt();
+        this.viewCount = post.getViewCount();
         this.commentCount = 0;
     }
 
