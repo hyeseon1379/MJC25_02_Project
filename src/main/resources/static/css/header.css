@@ -1,0 +1,135 @@
+nav {
+    background: white;
+    padding: 20px 60px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 10px rgba(180,135,131,0.25);
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    z-index: 1000;
+}
+
+.logo span {
+    color: #FF9999;
+}
+
+.nav-menu {
+    display: flex;
+    gap: 50px;
+    list-style: none;
+    align-items: center;
+}
+
+.nav-menu > li {
+    position: relative;
+}
+
+.nav-menu a {
+    text-decoration: none;
+    color: #43464D;
+    font-size: 16px;
+    font-weight: 700;
+    transition: color 0.3s;
+    display: block;
+    padding: 10px 0;
+}
+
+.nav-menu > li > a:hover {
+    color: #F6A199;
+}
+
+/* 드롭다운 메뉴 */
+.dropdown {
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: white;
+    min-width: 180px;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+    margin-top: 10px;
+    padding: 8px 0;
+    z-index: 1000;
+}
+
+.nav-menu > li:hover .dropdown {
+    opacity: 1;
+    visibility: visible;
+    margin-top: 0;
+}
+
+.dropdown li {
+    list-style: none;
+}
+
+.dropdown a {
+    text-align: center;
+    padding: 12px 24px;
+    color: #666;
+    font-size: 15px;
+    transition: all 0.2s;
+}
+
+.dropdown a:hover {
+    background: #FFE8E8;
+    color: #FF9999;
+}
+
+.nav-buttons {
+    display: flex;
+    gap: 15px;
+}
+
+.btn-login {
+    padding: 10px 30px;
+    border: 2px solid #FF9999;
+    background: white;
+    color: #FF9999;
+    border-radius: 25px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 700;
+    transition: all 0.3s;
+    text-decoration: none;
+}
+
+.btn-login:hover {
+    background: #FFF0F0;
+}
+
+.btn-signup {
+    padding: 10px 30px;
+    border: none;
+    background: #FF9999;
+    color: white;
+    border-radius: 25px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 700;
+    transition: all 0.3s;
+    text-decoration: none;
+}
+
+.btn-signup:hover {
+    background: #FF7777;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(255, 153, 153, 0.3);
+}
+
+@media (max-width: 768px) {
+    nav {
+        padding: 15px 30px;
+    }
+
+    .nav-menu {
+        gap: 25px;
+    }
+}
