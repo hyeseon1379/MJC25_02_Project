@@ -71,7 +71,7 @@ public class PostService {
             post.setContent(request.getContent());
 
             // Trouble enum 은 request 가 String이므로 매핑
-            post.setTrouble(Trouble.valueOf(request.getTrouble()));
+            post.setTrouble(Trouble.fromValue(request.getTrouble()));
 
             postRepository.save(post);
         }
