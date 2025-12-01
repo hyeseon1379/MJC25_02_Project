@@ -2,146 +2,301 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <title>Mind:ON</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>고민상담소 수정 페이지</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: Arial, sans-serif;
         }
 
-        /* 상단 헤더 */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Apple SD Gothic Neo', sans-serif;
+            background-color: #f5f5f5;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        h1 {
+            font-size: 24px;
+            margin-bottom: 30px;
+            color: #333;
+        }
+
+        .update-label {
+            font-size: 12px;
+            color: #999;
+            margin-bottom: 20px;
+        }
+
         .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 15px 40px;
             background-color: white;
-            border-bottom: 1px solid #eee;
+            padding: 20px 40px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            margin-bottom: 30px;
         }
 
         .logo {
-            font-size: 24px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 20px;
             font-weight: bold;
-            color: #ff6b81;
-        }
-
-        .menu a {
-            margin: 0 15px;
-            text-decoration: none;
             color: #333;
-            font-weight: 500;
         }
 
-        .auth button {
-            margin-left: 10px;
-            padding: 8px 15px;
-            border-radius: 8px;
-            border: none;
-            cursor: pointer;
+        .heart {
+            color: #ff7b9c;
         }
 
-        .login {
-            background-color: #f1f1f1;
+        .nav {
+            display: flex;
+            gap: 40px;
         }
 
-        .signup {
-            background-color: #ff6b81;
-            color: white;
+        .nav a {
+            text-decoration: none;
+            color: #666;
+            font-size: 15px;
         }
 
-        /* 메인 영역 */
-        .content {
-            min-height: 400px;
-            background-color: #fff5f7;
-            padding: 40px;
+        .nav a:hover {
+            color: #333;
         }
 
-        .box {
-            width: 600px;
-            margin: 0 auto;
+        .header-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-login {
+            padding: 8px 20px;
+            border: 1px solid #ff7b9c;
             background: white;
+            color: #ff7b9c;
             border-radius: 20px;
-            padding: 25px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            cursor: pointer;
+            font-size: 14px;
         }
 
-        input {
-            width: 100%;
-            padding: 12px;
-            margin-bottom: 10px;
-            border-radius: 10px;
-            border: 1px solid #ddd;
+        .btn-signup {
+            padding: 8px 20px;
+            border: none;
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+            color: white;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
         }
 
-        textarea {
+        .content-box {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .category-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 25px;
+        }
+
+        .tab {
+            padding: 8px 20px;
+            border-radius: 20px;
+            border: 1px solid #e0e0e0;
+            background: white;
+            color: #666;
+            cursor: pointer;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .tab.active {
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+            color: white;
+            border: none;
+        }
+
+        .tab-icon {
+            font-size: 16px;
+        }
+
+        .post-title {
             width: 100%;
-            height: 260px;
-            padding: 12px;
-            border-radius: 10px;
-            border: 1px solid #ddd;
+            padding: 15px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            margin-bottom: 20px;
             resize: none;
         }
 
-        /* 하단 푸터 */
+        .post-content {
+            width: 100%;
+            min-height: 200px;
+            padding: 15px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            line-height: 1.6;
+            resize: vertical;
+            font-family: inherit;
+        }
+
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .btn-cancel {
+            padding: 10px 30px;
+            border: 1px solid #ddd;
+            background: white;
+            color: #666;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .btn-submit {
+            padding: 10px 30px;
+            border: none;
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+            color: white;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
         .footer {
-            background-color: #333;
+            background: #3a3f4a;
             color: white;
             text-align: center;
-            padding: 20px 0;
-            font-size: 14px;
+            padding: 30px 20px;
+            margin-top: 50px;
+            font-size: 13px;
+            line-height: 1.8;
+        }
+
+        .footer-copyright {
+            color: #aaa;
+        }
+
+        .footer-service {
+            color: #ccc;
+            margin-top: 5px;
         }
     </style>
 </head>
 <body>
-
-<!-- 상단 헤더 -->
-<header class="header">
-    <div class="logo">💗 ON</div>
-
-    <nav class="menu">
-        <a href="#">대화</a>
-        <a href="#">궁합</a>
+<div class="header">
+    <div class="logo">
+        <span class="heart">💗</span>
+        <span>ON</span>
+    </div>
+    <nav class="nav">
+        <a href="#">대학</a>
+        <a href="#">공감</a>
         <a href="#">MBTI</a>
         <a href="#">고민 상담소</a>
     </nav>
-
-    <div class="auth">
-        <button class="login">로그인</button>
-        <button class="signup">회원가입</button>
+    <div class="header-buttons">
+        <button class="btn-login">로그인</button>
+        <button class="btn-signup">회원가입</button>
     </div>
-</header>
+</div>
 
-<!-- 메인 콘텐츠 -->
-<main class="content">
-    <div class="box">
-        <div class="emoji-bar">
-            <button class="emoji-btn active">💗 연애</button>
-            <button class="emoji-btn">😊 친구</button>
-            <button class="emoji-btn">💬 대화</button>
-            <button class="emoji-btn">💭 고민</button>
+<div class="container">
+    <h1>고민상담소 수정 페이지</h1>
+    <div class="update-label">community_update</div>
+
+    <div class="content-box">
+        <div class="category-tabs">
+            <button class="tab active">
+                <span class="tab-icon">💗</span>
+                <span>연애</span>
+            </button>
+            <button class="tab">
+                <span class="tab-icon">🍊</span>
+                <span>친구</span>
+            </button>
+            <button class="tab">
+                <span class="tab-icon">👤</span>
+                <span>직장</span>
+            </button>
+            <button class="tab">
+                <span class="tab-icon">🌙</span>
+                <span>기타</span>
+            </button>
         </div>
 
-        <input type="text" value="고백을 받았는데 어떻게 대답해야 할지 모르겠어요.">
+        <textarea class="post-title" placeholder="제목을 입력하세요">고백을 받았는데 어떻게 대답해야 할지 모르겠어요.</textarea>
 
-        <textarea>
-안녕하세요, 23살 여자입니다.
+        <textarea class="post-content">안녕하세요, 23살 여자입니다.
 
-어제 제가 친하게 지내던 3살 위 선배가 갑자기 저한테 고백을 했어요. 사실 선배에 대한 감정이 정확히 뭔지 모르겠어서 너무 당황스러웠어요.
+어제 제가 친하게 지내던 3살 위 선배가 갑자기 저한테 고백을 했어요. 사실 선배를 내린 감정이 있었지만 저도 많지 않습니다.
 
-선배는 정말 좋은 사람이고, 항상 배려해주고 잘 도와주고, 같이 있으면 편하거든요. 그런데 그게 친구로서 편한 건지, 아니면 이성으로서의 감정인지 구분이 안 가요.
+선배는 정말 좋은 사람이에요. 항상 배려해주고 제법은 잘 봐주는 근, 같이 있으면 편하거든요. 그런데 그게 친구로써 편한 건지, 아니면 이성으로서 감정인 건지 구분이 안 가요.
 
-고백을 받고 나서 며칠 생각할 시간을 달라고 했는데, 계속 생각해도 답이 안 나오네요. 거절하자니 그동안의 관계가 어색해질까 걱정되고, 받아주자니 제가 혹시 상처를 주게 될까 봐 고민돼요.
-        </textarea>
+고백을 받고 나서 머릿 생각할 시간을 달라고 했는데, 계속 생각해도 답이 안나오네요. 거절했지지 치켜하지 싫어한 좋은 관계를 아예망칠까봐 걱정되고, 그</textarea>
+
+        <div class="action-buttons">
+            <button class="btn-cancel">목록으로</button>
+            <button class="btn-submit">댓글작성</button>
+        </div>
     </div>
-</main>
+</div>
 
-<!-- 하단 푸터 -->
-<footer class="footer">
-    <p>© 2024 Mind:ON. All rights reserved.</p>
-    <p>Relationship Temperature Analysis Service</p>
-</footer>
+<div class="footer">
+    <div class="footer-copyright">© 2024 Mind-ON. All rights reserved.</div>
+    <div class="footer-service">Relationship Temperature Analysis Service</div>
+</div>
 
+<script>
+    const tabs = document.querySelectorAll('.tab');
+    tabs.forEach(tab => {
+        tab.addEventListener('click', function() {
+            tabs.forEach(t => t.classList.remove('active'));
+            this.classList.add('active');
+        });
+    });
+
+    document.querySelector('.btn-cancel').addEventListener('click', function() {
+        if(confirm('작성중인 내용이 저장되지 않습니다. 돌아가시겠습니까?')) {
+            window.history.back();
+        }
+    });
+
+    document.querySelector('.btn-submit').addEventListener('click', function() {
+        const title = document.querySelector('.post-title').value;
+        const content = document.querySelector('.post-content').value;
+
+        if(!title.trim()) {
+            alert('제목을 입력해주세요.');
+            return;
+        }
+
+        if(!content.trim()) {
+            alert('내용을 입력해주세요.');
+            return;
+        }
+
+        alert('게시글이 수정되었습니다.');
+    });
+</script>
 </body>
 </html>
