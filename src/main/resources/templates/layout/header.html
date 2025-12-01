@@ -1,0 +1,28 @@
+<header th:fragment="header-fragment" class="main-header">
+    <nav>
+        <div><img th:src="@{/image/logo2.png}" width="150px" height="35px"></div>
+        <ul class="nav-menu">
+            <li>
+                <a href="#conversation">대화</a>
+                <ul class="dropdown">
+                    <li><a href="#temp">그룹 친밀도</a></li>
+                    <li><a href="#couple">커플 호감도</a></li>
+                    <li><a href="#relationship">관계 위험도</a></li>
+                </ul>
+            </li>
+            <li><a href="#compatibility">궁합</a></li>
+            <li>
+                <a href="#mbti">MBTI</a>
+                <ul class="dropdown">
+                    <li><a href="#mbti-analysis">MBTI 성향</a></li>
+                    <li><a href="#mbti-compatibility">MBTI 궁합</a></li>
+                </ul>
+            </li>
+            <li><a href="#consulting">고민 상담소</a></li>
+        </ul>
+        <div class="nav-buttons">
+            <a href="#login" class="btn-login">로그인</a>
+            <a href="#signUp" class="btn-signup">회원가입</a>
+        </div>
+    </nav>
+</header>
