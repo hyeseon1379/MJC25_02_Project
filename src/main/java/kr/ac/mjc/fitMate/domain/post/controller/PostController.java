@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
@@ -57,5 +58,55 @@ public class PostController {
         return "post-view";// templates에 나중에 post-view.html 추가
     }
 
-    // 수정 기능 추가
+    @GetMapping("/post/update")
+    public String updatePost() {
+        return "post-update";
+    }
+
+    /**
+     * 수정 페이지 이동
+     */
+    @GetMapping("/post/{id}/edit")
+    public String editPage(@PathVariable Long id, Model model) {
+        PostResponse post = postService.getPost(id);
+        model.addAttribute("post", post); // 기존 데이터 전달
+        return "post-update"; // 수정 화면
+    }
+
+    /**
+     * 수정 처리
+     */
+    @PostMapping("/post/{id}/edit")
+    public String update(
+            @PathVariable Long id,
+            @ModelAttribute PostRequest request, HttpSession session
+    ) {
+        UserResponse loginUser = (UserResponse) session.getAttribute("loginUser");
+
+        if (loginUser == null) {
+            throw new IllegalStateException("로그인이 필요합니다.");
+        }
+
+        Long userId = loginUser.getId();
+        postService.updatePost(id, request, userId);
+
+        return "redirect:/post/" + id; // 수정 후 상세 페이지로 이동
+    }
+
+    @PostMapping("/post/{id}/delete")
+    public String delete(@PathVariable Long id, HttpSession session, Model model) {
+        UserResponse loginUser = (UserResponse) session.getAttribute("loginUser");
+        if (loginUser == null) {
+            throw new IllegalStateException("로그인이 필요합니다.");
+        }
+
+        Long userId = loginUser.getId();
+        postService.deletePost(id, userId);
+
+        model.addAttribute("postId", id);
+
+        //return "redirect:/post";
+        return "redirect:/";
+    }
+
 }
