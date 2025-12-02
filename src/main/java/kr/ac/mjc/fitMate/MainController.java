@@ -9,9 +9,4 @@ public class MainController {
     public String menu() {
         return "main";
     }
-    
-    @GetMapping("/dialog")
-    public String dialog() {
-        return "dialog";
-    }
 }
