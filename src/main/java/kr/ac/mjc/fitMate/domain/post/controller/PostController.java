@@ -93,4 +93,20 @@ public class PostController {
         return "redirect:/post/" + id; // 수정 후 상세 페이지로 이동
     }
 
+    @PostMapping("/post/{id}/delete")
+    public String delete(@PathVariable Long id, HttpSession session, Model model) {
+        UserResponse loginUser = (UserResponse) session.getAttribute("loginUser");
+        if (loginUser == null) {
+            throw new IllegalStateException("로그인이 필요합니다.");
+        }
+
+        Long userId = loginUser.getId();
+        postService.deletePost(id, userId);
+
+        model.addAttribute("postId", id);
+
+        //return "redirect:/post";
+        return "redirect:/";
+    }
+
 }

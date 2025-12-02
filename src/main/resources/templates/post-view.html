@@ -161,7 +161,7 @@
             margin-left: 6px;
         }
 
-        /* 수정/삭제 버튼 스타일 추가 */
+        /* 수정/삭제 버튼 */
         .post-action-buttons {
             position: absolute;
             top: 0;
@@ -271,6 +271,7 @@
             border-radius: 20px;
             font-weight: bold;
             font-size: 0.9rem;
+            cursor: pointer;
         }
 
         .reply-submit-btn-small {
@@ -281,6 +282,7 @@
             border-radius: 20px;
             font-weight: bold;
             font-size: 0.85rem;
+            cursor: pointer;
         }
 
         .comment-list-item .comment-item {
@@ -346,6 +348,7 @@
         .comment-actions a {
             color: #999;
             margin-left: 15px;
+            cursor: pointer;
         }
 
         .comment-writer-custom {
@@ -358,6 +361,94 @@
             padding: 10px 0 0 15px;
             margin-top: 15px;
             margin-left: 15px;
+        }
+
+        /* 삭제 확인 모달 */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 20px;
+            padding: 40px 50px;
+            text-align: center;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            position: relative;
+            max-width: 400px;
+            width: 90%;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 1.5rem;
+            color: #999;
+            cursor: pointer;
+            background: none;
+            border: none;
+            padding: 0;
+            line-height: 1;
+        }
+
+        .modal-close:hover {
+            color: #333;
+        }
+
+        .modal-title {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 30px;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .modal-btn {
+            padding: 12px 40px;
+            border-radius: 25px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s ease;
+        }
+
+        .modal-btn-cancel {
+            background-color: white;
+            color: #666;
+            border: 1px solid #ddd;
+        }
+
+        .modal-btn-cancel:hover {
+            background-color: #f8f8f8;
+        }
+
+        .modal-btn-delete {
+            background-color: #ff9d9d;
+            color: white;
+        }
+
+        .modal-btn-delete:hover {
+            background-color: #ff8585;
         }
     </style>
 </head>
@@ -378,7 +469,7 @@
                     <a th:href="@{/post/{id}/edit(id=${post.id})}" class="post-action-btn edit-btn">
                         <i class="fas fa-edit"></i> 수정
                     </a>
-                    <button onclick="deletePost()" class="post-action-btn delete-btn">
+                    <button onclick="openDeleteModal()" class="post-action-btn delete-btn">
                         <i class="fas fa-trash-alt"></i> 삭제
                     </button>
                 </div>
@@ -402,7 +493,6 @@
                             </div>
                         </div>
                     </div>
-
                     <div class="post-counts">
                         <span class="text-secondary"><i class="far fa-eye me-1"></i> <span th:text="${post.viewCount}">123</span></span>
                         <span class="text-secondary"><i class="far fa-comment-dots me-1"></i> <span th:text="${post.commentCount}">57</span></span>
@@ -497,6 +587,23 @@
     </div>
 </main>
 
+<!-- 삭제 확인 모달 -->
+<form th:action="@{'/post/' + ${post.id} + '/delete'}"
+      method="post"
+      id="deleteForm"
+      style="display: none;">
+</form>
+<div class="modal-overlay" id="deleteModal">
+    <div class="modal-content">
+        <button class="modal-close" onclick="closeDeleteModal()">×</button>
+        <h3 class="modal-title">게시글을 삭제하시겠습니까?</h3>
+        <div class="modal-buttons">
+            <button class="modal-btn modal-btn-cancel" onclick="closeDeleteModal()">취소</button>
+            <button class="modal-btn modal-btn-delete" onclick="confirmDelete()">삭제</button>
+        </div>
+    </div>
+</div>
+
 <div th:replace="layout/footer.html :: footer"></div>
 
 <script>
@@ -572,13 +679,45 @@
         });
     }
 
-    // 삭제 함수
-    function deletePost() {
-        if (confirm('정말로 이 게시글을 삭제하시겠습니까?')) {
-            // window.location.href = '/post/delete/' + postId;
-            alert('게시글이 삭제되었습니다.');
+    function confirmDelete() {
+        closeDeleteModal();
+
+        const deleteForm = document.getElementById('deleteForm');
+
+        if (deleteForm) {
+            deleteForm.submit();
+        } else {
+            alert("삭제 폼을 찾을 수 없습니다.");
         }
     }
+
+    // 삭제 모달 열기
+    function openDeleteModal() {
+        document.getElementById('deleteModal').classList.add('active');
+    }
+
+    // 삭제 모달 닫기
+    function closeDeleteModal() {
+        document.getElementById('deleteModal').classList.remove('active');
+    }
+
+    // 삭제 확인
+    // function confirmDelete() {
+    //     const postId = '[[${post.id}]]';
+    //     window.location.href = '/post/' + postId + '/delete';
+    //
+    //     alert('게시글이 삭제되었습니다.');
+    //     closeDeleteModal();
+    //     window.location.href = '/'; // 목록으로 이동
+    // }
+
+    // 모달 외부 클릭 시 닫기
+    window.addEventListener('click', function(e) {
+        const modal = document.getElementById('deleteModal');
+        if (e.target === modal) {
+            closeDeleteModal();
+        }
+    });
 
     // 페이지 로드 시 실행
     document.addEventListener('DOMContentLoaded', function() {
