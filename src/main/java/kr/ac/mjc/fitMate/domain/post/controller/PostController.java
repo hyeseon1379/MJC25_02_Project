@@ -60,7 +60,7 @@ public class PostController {
 
     @GetMapping("/post/update")
     public String updatePost() {
-        return "index";
+        return "post-update";
     }
 
     /**
@@ -70,7 +70,7 @@ public class PostController {
     public String editPage(@PathVariable Long id, Model model) {
         PostResponse post = postService.getPost(id);
         model.addAttribute("post", post); // 기존 데이터 전달
-        return "index"; // 수정 화면
+        return "post-update"; // 수정 화면
     }
 
     /**
@@ -79,9 +79,17 @@ public class PostController {
     @PostMapping("/post/{id}/edit")
     public String update(
             @PathVariable Long id,
-            @ModelAttribute PostRequest request
+            @ModelAttribute PostRequest request, HttpSession session
     ) {
-        postService.updatePost(id, request);
+        UserResponse loginUser = (UserResponse) session.getAttribute("loginUser");
+
+        if (loginUser == null) {
+            throw new IllegalStateException("로그인이 필요합니다.");
+        }
+
+        Long userId = loginUser.getId();
+        postService.updatePost(id, request, userId);
+
         return "redirect:/post/" + id; // 수정 후 상세 페이지로 이동
     }
 
