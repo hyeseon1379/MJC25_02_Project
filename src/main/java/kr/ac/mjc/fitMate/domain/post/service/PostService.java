@@ -18,8 +18,8 @@ public class PostService {
     private final PostRepository postRepository;
     private final UserRepository userRepository;
 
-    public Long savePost(PostRequest dto) {
-        User user = userRepository.findById(1L)
+    public Long savePost(PostRequest dto, Long userId) {
+        User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
 
         String writerName = randomWriterName();

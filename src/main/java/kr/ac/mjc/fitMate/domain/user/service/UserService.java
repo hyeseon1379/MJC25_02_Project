@@ -60,7 +60,7 @@ public class UserService {
 //            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
 //        }
 
-        if (userRepository.existsByPassword(request.getPassword())) {
+        if (!userRepository.existsByPassword(request.getPassword())) {
             throw new IllegalArgumentException("이미 존재하는 비밀번호입니다.");
         }
 
