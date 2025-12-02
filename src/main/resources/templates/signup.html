@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>회원가입</title>
+</head>
+<body>
+<h2>회원가입</h2>
+
+<form action="/signup" method="post">
+
+    <label>Email:</label><br>
+    <input type="email" name="email" required><br><br>
+
+    <label>Password:</label><br>
+    <input type="password" name="password" required><br><br>
+
+    <label>Username:</label><br>
+    <input type="text" name="username" required><br><br>
+
+    <label>Nickname:</label><br>
+    <input type="text" name="nickname" required><br><br>
+
+    <label>Birth:</label><br>
+    <input type="date" name="birth" required><br><br>
+
+    <label>Gender:</label><br>
+    <select name="gender" required>
+        <option value="MALE">남성</option>
+        <option value="FEMALE">여성</option>
+    </select>
+    <br><br>
+
+    <label>MBTI:</label><br>
+    <select name="mbti" required>
+        <option value="INTP">INTP</option>
+        <option value="ISTJ">ISTJ</option>
+        <option value="INFP">INFP</option>
+        <option value="ENFP">ENFP</option>
+        <!-- 필요한 유형 더 추가 -->
+    </select>
+    <br><br>
+
+    <label>Trouble:</label><br>
+    <select name="trouble" required>
+        <option value="LOVE">연애</option>
+        <option value="FRIENDS">친구</option>
+        <option value="WORK">직장</option>
+        <option value="OTHER">기타</option>
+    </select>
+    <br><br>
+
+    <button type="submit">회원가입</button>
+</form>
+
+<br>
+<a href="/login">로그인 하러가기</a>
+
+</body>
+</html>
