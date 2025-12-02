@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="|${post.title} - Mind:ON|">Mind:ON - 게시글 상세</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+    <link rel="stylesheet" th:href="@{/css/header.css}">
+    <link rel="stylesheet" th:href="@{/css/footer.css}">
+    <style>
+        /* 초기화 및 기본 설정 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body { /* 전체 배경, 스크롤 영역 설정 */
+            background-color: #f4f6f9;
+            display: flex;
+            flex-direction: column;
+        }
+
+        a { /* 모든 링크 기본 스타일 */
+            text-decoration: none;
+            color: inherit;
+        }
+
+        /* 🌟 메인 영역 */
+        .content { /* 메인 콘텐츠 영역 (배경색) */
+            flex-grow: 1;
+            padding: 30px 20px 60px 20px;
+            background-color: #fff5f7;
+        }
+
+        /* 🌟 분리된 컨테이너 스타일 */
+        .content-container { /* 게시글 전체 박스(목록, 본문, 댓글)의 최대 너비 제한 */
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .box, .comment-box { /* 게시글 본문 및 댓글 박스의 흰색 배경, 그림자, 모서리 */
+            background: white;
+            border-radius: 20px;
+            padding: 30px 40px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            margin-bottom: 20px;
+        }
+
+
+        /* ⭐ 개별 댓글 항목 컨테이너 스타일 */
+        .comment-list-item { /* 댓글 박스 */
+            background-color: #fcfcfc;
+            border-radius: 20px;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+            margin-bottom: 15px;
+            padding: 15px 25px;
+            border: 1px solid #eee;
+        }
+
+
+        /* ⭐ 대댓글 박스 스타일 (댓글 박스 내부에 들어감) */
+        .reply-list-item {
+            background-color: white; /* 댓글 박스와 구분되는 흰색 배경 */
+            border-radius: 12px;
+            padding: 10px 15px;
+            margin-top: 15px;
+            border: 1px solid #f5f5f5;
+            box-shadow: 0 0 5px rgba(0,0,0,0.03);
+        }
+
+
+
+        /* 목록으로 버튼 섹션 */
+        .back-to-list-section { /* 목록 버튼을 감싸는 영역의 마진 */
+            margin-bottom: 30px;
+        }
+
+
+
+        /* ---------------------------------------------------- */
+
+        /* '목록으로' 버튼 타원형 스타일 */
+        .back-to-list-style { /* '목록으로' 버튼 스타일 */
+            display: inline-flex;
+            align-items: center;
+            padding: 6px 12px;
+            border-radius: 20px;
+            border-style: solid;
+            border-width: 0.1px;
+            border-color: lightgray;
+            background-color: white;
+            color: #444;
+            font-weight: 500;
+            font-size: 0.85rem;
+        }
+
+        .back-to-list-style i { /* '목록으로' 버튼 아이콘 마진 */
+            margin-right: 5px;
+        }
+
+
+
+        /* ---------------------------------------------------- */
+
+        /* --- 게시글 본문 스타일 --- */
+        .post-header { /* 제목, 메타 정보 영역의 하단 패딩 */
+            padding-bottom: 5px;
+        }
+
+        .post-info-meta { /* 작성자, 시간, 조회수 등을 포함하는 메타 정보 영역 */
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            color: #999;
+            padding-top: 10px;
+        }
+
+
+
+        /* ⭐ 1. 프로필 사진과 상세 정보를 가로로 배치 */
+        .post-meta-text { /* 프로필 사진(왼쪽)과 상세 정보(오른쪽)를 감싸는 컨테이너 */
+            display: flex;
+            align-items: center; /* 이미지와 텍스트를 수직 중앙 정렬 */
+            color: #888;
+        }
+
+
+
+        /* ⭐ 2. 원형 프로필 이미지 스타일 */
+        .profile-img-small { /* 작성자 프로필 이미지 스타일 */
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+
+
+        /* ⭐ 3. 작성자 이름과 날짜/시간을 수직으로 담는 컨테이너 */
+        .post-writer-details {
+            display: flex;
+            flex-direction: column; /* 세로 정렬 */
+            margin-left: 8px; /* 프로필 사진과의 간격 */
+        }
+
+
+
+        /* ⭐ 4. 날짜와 작성 시간을 담는 컨테이너 */
+        .post-date-time {
+            display: flex;
+            margin-top: 2px; /* 작성자 이름과의 세로 간격 */
+            font-size: 0.8rem;
+            color: #999;
+        }
+
+        .post-date-time span { /* 날짜와 시간 항목 */
+            margin-right: 10px;
+        }
+
+
+
+        /* --- 기존에 쓰던 스타일 중 일부 --- */
+        .post-title-area { /* 뱃지, 제목 영역 */
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            margin-bottom: 5px;
+        }
+
+        .post-badge {
+            background-color: #ff9d9d;
+            color: white;
+            padding: 6px 18px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .badge-emoji {
+            font-size: 0.9rem;
+        }
+
+        .post-title { /* 게시글 제목 스타일 */
+            font-size: 1.35rem;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 0;
+        }
+
+        .post-counts span { /* 조회수, 댓글 수 아이콘 마진 */
+            margin-left: 6px;
+        }
+
+        .post-body { /* 게시글 본문 영역 (내용) */
+            padding-top: 20px;
+            line-height: 1.8;
+            font-size: 0.95rem;
+            border-top: 2px solid #e4e4e4;
+            margin-top: 20px;
+        }
+
+        .post-body p { /* 본문 문단 마진 */
+            margin-bottom: 1rem;
+        }
+
+
+
+        /* --- 댓글 영역 스타일 --- */
+        .comment-box { /* 댓글 전체 박스 스타일 */
+            padding: 20px 40px;
+        }
+
+        .comment-header { /* 댓글 수 제목 스타일 */
+            font-size: 1.1rem;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .comment-input-box { /* 새 댓글 입력 폼 박스 스타일 */
+            background-color: #fcfcfc;
+            border: 1px solid #eee;
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 40px;
+        }
+
+        textarea.comment-textarea { /* 댓글 입력 textarea 스타일 (따뜻한 조언 부분)*/
+            width: 100%;
+            height: 100px;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            resize: none;
+            margin-bottom: 10px;
+            font-size: 0.9rem;
+        }
+
+        textarea.reply-textarea-small { /* 답글 입력 textarea 스타일 */
+            width: 100%;
+            height: 50px; /* 높이 조정 */
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            resize: none;
+            margin-bottom: 10px;
+            font-size: 0.9rem;
+        }
+
+
+        .comment-btn-container { /* 댓글 작성 버튼 컨테이너 */
+            text-align: right;
+        }
+
+        .comment-submit-btn { /* 댓글 작성 버튼 스타일 */
+            background-color: #ff9d9d;
+            color: white;
+            border: none;
+            padding: 7px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+
+        .reply-submit-btn-small { /* 답글 작성 버튼 스타일 */
+            background-color: #ff9d9d;
+            color: white;
+            border: none;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 0.85rem; /* 크기 조정 */
+        }
+
+
+        /* ⭐ 개별 댓글 항목 컨테이너 스타일 (추가) */
+        .comment-list-item {
+            background-color: #fcfcfc; /* 박스 배경색: fcfcfc로 수정 */
+            border-radius: 20px; /* 반경 20px로 수정 */
+            box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+            margin-bottom: 15px;
+            padding: 15px 25px;
+            border: 1px solid #eee; /* 테두리 #eee로 수정 */
+        }
+
+
+        /* ⭐ 대댓글 박스 스타일 (추가) */
+        .reply-list-item {
+            background-color: white; /* 배경: 흰색 */
+            border-radius: 20px;
+            padding: 10px 15px;
+            margin-top: 15px;
+            border: 1px solid #f5f5f5;
+            box-shadow: -3px 0 0 0 #ff9d9d;
+        }
+
+
+        /* 각 항목의 내부 패딩/마진 조정 */
+        .comment-list-item .comment-item {
+            padding: 10px 0;
+            border-bottom: 1px solid #f0f0f0; /* 댓글과 답글 폼을 구분하기 위해 구분선 복구 */
+        }
+
+        .comment-list-item .comment-item:last-child {
+            border-bottom: none; /* 마지막 댓글만 구분선 제거 */
+        }
+
+        /* 대댓글 항목의 내부 패딩/마진 조정 */
+        .reply-list-item .reply-content {
+            padding: 5px 0;
+            border-bottom: none;
+        }
+
+
+        /* 개별 댓글 */
+        .comment-item { /* 개별 댓글 항목 구분선 */
+            padding: 15px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .comment-meta { /* 댓글 작성자 메타 정보 */
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+
+        /* ⭐ 5. 댓글 프로필 이미지와 이름을 감싸는 컨테이너 (추가) */
+        .comment-writer-info {
+            display: flex;
+            align-items: center; /* 이미지와 이름을 수직 중앙 정렬 */
+        }
+
+
+
+        /* ⭐ 6. 댓글 프로필 이미지 스타일 (추가) */
+        .profile-img-comment {
+            width: 30px; /* 게시글 본문보다 약간 작게 */
+            height: 30px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-right: 8px; /* 이름과의 간격 */
+        }
+
+        .comment-name { /* 댓글 작성자 이름 */
+            font-weight: bold;
+            font-size: 0.95rem;
+        }
+
+        .comment-date-action { /* 댓글 시간 */
+            font-size: 0.8rem;
+            color: #999;
+        }
+
+        .comment-body { /* 댓글 내용 */
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        .comment-actions { /* 좋아요/답글 버튼 컨테이너 */
+            text-align: right;
+            margin-top: 10px;
+            font-size: 0.8rem;
+        }
+
+        .comment-actions a { /* 댓글 좋아요/답글 링크 스타일 */
+            color: #999;
+            margin-left: 15px;
+        }
+
+
+
+        /* 작성자 댓글 강조 */
+        .comment-writer-custom { /* 작성자가 쓴 댓글 이름 강조 */
+            color: #ff5270;
+            font-weight: bold;
+        }
+
+
+
+        /* 대댓글 */
+        .reply-item { /* 대댓글 들여쓰기 구분선 */
+            border-left: 2px solid #f0f0f0;
+            padding: 10px 0 0 15px;
+            margin-top: 15px;
+            margin-left: 15px;
+        }
+
+    </style>
+</head>
+<body>
+<nav th:replace="~{layout/header :: header-fragment}"></nav>
+
+<main class="content">
+
+    <div class="content-container">
+
+        <div class="back-to-list-section">
+            <a th:href="@{/post}" class="back-to-list-style">
+                <i class="fas fa-arrow-left me-1"></i>목록으로
+            </a>
+        </div>
+
+        <div class="box">
+            <div class="post-header">
+                <div class="post-title-area">
+                    <span class="post-badge" id="categoryBadge" th:attr="data-category=${post.trouble}">
+                        <span class="badge-emoji">❤️</span>
+                        <span>연애</span>
+                    </span>
+
+                    <h1 class="post-title" th:text="${post.title}">고백을 받았는데 어떻게 대답해야 할지 모르겠어요.</h1>
+                </div>
+
+                <div class="post-info-meta">
+                    <div class="post-meta-text">
+                        <img class="profile-img-small" src="https://img.freepik.com/free-photo/photo-wall-texture-pattern_58702-15193.jpg?semt=ais_hybrid&w=740&q=80" alt="프로필 사진">
+
+                        <div class="post-writer-details">
+                            <span class="fw-bold" th:text="${post.writer}">익명의 나비</span>
+
+                            <div class="post-date-time">
+                                <span th:text="${#temporals.format(post.createdAt, 'yy년 MM월 dd일')}">2025년 11월 23일</span>
+                                <span class="time-ago" th:attr="data-time=${#temporals.format(post.createdAt, 'yyyy-MM-dd HH:mm:ss')}">로딩중...</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="post-counts">
+                        <span class="text-secondary"><i class="far fa-eye me-1"></i> <span th:text="${post.viewCount}">123</span></span>
+                        <span class="text-secondary"><i class="far fa-comment-dots me-1"></i> <span th:text="${post.commentCount}">57</span></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="post-body">
+                <p th:utext="${post.content}">
+                    안녕하세요. 23살 여자입니다.
+                    <br><br>
+                    제가 하지도 않던 1살 위 선배가 갑자기 편하게 고백을 했어요. 사실 선배에 대한 감정이 뭔지 모르겠어서 일단 당황했습니다.
+                    <br><br>
+                    선배는 정말 좋은 사람이에요. 항상 배려해주고 매번도, 말 들어주고, 같이 있으면 편안하거든요. 그리고 친구분께서 분석한 결과, 어떤 이성에게든 감정만은 표현 안 해요.
+                    <br><br>
+                    그런데 제가 이 분과 당장 연애를 할 시간을 당장 이라는 시간을 가지고 있는 것도 아니고, 바쁘다면서 연애는 안된다고 하네요. 거절하자니 지금 놓치면 좋은 관계가 멀어질까봐 두렵고, 그렇다고 확실하지 않은 마음으로 사귀자고 하는 것도, 미안하게 될까봐 망설입니다.
+                    <br><br>
+                    비슷한 경험 있으신 분 계신가요? 어떻게 하면 좋을까요? 조언 부탁드립니다ㅠㅠ
+                </p>
+            </div>
+        </div>
+
+        <div class="comment-box">
+            <div class="comments-section">
+                <h5 class="comment-header"><i class="far fa-comment-dots me-2"></i> 댓글 <span style="color: #ff9d9d" th:text="${post.commentCount}">57</span></h5>
+
+                <div class="comment-input-box">
+                    <textarea class="comment-textarea" placeholder="따뜻한 조언을 남겨주세요. (익명으로 작성됩니다.)"></textarea>
+                    <div class="comment-btn-container">
+                        <button class="comment-submit-btn">댓글 작성</button>
+                    </div>
+                </div>
+
+                <div class="comment-list-item">
+                    <div class="comment-item">
+                        <div class="comment-meta">
+                            <div class="comment-writer-info">
+                                <img class="profile-img-comment" src="https://img.freepik.com/free-photo/photo-wall-texture-pattern_58702-15193.jpg?semt=ais_hybrid&w=740&q=80" alt="프로필 사진">
+                                <span class="comment-name">익명의 복</span>
+                            </div>
+                            <div class="comment-date-action">
+                                <span class="me-2">3분 전</span>
+                            </div>
+                        </div>
+                        <p class="comment-body">저도 비슷한 경험이 있어요. 제 경우엔 일단 솔직하게 지금 감정이 명확하지 않다고 말씀드렸어요. 그리고 시간을 가지면서 데이트를 해 봤는데, 그러고 보니 제 감정을 더 명확하게 알 수 있었어요. 급하게 결정하시지 마시고 천천히 마음을 확인해보는 것도 좋을 것 같아요!</p>
+                        <div class="comment-actions">
+                            <a href="#"><i class="far fa-thumbs-up me-1"></i> 1</a>
+                            <a href="#"><i class="far fa-comment me-1"></i> 답글</a>
+                        </div>
+
+                        <div class="reply-list-item">
+                            <div class="comment-item">
+                                <div class="comment-meta">
+                                    <div class="comment-writer-info">
+                                        <img class="profile-img-comment" src="https://img.freepik.com/free-photo/photo-wall-texture-pattern_58702-15193.jpg?semt=ais_hybrid&w=740&q=80" alt="작성자 프로필 사진">
+                                        <span class="comment-name comment-writer-custom">익명의 나비 (작성자)</span>
+                                    </div>
+                                    <div class="comment-date-action">
+                                        <span class="me-2">3분 전</span>
+                                    </div>
+                                </div>
+                                <p class="comment-body">조언 감사합니다! 솔직하게 말해주는 게 맞는 것 같아요. 용기내서 얘기해볼게요 ㅎㅎ</p>
+                                <div class="comment-actions">
+                                    <a href="#"><i class="far fa-thumbs-up me-1"></i> 0</a>
+                                    <a href="#">답글</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div> <div class="comment-list-item">
+                <div class="comment-item">
+                    <div class="comment-meta">
+                        <div class="comment-writer-info">
+                            <img class="profile-img-comment" src="https://img.freepik.com/free-photo/photo-wall-texture-pattern_58702-15193.jpg?semt=ais_hybrid&w=740&q=80" alt="프로필 사진">
+                            <span class="comment-name">익명의 꽃</span>
+                        </div>
+                        <div class="comment-date-action">
+                            <span class="me-2">5분 전</span>
+                        </div>
+                    </div>
+                    <p class="comment-body">저도 비슷한 경험이 있어요. 제 경우엔 일단 솔직하게 지금 감정이 명확하지 않다고 말씀드렸어요. 그리고 시간을 가지면서 데이트를 해 봤는데, 그러고 보니 제 감정을 더 명확하게 알 수 있었어요. 급하게 결정하시지 마시고 천천히 마음을 확인해보는 것도 좋을 것 같아요!</p>
+                    <div class="comment-actions">
+                        <a href="#"><i class="far fa-thumbs-up me-1"></i> 1</a>
+                        <a href="#"><i class="far fa-comment me-1"></i> 답글</a>
+                    </div>
+                </div>
+            </div>
+            </div>
+        </div>
+
+    </div>
+</main>
+
+<div th:replace="layout/footer.html :: footer"></div>
+
+<script>
+    // 카테고리별 이모지 매핑
+    const categoryEmojis = {
+        '연애': '❤️',
+        '친구': '😊',
+        '직장': '💼',
+        '기타': '💭'
+    };
+
+    // 페이지 로드 시 카테고리 뱃지 설정
+    function setCategoryBadge(categoryName) {
+        const badge = document.getElementById('categoryBadge');
+        const emoji = categoryEmojis[categoryName] || '💭';
+
+        badge.innerHTML = `
+            <span class="badge-emoji">${emoji}</span>
+            <span>${categoryName}</span>
+        `;
+    }
+
+    const category = document.getElementById('categoryBadge').dataset.category;
+    setCategoryBadge(category);
+
+    // 시간 계산 함수
+    function getTimeAgo(dateString) {
+        const now = new Date();
+        const normalizedDateString = dateString.replace(/-/g, "/");
+        const past = new Date(normalizedDateString);
+        if (isNaN(past.getTime())) {
+            return "날짜 오류";
+        }
+
+        const diffInSeconds = Math.floor((now - past) / 1000);
+
+        if (diffInSeconds < 60) {
+            return '방금 전';
+        }
+
+        const diffInMinutes = Math.floor(diffInSeconds / 60);
+        if (diffInMinutes < 60) {
+            return `${diffInMinutes}분 전`;
+        }
+
+        const diffInHours = Math.floor(diffInMinutes / 60);
+        if (diffInHours < 24) {
+            return `${diffInHours}시간 전`;
+        }
+
+        const diffInDays = Math.floor(diffInHours / 24);
+        if (diffInDays < 30) {
+            return `${diffInDays}일 전`;
+        }
+
+        const diffInMonths = Math.floor(diffInDays / 30);
+        if (diffInMonths < 12) {
+            return `${diffInMonths}개월 전`;
+        }
+
+        const diffInYears = Math.floor(diffInMonths / 12);
+        return `${diffInYears}년 전`;
+    }
+
+    // 모든 시간 요소 업데이트
+    function updateAllTimes() {
+        const timeElements = document.querySelectorAll('.time-ago');
+        timeElements.forEach(element => {
+            const dateTime = element.getAttribute('data-time');
+            if (dateTime) {
+                element.textContent = getTimeAgo(dateTime);
+            }
+        });
+    }
+
+    // 페이지 로드 시 실행
+    document.addEventListener('DOMContentLoaded', function() {
+        updateAllTimes();
+
+        // 1분마다 시간 업데이트
+        setInterval(updateAllTimes, 60000);
+    });
+</script>
+
+
+</body>
+</html>
