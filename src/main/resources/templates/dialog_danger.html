@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>관계 위험도 분석</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+    <link rel="stylesheet" th:href="@{/css/header.css}">
+    <link rel="stylesheet" th:href="@{/css/footer.css}">
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            background: linear-gradient(180deg, #E7F7FD 0%, #cbebfa 100%);
+            padding: 15px 50px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            margin-left: 204px;
+            margin-right: 204px;
+        }
+
+        .back-btn {
+            font-size: 24px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #333;
+        }
+
+        .header-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #333;
+        }
+
+        .menu-btn {
+            font-size: 24px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #333;
+        }
+
+        .chat-container {
+            background: linear-gradient(180deg, #E7F7FD 0%, #cbebfa 100%);
+            flex: 1;
+            padding: 20px 250px;
+            overflow-y: auto;
+            max-width: 1300px;
+            width: 100%;
+            margin: 0 auto;
+            min-height: 500px;
+        }
+
+        @media (max-width: 1024px) {
+            .chat-container {
+                padding: 20px 100px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .chat-container {
+                padding: 20px;
+            }
+        }
+
+        .message {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            opacity: 0;
+            animation: fadeIn 0.5s forwards;
+        }
+
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+            }
+        }
+
+        .message.user {
+            flex-direction: row-reverse;
+        }
+
+        .avatar {
+            width: 45px;
+            height: 45px;
+            background: linear-gradient(135deg, #C9E5FA 0%, #99CBF6 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            flex-shrink: 0;
+        }
+
+        .message-content {
+            max-width: 70%;
+        }
+
+        .bubble {
+            background: white;
+            padding: 15px 20px;
+            border-radius: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+            margin-bottom: 5px;
+            line-height: 1.6;
+            color: #333;
+        }
+
+        .message.user .bubble {
+            background: #96C7FF;
+            color: white;
+        }
+
+        .image-preview {
+            max-width: 300px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+        }
+
+        .image-preview img {
+            width: 100%;
+            height: auto;
+            border-radius: 15px;
+        }
+
+        .typing {
+            display: flex;
+            gap: 5px;
+            padding: 15px;
+        }
+
+        .typing span {
+            width: 8px;
+            height: 8px;
+            background: #999;
+            border-radius: 50%;
+            animation: typing 1.4s infinite;
+        }
+
+        .typing span:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .typing span:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes typing {
+            0%, 60%, 100% {
+                transform: translateY(0);
+            }
+            30% {
+                transform: translateY(-10px);
+            }
+        }
+
+        .result-card {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .thermometer-container {
+            width: 60px;
+            height: 180px;
+            margin: 0 auto 20px;
+            position: relative;
+        }
+
+        .thermometer-bulb {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            position: absolute;
+            bottom: 0;
+            left: 10px;
+        }
+
+        .thermometer-tube {
+            width: 30px;
+            height: 150px;
+            background: #E0E0E0;
+            border-radius: 15px 15px 0 0;
+            position: absolute;
+            bottom: 30px;
+            left: 15px;
+            overflow: hidden;
+        }
+
+        .thermometer-fill {
+            width: 100%;
+            position: absolute;
+            bottom: 0;
+            border-radius: 15px 15px 0 0;
+            transition: height 1s ease, background 1s ease;
+        }
+
+        .temperature {
+            font-size: 64px;
+            font-weight: 700;
+            margin: 20px 0;
+        }
+
+        .result-section {
+            text-align: left;
+            margin-top: 25px;
+            padding-top: 25px;
+            border-top: 1px solid #F0F0F0;
+        }
+
+        .result-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: #96C7FF;
+            margin-bottom: 10px;
+        }
+
+        .result-text {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.8;
+            white-space: pre-wrap;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .btn {
+            padding: 10px 25px;
+            border-radius: 20px;
+            border: none;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-outline {
+            background: white;
+            color: #96C7FF;
+            border: 2px solid #96C7FF;
+        }
+
+        .btn-outline:hover {
+            background: #f0fbff;
+        }
+
+        .btn-primary {
+            background: #8ED2F3;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #6fc3f3;
+        }
+
+        .input-area {
+            margin-left: 204px;
+            margin-right: 204px;
+            background: white;
+            padding: 15px 50px;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
+        }
+
+        @media (max-width: 1024px) {
+            .input-area {
+                padding: 15px 10px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .input-area {
+                padding: 15px 5px;
+            }
+        }
+
+        .upload-btn {
+            width: 40px;
+            height: 40px;
+            background: #F5F5F5;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+
+        .upload-btn:hover {
+            background: #e8faff;
+        }
+
+        .upload-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .input-field {
+            flex: 1;
+            border: none;
+            outline: none;
+            font-size: 15px;
+            padding: 10px;
+            background: #F5F5F5;
+            border-radius: 20px;
+        }
+
+        .send-btn {
+            width: 40px;
+            height: 40px;
+            background: #8ED2F3;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            color: white;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+
+        .send-btn:hover {
+            background: #6fc3f3;
+            transform: scale(1.05);
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .error-message {
+            background: #e8f6ff;
+            color: #D32F2F;
+            padding: 15px 20px;
+            border-radius: 20px;
+            border-left: 4px solid #D32F2F;
+        }
+    </style>
+</head>
+<body>
+<nav th:replace="~{layout/header :: header-fragment}"></nav>
+<div class="header">
+    <button class="back-btn">←</button>
+    <div class="header-title">관계 위험도 분석</div>
+    <button class="menu-btn">☰</button>
+</div>
+
+<div class="chat-container" id="chatContainer">
+    <!-- 메시지들이 여기에 추가됩니다 -->
+</div>
+
+<div class="input-area">
+    <button class="upload-btn" id="uploadBtn" onclick="handleUpload()">+</button>
+    <input type="file" id="fileInput" class="hidden" accept="image/*">
+    <input type="text" class="input-field" placeholder="메시지 입력" disabled>
+    <button class="send-btn">➤</button>
+</div>
+
+<script>
+    const chatContainer = document.getElementById('chatContainer');
+    const uploadBtn = document.getElementById('uploadBtn');
+    let isProcessing = false;
+
+    // 초기 메시지 표시
+    setTimeout(() => {
+        addBotMessage('안녕하세요! MIND:ON AI입니다 👋');
+    }, 500);
+
+    setTimeout(() => {
+        addBotMessage('대화 캡쳐 이미지를 업로드해주시면 상대방과의 관계 위험도를 분석해드릴게요!');
+    }, 1500);
+
+    function addBotMessage(text) {
+        const messageDiv = document.createElement('div');
+        messageDiv.className = 'message';
+        messageDiv.innerHTML = `
+            <div class="avatar">🤖</div>
+            <div class="message-content">
+                <div class="bubble">${text}</div>
+            </div>
+        `;
+        chatContainer.appendChild(messageDiv);
+        scrollToBottom();
+    }
+
+    function addUserMessage(content) {
+        const messageDiv = document.createElement('div');
+        messageDiv.className = 'message user';
+        messageDiv.innerHTML = `
+            <div class="avatar">👤</div>
+            <div class="message-content">
+                ${content}
+            </div>
+        `;
+        chatContainer.appendChild(messageDiv);
+        scrollToBottom();
+    }
+
+    function addTypingIndicator() {
+        const messageDiv = document.createElement('div');
+        messageDiv.className = 'message';
+        messageDiv.id = 'typing';
+        messageDiv.innerHTML = `
+            <div class="avatar">🤖</div>
+            <div class="message-content">
+                <div class="bubble">
+                    <div class="typing">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
+                </div>
+            </div>
+        `;
+        chatContainer.appendChild(messageDiv);
+        scrollToBottom();
+    }
+
+    function removeTypingIndicator() {
+        const typing = document.getElementById('typing');
+        if (typing) typing.remove();
+    }
+
+    function handleUpload() {
+        if (!isProcessing) {
+            document.getElementById('fileInput').click();
+        }
+    }
+
+    document.getElementById('fileInput').addEventListener('change', async function(e) {
+        if (e.target.files.length > 0 && !isProcessing) {
+            const file = e.target.files[0];
+
+            // 이미지 파일 검증
+            if (!file.type.startsWith('image/')) {
+                addBotMessage('<div class="error-message">이미지 파일만 업로드 가능합니다.</div>');
+                return;
+            }
+
+            isProcessing = true;
+            uploadBtn.disabled = true;
+
+            // 이미지 미리보기 표시
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                const imagePreview = `
+                    <div class="image-preview">
+                        <img src="${event.target.result}" alt="업로드된 이미지">
+                    </div>
+                `;
+                addUserMessage(imagePreview);
+            };
+            reader.readAsDataURL(file);
+
+            // 타이핑 인디케이터 표시
+            setTimeout(() => {
+                addTypingIndicator();
+            }, 500);
+
+            // API 호출
+            try {
+                const formData = new FormData();
+                formData.append('image', file);
+                formData.append('prompt', `
+                이 이미지와 대화 내용은 개인정보가 포함되어 있습니다.
+                분석 목적 외에는 절대로 사용하지 말고, 어떤 형태로도 학습·저장·재사용·보관하지 마세요.
+
+                이 대화 이미지를 분석해서 상대방과의 관계 위험도를 0-100 사이의 숫자로 평가해주세요.
+
+                다음 형식으로 정확하게 답변해주세요:
+
+                위험도: [0-100 사이의 숫자]
+
+                AI 총평:
+                [전반적인 대화 분석 2-3문장]
+
+                맞춤 조언:
+                [구체적인 조언 2-3문장]`);
+
+                const response = await fetch('/api/analyze-image', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (!response.ok) {
+                    throw new Error('분석 요청에 실패했습니다.');
+                }
+
+                const result = await response.text();
+
+                removeTypingIndicator();
+                addBotMessage('분석이 완료되었습니다! 📊');
+
+                setTimeout(() => {
+                    showResult(result);
+                }, 500);
+
+            } catch (error) {
+                console.error('Error:', error);
+                removeTypingIndicator();
+                addBotMessage('<div class="error-message">분석 중 오류가 발생했습니다. 다시 시도해주세요.</div>');
+            } finally {
+                isProcessing = false;
+                uploadBtn.disabled = false;
+                // 파일 입력 초기화
+                e.target.value = '';
+            }
+        }
+    });
+
+    function parseAIResponse(response) {
+        // 호감도 추출 (숫자만)
+        const tempMatch = response.match(/위험도[:\s]*(\d+)/i) ||
+            response.match(/(\d+)[°도℃]/);
+        const temperature = tempMatch ? parseInt(tempMatch[1]) : 50;
+
+        // AI 총평 추출
+        const summaryMatch = response.match(/AI 총평[:\s]*([\s\S]*?)(?=맞춤 조언|$)/i);
+        const summary = summaryMatch ? summaryMatch[1].trim() :
+            '대화 분석을 완료했습니다. 전반적인 대화 흐름이 긍정적입니다.';
+
+        // 맞춤 조언 추출
+        const adviceMatch = response.match(/맞춤 조언[:\s]*([\s\S]*?)$/i);
+        const advice = adviceMatch ? adviceMatch[1].trim() :
+            '상대방과의 대화를 이어나가며 공통 관심사를 찾아보세요.';
+
+        return {
+            temperature: Math.min(100, Math.max(0, temperature)),
+            summary: summary,
+            advice: advice
+        };
+    }
+
+    function getTemperatureStyle(temp) {
+        const height = temp + '%';
+        let background;
+        let bulb_background;
+
+        if (temp <= 20) {
+            background = 'linear-gradient(to top, #74C8FF, #9FD9FF, #C3E7FF)';
+            bulb_background = '#74C8FF';
+        } else if (temp <= 50) {
+            background = 'linear-gradient(to top, #F4B572 0%, #F5C18A 50%, #F9D8B5 100%)';
+            bulb_background = '#F4B572';
+        } else if (temp <= 80) {
+            background = 'linear-gradient(to top, #FF6762 0%, #FF8986 50%, #FFC3BD 100%)';
+            bulb_background = '#FF6762';
+        } else {
+            background = 'linear-gradient(to top, #F04245 0%, #F3676A 50%, #F69698 100%)';
+            bulb_background = '#F04245';
+        }
+
+        return { height, background, bulb_background };
+    }
+
+    function showResult(aiResponse) {
+        const parsed = parseAIResponse(aiResponse);
+        const style = getTemperatureStyle(parsed.temperature);
+
+        const resultHTML = `
+            <div class="result-card">
+                <div class="thermometer-container">
+                    <div class="thermometer-tube">
+                        <div class="thermometer-fill" style="height: ${style.height}; background: ${style.background};"></div>
+                    </div>
+                    <div class="thermometer-bulb" style="background: ${style.bulb_background}"></div>
+                </div>
+                <div class="temperature" style="color: ${style.bulb_background}">${parsed.temperature}°C</div>
+
+                <div class="result-section">
+                    <div class="result-title">💡 AI 총평</div>
+                    <div class="result-text">${parsed.summary}</div>
+                </div>
+
+                <div class="result-section">
+                    <div class="result-title">💭 맞춤 조언</div>
+                    <div class="result-text">${parsed.advice}</div>
+                </div>
+
+                <div class="action-buttons">
+                    <button class="btn btn-outline" onclick="analyzeAgain()">다시 분석하기</button>
+                    <button class="btn btn-primary" onclick="goHome()">홈으로</button>
+                </div>
+            </div>
+        `;
+        addBotMessage(resultHTML);
+    }
+
+    function analyzeAgain() {
+        addBotMessage('새로운 대화 이미지를 업로드해주세요! 📸');
+    }
+
+    function goHome() {
+        window.location.href = '/';
+    }
+
+    function scrollToBottom() {
+        chatContainer.scrollTop = chatContainer.scrollHeight;
+    }
+</script>
+<div th:replace="layout/footer.html :: footer"></div>
+</body>
+</html>
