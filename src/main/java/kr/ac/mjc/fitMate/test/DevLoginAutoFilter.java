@@ -4,18 +4,13 @@ import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import kr.ac.mjc.fitMate.domain.user.dto.UserResponse;
-import kr.ac.mjc.fitMate.domain.user.entity.Gender;
-import kr.ac.mjc.fitMate.domain.user.entity.Role;
 import kr.ac.mjc.fitMate.domain.user.entity.User;
 import kr.ac.mjc.fitMate.domain.user.repository.UserRepository;
-import kr.ac.mjc.fitMate.global.entity.Mbti;
-import kr.ac.mjc.fitMate.global.entity.Trouble;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
-import java.time.LocalDate;
 
 @Component
 @Profile("secret")

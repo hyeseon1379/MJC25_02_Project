@@ -58,7 +58,7 @@ public class PostService {
 
     // 🔥 전체 게시글 목록 조회
     public List<PostResponse> getPostList() {
-        return postRepository.findAll()
+        return postRepository.findAllByOrderByIdDesc()
                 .stream()
                 .map(PostResponse::new)   // new PostResponse(post)
                 .toList();
@@ -69,7 +69,7 @@ public class PostService {
 
         Trouble troubleEnum = Trouble.fromValue(trouble);   // 문자열 → enum으로 변환
 
-        return postRepository.findByTrouble(troubleEnum)
+        return postRepository.findByTroubleOrderByCreateAtDesc(troubleEnum)
                 .stream()
                 .map(PostResponse::new)
                 .toList();
