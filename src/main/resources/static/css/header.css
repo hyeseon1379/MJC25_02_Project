@@ -38,6 +38,16 @@ nav {
     padding: 10px 0;
 }
 
+.nav-menu span {
+    text-decoration: none;
+    color: #43464D;
+    font-size: 16px;
+    font-weight: 700;
+    transition: color 0.3s;
+    display: block;
+    padding: 10px 0;
+}
+
 .nav-menu > li > a:hover {
     color: #F6A199;
 }

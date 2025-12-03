@@ -1,5 +1,6 @@
 package kr.ac.mjc.fitMate.test;
 
+import kr.ac.mjc.fitMate.domain.post.entity.Post;
 import kr.ac.mjc.fitMate.domain.post.repository.PostRepository;
 import kr.ac.mjc.fitMate.domain.user.entity.Gender;
 import kr.ac.mjc.fitMate.domain.user.entity.Role;
@@ -49,5 +50,27 @@ public class DevInitTest implements CommandLineRunner {
                 .build();
 
         userRepository.save(user2);
+
+        Post post = Post.builder()
+                .title("title")
+                .content("content")
+                .writer("익명의 작성자 1234")
+                .trouble(Trouble.LOVE)
+                .user(user)
+                .viewCount(0)
+                .build();
+
+        postRepository.save(post);
+
+        Post post2 = Post.builder()
+                .title("title2")
+                .content("content2")
+                .writer("익명의 작성자 5678")
+                .trouble(Trouble.WORK)
+                .user(user2)
+                .viewCount(0)
+                .build();
+
+        postRepository.save(post2);
     }
 }
