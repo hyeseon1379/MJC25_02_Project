@@ -19,6 +19,7 @@ public class PostResponse {
     private int viewCount;              // 게시글 조회수
     private int commentCount;           // 게시글 댓글수
     private String trouble;            // 게시글 카테고리
+    private Long userId;
 
 
     public PostResponse(Post post) {
@@ -30,6 +31,7 @@ public class PostResponse {
         this.createdAt = post.getCreateAt();
         this.viewCount = post.getViewCount();
         this.commentCount = 0;
+        this.userId = post.getUser().getId();
     }
 
 }
