@@ -1,60 +1,485 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <title>회원가입</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mind:ON - 회원가입</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+    <link rel="stylesheet" th:href="@{/css/header.css}">
+    <link rel="stylesheet" th:href="@{/css/footer.css}">
+    <style>
+        body {
+            background: #FFF6F6;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* 메인 콘텐츠 */
+        .main-content {
+            flex: 1;
+            padding: 60px 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .signup-container {
+            background: white;
+            padding: 50px 60px;
+            border-radius: 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.08);
+            max-width: 600px;
+            width: 100%;
+        }
+
+        .signup-logo {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .logo-icon {
+            font-size: 50px;
+            margin-bottom: 10px;
+        }
+
+        .logo-subtitle {
+            font-size: 13px;
+            color: #B2BEC3;
+        }
+
+        .signup-title {
+            font-size: 22px;
+            font-weight: 700;
+            color: #2D3436;
+            margin-bottom: 30px;
+        }
+
+        /* 폼 그룹 */
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            color: #2D3436;
+            margin-bottom: 8px;
+        }
+
+        .required {
+            color: #FFB8B8;
+            margin-left: 2px;
+        }
+
+        .form-hint {
+            font-size: 12px;
+            color: #B2BEC3;
+            margin-left: 4px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #F0F0F0;
+            border-radius: 10px;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #FFB8B8;
+            box-shadow: 0 0 0 3px rgba(255, 184, 184, 0.1);
+        }
+
+        .form-input::placeholder {
+            color: #DFE6E9;
+        }
+
+        /* 성별 선택 */
+        .gender-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .gender-option {
+            position: relative;
+        }
+
+        .gender-option input[type="radio"] {
+            display: none;
+        }
+
+        .gender-label {
+            display: block;
+            padding: 12px;
+            border: 2px solid #F0F0F0;
+            border-radius: 10px;
+            text-align: center;
+            font-size: 14px;
+            font-weight: 600;
+            color: #636E72;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .gender-option input[type="radio"]:checked + .gender-label {
+            border-color: #FFB8B8;
+            background: #FFB8B8;
+            color: white;
+        }
+
+        /* MBTI 선택 */
+        .mbti-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+
+        .mbti-option {
+            position: relative;
+        }
+
+        .mbti-option input[type="radio"] {
+            display: none;
+        }
+
+        .mbti-label {
+            display: block;
+            padding: 10px;
+            border: 2px solid #F0F0F0;
+            border-radius: 10px;
+            text-align: center;
+            font-size: 13px;
+            font-weight: 600;
+            color: #636E72;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .mbti-option input[type="radio"]:checked + .mbti-label {
+            border-color: #FFB8B8;
+            background: #FFB8B8;
+            color: white;
+        }
+
+        /* 주요 고민 */
+        .concern-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .concern-option {
+            position: relative;
+        }
+
+        .concern-option input[type="radio"] {
+            display: none;
+        }
+
+        .concern-label {
+            display: block;
+            padding: 10px 20px;
+            border: 2px solid #F0F0F0;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #636E72;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .concern-option input[type="radio"]:checked + .concern-label {
+            border-color: #FFB8B8;
+            background: #FFB8B8;
+            color: white;
+        }
+
+        /* 약관 동의 */
+        .terms-group {
+            margin-top: 30px;
+            margin-bottom: 30px;
+        }
+
+        .checkbox-wrapper {
+            display: flex;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .checkbox-wrapper input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            margin-right: 10px;
+            accent-color: #FFB8B8;
+            cursor: pointer;
+        }
+
+        .checkbox-wrapper label {
+            font-size: 14px;
+            color: #636E72;
+            cursor: pointer;
+        }
+
+        .checkbox-wrapper.required label {
+            font-weight: 600;
+        }
+
+        /* 가입 버튼 */
+        .signup-button {
+            width: 100%;
+            padding: 16px;
+            background: #FFB8B8;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .signup-button:hover {
+            background: #FFA0A0;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(255, 184, 184, 0.4);
+        }
+
+        .login-link {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 13px;
+            color: #636E72;
+        }
+
+        .login-link a {
+            color: #FFB8B8;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        /* 반응형 */
+        @media (max-width: 768px) {
+
+            .signup-container {
+                padding: 40px 30px;
+            }
+
+            .mbti-grid {
+                grid-template-columns: repeat(4, 1fr);
+                gap: 8px;
+            }
+
+            .mbti-label {
+                font-size: 12px;
+                padding: 8px;
+            }
+        }
+    </style>
 </head>
 <body>
-<h2>회원가입</h2>
+<nav th:replace="~{layout/header :: header-fragment}"></nav>
+<!-- 메인 콘텐츠 -->
+<main class="main-content">
+    <div class="signup-container">
+        <div class="signup-logo">
+            <div class="logo-icon"><img th:src="@{/image/logo_icon2.png}" width="241px" height="153px"></div>
+            <p class="logo-subtitle">당신의 관계 온도를 측정하세요</p>
+        </div>
 
-<form action="/signup" method="post">
+        <h2 class="signup-title">회원가입</h2>
 
-    <label>Email:</label><br>
-    <input type="email" name="email" required><br><br>
+        <form action="/signup" method="post">
+            <!-- 이메일 -->
+            <div class="form-group">
+                <label class="form-label">이메일 <span class="required">*</span></label>
+                <input type="email" name="email" class="form-input" placeholder="example@gmail.com" required>
+            </div>
 
-    <label>Password:</label><br>
-    <input type="password" name="password" required><br><br>
+            <!-- 비밀번호 -->
+            <div class="form-group">
+                <label class="form-label">
+                    비밀번호 <span class="required">*</span>
+                    <span class="form-hint">영문, 숫자 조합 8자 이상</span>
+                </label>
+                <input type="password" name="password" class="form-input" placeholder="********" required minlength="8">
+            </div>
 
-    <label>Username:</label><br>
-    <input type="text" name="username" required><br><br>
+            <!-- 이름 -->
+            <div class="form-group">
+                <label class="form-label">이름 <span class="required">*</span></label>
+                <input type="text" name="username" class="form-input" placeholder="홍길동" required>
+            </div>
 
-    <label>Nickname:</label><br>
-    <input type="text" name="nickname" required><br><br>
+            <!-- 닉네임 -->
+            <div class="form-group">
+                <label class="form-label">닉네임 <span class="required">*</span></label>
+                <input type="text" name="nickname" class="form-input" placeholder="닉네임" required>
+            </div>
 
-    <label>Birth:</label><br>
-    <input type="date" name="birth" required><br><br>
+            <!-- 생년월일 -->
+            <div class="form-group">
+                <label class="form-label">생년월일 <span class="required">*</span></label>
+                <input type="date" name=birth class="form-input" placeholder="2004-05-04" required>
+            </div>
 
-    <label>Gender:</label><br>
-    <select name="gender" required>
-        <option value="MALE">남성</option>
-        <option value="FEMALE">여성</option>
-    </select>
-    <br><br>
+            <!-- 성별 -->
+            <div class="form-group">
+                <label class="form-label">성별 <span class="required">*</span></label>
+                <div class="gender-group">
+                    <div class="gender-option">
+                        <input type="radio" id="male" name="gender" value="MALE" required>
+                        <label class="gender-label" for="male">남성</label>
+                    </div>
+                    <div class="gender-option">
+                        <input type="radio" id="female" name="gender" value="FEMALE">
+                        <label class="gender-label" for="female">여성</label>
+                    </div>
+                </div>
+            </div>
 
-    <label>MBTI:</label><br>
-    <select name="mbti" required>
-        <option value="INTP">INTP</option>
-        <option value="ISTJ">ISTJ</option>
-        <option value="INFP">INFP</option>
-        <option value="ENFP">ENFP</option>
-        <!-- 필요한 유형 더 추가 -->
-    </select>
-    <br><br>
+            <!-- MBTI -->
+            <div class="form-group">
+                <label class="form-label">MBTI</label>
+                <div class="mbti-grid">
+                    <div class="mbti-option">
+                        <input type="radio" id="istj" name="mbti" value="ISTJ">
+                        <label class="mbti-label" for="istj">ISTJ</label>
+                    </div>
+                    <div class="mbti-option">
+                        <input type="radio" id="isfj" name="mbti" value="ISFJ">
+                        <label class="mbti-label" for="isfj">ISFJ</label>
+                    </div>
+                    <div class="mbti-option">
+                        <input type="radio" id="infj" name="mbti" value="INFJ">
+                        <label class="mbti-label" for="infj">INFJ</label>
+                    </div>
+                    <div class="mbti-option">
+                        <input type="radio" id="intj" name="mbti" value="INTJ">
+                        <label class="mbti-label" for="intj">INTJ</label>
+                    </div>
+                    <div class="mbti-option">
+                        <input type="radio" id="istp" name="mbti" value="ISTP">
+                        <label class="mbti-label" for="istp">ISTP</label>
+                    </div>
+                    <div class="mbti-option">
+                        <input type="radio" id="isfp" name="mbti" value="ISFP">
+                        <label class="mbti-label" for="isfp">ISFP</label>
+                    </div>
+                    <div class="mbti-option">
+                        <input type="radio" id="infp" name="mbti" value="INFP">
+                        <label class="mbti-label" for="infp">INFP</label>
+                    </div>
+                    <div class="mbti-option">
+                        <input type="radio" id="intp" name="mbti" value="INTP">
+                        <label class="mbti-label" for="intp">INTP</label>
+                    </div>
+                    <div class="mbti-option">
+                        <input type="radio" id="estp" name="mbti" value="ESTP">
+                        <label class="mbti-label" for="estp">ESTP</label>
+                    </div>
+                    <div class="mbti-option">
+                        <input type="radio" id="esfp" name="mbti" value="ESFP">
+                        <label class="mbti-label" for="esfp">ESFP</label>
+                    </div>
+                    <div class="mbti-option">
+                        <input type="radio" id="enfp" name="mbti" value="ENFP">
+                        <label class="mbti-label" for="enfp">ENFP</label>
+                    </div>
+                    <div class="mbti-option">
+                        <input type="radio" id="entp" name="mbti" value="ENTP">
+                        <label class="mbti-label" for="entp">ENTP</label>
+                    </div>
+                    <div class="mbti-option">
+                        <input type="radio" id="estj" name="mbti" value="ESTJ">
+                        <label class="mbti-label" for="estj">ESTJ</label>
+                    </div>
+                    <div class="mbti-option">
+                        <input type="radio" id="esfj" name="mbti" value="ESFJ">
+                        <label class="mbti-label" for="esfj">ESFJ</label>
+                    </div>
+                    <div class="mbti-option">
+                        <input type="radio" id="enfj" name="mbti" value="ENFJ">
+                        <label class="mbti-label" for="enfj">ENFJ</label>
+                    </div>
+                    <div class="mbti-option">
+                        <input type="radio" id="entj" name="mbti" value="ENTJ">
+                        <label class="mbti-label" for="entj">ENTJ</label>
+                    </div>
+                </div>
+            </div>
 
-    <label>Trouble:</label><br>
-    <select name="trouble" required>
-        <option value="LOVE">연애</option>
-        <option value="FRIENDS">친구</option>
-        <option value="WORK">직장</option>
-        <option value="OTHER">기타</option>
-    </select>
-    <br><br>
+            <!-- 주요 고민 -->
+            <div class="form-group">
+                <label class="form-label">주요 고민</label>
+                <div class="concern-group">
+                    <div class="concern-option">
+                        <input type="radio" id="love" name="trouble" value="LOVE">
+                        <label class="concern-label" for="love">연애</label>
+                    </div>
+                    <div class="concern-option">
+                        <input type="radio" id="friend" name="trouble" value="FRIENDS">
+                        <label class="concern-label" for="friend">친구</label>
+                    </div>
+                    <div class="concern-option">
+                        <input type="radio" id="work" name="trouble" value="WORK">
+                        <label class="concern-label" for="work">직장</label>
+                    </div>
+                    <div class="concern-option">
+                        <input type="radio" id="other" name="trouble" value="OTHER">
+                        <label class="concern-label" for="other">기타</label>
+                    </div>
+                </div>
+            </div>
 
-    <button type="submit">회원가입</button>
-</form>
+            <!-- 약관 동의 -->
+            <div class="terms-group">
+                <div class="checkbox-wrapper required">
+                    <input type="checkbox" id="allAgree" onchange="toggleAllTerms(this)">
+                    <label for="allAgree">전체 동의</label>
+                </div>
+                <div class="checkbox-wrapper">
+                    <input type="checkbox" id="terms" class="term-checkbox" required>
+                    <label for="terms">이용약관 동의 (필수)</label>
+                </div>
+                <div class="checkbox-wrapper">
+                    <input type="checkbox" id="privacy" class="term-checkbox" required>
+                    <label for="privacy">개인정보 처리방침 동의 (필수)</label>
+                </div>
+            </div>
 
-<br>
-<a href="/login">로그인 하러가기</a>
+            <!-- 가입 버튼 -->
+            <button type="submit" class="signup-button">가입 완료하기</button>
+        </form>
 
+        <div class="login-link">
+            이미 계정이 있으신가요? <a th:href="@{/login}">로그인하기</a>
+        </div>
+    </div>
+</main>
+
+<script>
+    // 전체 동의 토글
+    function toggleAllTerms(checkbox) {
+        const checkboxes = document.querySelectorAll('.term-checkbox');
+        checkboxes.forEach(cb => cb.checked = checkbox.checked);
+    }
+
+    // 개별 체크박스 변경 시 전체 동의 상태 업데이트
+    document.querySelectorAll('.term-checkbox').forEach(checkbox => {
+        checkbox.addEventListener('change', () => {
+            const allCheckboxes = document.querySelectorAll('.term-checkbox');
+            const allChecked = Array.from(allCheckboxes).every(cb => cb.checked);
+            document.getElementById('allAgree').checked = allChecked;
+        });
+    });
+
+</script>
+<div th:replace="~{layout/footer.html :: footer}"></div>
 </body>
 </html>

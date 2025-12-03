@@ -1,24 +1,176 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <title>로그인</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mind:ON - 로그인</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+    <link rel="stylesheet" th:href="@{/css/header.css}">
+    <link rel="stylesheet" th:href="@{/css/footer.css}">
+    <style>
+        body {
+            background: #FFF6F6;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* 메인 콘텐츠 */
+        .main-content {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 60px 20px;
+        }
+
+        .login-container {
+            background: white;
+            padding: 60px 80px;
+            border-radius: 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.08);
+            max-width: 500px;
+            width: 100%;
+            text-align: center;
+        }
+
+        .login-logo {
+            margin-bottom: 30px;
+        }
+
+        .logo-icon {
+            font-size: 60px;
+            margin-bottom: 10px;
+        }
+
+        .logo-subtitle {
+            font-size: 14px;
+            color: #B2BEC3;
+        }
+
+        .login-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #43464D;
+            margin-bottom: 40px;
+            text-align: left;
+        }
+
+        .form-group {
+            margin-bottom: 24px;
+            text-align: left;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            color: #43464D;
+            margin-bottom: 8px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid #F0F0F0;
+            border-radius: 12px;
+            font-size: 15px;
+            transition: all 0.3s;
+            background: white;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #FFB8B8;
+            box-shadow: 0 0 0 3px rgba(255, 184, 184, 0.1);
+        }
+
+        .form-input::placeholder {
+            color: #DFE6E9;
+        }
+
+        .login-button {
+            width: 100%;
+            padding: 16px;
+            background: #FFB8B8;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 32px;
+        }
+
+        .login-button:hover {
+            background: #FFA0A0;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(255, 184, 184, 0.4);
+        }
+
+        .signup-link {
+            margin-top: 24px;
+            font-size: 14px;
+            color: #636E72;
+        }
+
+        .signup-link a {
+            color: #FFB8B8;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .signup-link a:hover {
+            text-decoration: underline;
+        }
+    </style>
 </head>
 <body>
-<h2>로그인</h2>
+<nav th:replace="~{layout/header :: header-fragment}"></nav>
+<!-- 메인 콘텐츠 -->
+<main class="main-content">
+    <div class="login-container">
+        <div class="login-logo">
+            <div class="logo-icon"><img th:src="@{/image/logo_icon2.png}" width="230px" height="140px"></div>
+            <p class="logo-subtitle">당신의 관계 온도를 측정하세요</p>
+        </div>
 
-<form action="/login" method="post">
-    <label>Email:</label><br>
-    <input type="email" name="email" required><br><br>
+        <h2 class="login-title">로그인</h2>
 
-    <label>Password:</label><br>
-    <input type="password" name="password" required><br><br>
+        <form action="/login" method="post">
+            <div class="form-group">
+                <label class="form-label">이메일</label>
+                <input
+                        type="email"
+                        class="form-input"
+                        placeholder="이메일을 입력해주세요"
+                        name="email"
+                        required
+                >
+            </div>
 
-    <button type="submit">로그인</button>
-</form>
+            <div class="form-group">
+                <label class="form-label">비밀번호</label>
+                <input
+                        type="password"
+                        class="form-input"
+                        placeholder="비밀번호를 입력해주세요"
+                        name="password"
+                        required
+                >
+            </div>
 
-<br>
-<a href="/signup">회원가입 하러가기</a>
+            <button type="submit" class="login-button">로그인</button>
+        </form>
 
+        <div class="signup-link">
+            아직 계정이 없으신가요? <a th:href="@{/signup}">회원가입 하러가기</a>
+        </div>
+    </div>
+</main>
+<div th:replace="~{layout/footer.html :: footer}"></div>
 </body>
 </html>
