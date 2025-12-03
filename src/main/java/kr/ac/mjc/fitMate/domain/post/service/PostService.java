@@ -11,6 +11,8 @@ import kr.ac.mjc.fitMate.global.entity.Trouble;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class PostService {
@@ -52,5 +54,24 @@ public class PostService {
         post.setViewCount(viewCount);
         postRepository.save(post);
         return new PostResponse(post);
+    }
+
+    // 🔥 전체 게시글 목록 조회
+    public List<PostResponse> getPostList() {
+        return postRepository.findAll()
+                .stream()
+                .map(PostResponse::new)   // new PostResponse(post)
+                .toList();
+    }
+
+    // 🔥 trouble 기준 게시글 목록 조회
+    public List<PostResponse> getPostListByTrouble(String trouble) {
+
+        Trouble troubleEnum = Trouble.fromValue(trouble);   // 문자열 → enum으로 변환
+
+        return postRepository.findByTrouble(troubleEnum)
+                .stream()
+                .map(PostResponse::new)
+                .toList();
     }
 }
