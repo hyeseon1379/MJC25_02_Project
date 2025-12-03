@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MBTI 분석</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background-color: white;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: white;
+            padding: 15px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #ff6b9d;
+        }
+
+        .logo::before {
+            content: '❤️ ';
+        }
+
+        nav {
+            display: flex;
+            gap: 40px;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: #333;
+            font-size: 16px;
+            transition: color 0.3s;
+        }
+
+        nav a:hover {
+            color: #ff6b9d;
+        }
+
+        .header-buttons {
+            display: flex;
+            gap: 15px;
+        }
+
+        .btn-login {
+            padding: 8px 20px;
+            border: 1px solid #ff6b9d;
+            background-color: white;
+            color: #ff6b9d;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-login:hover {
+            background-color: #fff0f5;
+        }
+
+        .btn-register {
+            padding: 8px 20px;
+            border: none;
+            background-color: #ff9ebc;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-register:hover {
+            background-color: #ff6b9d;
+        }
+
+        main {
+            width: 1400px;
+            margin: 0 auto;
+            padding: 60px 0;
+            background-color: #FFF6F6;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 50px;
+            font-size: 32px;
+        }
+
+        .mbti-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 200px);
+            gap: 50px;
+            margin-bottom: 60px;
+            justify-content: center;
+        }
+
+        .mbti-card {
+            background-color: white;
+            border: 2px solid #F699A4;
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            width: 200px;
+            height: 200px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .mbti-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            border-color: #ff9ebc;
+            background-color: #ffcad4;
+        }
+
+        .mbti-card:hover .mbti-type,
+        .mbti-card:hover .mbti-subtitle {
+            color: white;
+        }
+
+        .mbti-type {
+            font-size: 32px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .mbti-subtitle {
+            font-size: 20px;
+            color: #666;
+            white-space: nowrap;
+        }
+
+        footer {
+            background-color: #4a4a4a;
+            color: white;
+            text-align: center;
+            padding: 30px;
+            font-size: 14px;
+        }
+
+        footer p:first-child {
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+<main>
+    <h1>MBTI 분석</h1>
+    <div class="mbti-grid">
+        <!-- MBTI 카드 16개 -->
+        <div class="mbti-card" onclick="location.href='/mbti/ENFP'">
+            <div class="mbti-type">ENFP</div>
+            <div class="mbti-subtitle">재기발랄 자유 영혼형</div>
+        </div>
+        <div class="mbti-card" onclick="location.href='/mbti/INFP'">
+            <div class="mbti-type">INFP</div>
+            <div class="mbti-subtitle">조용 이상주의형</div>
+        </div>
+        <div class="mbti-card" onclick="location.href='/mbti/ENTP'">
+            <div class="mbti-type">ENTP</div>
+            <div class="mbti-subtitle">재치 토론 아이디어형</div>
+        </div>
+        <div class="mbti-card" onclick="location.href='/mbti/INTP'">
+            <div class="mbti-type">INTP</div>
+            <div class="mbti-subtitle">논리 감정 분석형</div>
+        </div>
+        <div class="mbti-card" onclick="location.href='/mbti/ENFJ'">
+            <div class="mbti-type">ENFJ</div>
+            <div class="mbti-subtitle">사람 비전 리드형</div>
+        </div>
+        <div class="mbti-card" onclick="location.href='/mbti/INFJ'">
+            <div class="mbti-type">INFJ</div>
+            <div class="mbti-subtitle">미래 통찰 공감형</div>
+        </div>
+        <div class="mbti-card" onclick="location.href='/mbti/ENTJ'">
+            <div class="mbti-type">ENTJ</div>
+            <div class="mbti-subtitle">목표 실행 통솔형</div>
+        </div>
+        <div class="mbti-card" onclick="location.href='/mbti/INTJ'">
+            <div class="mbti-type">INTJ</div>
+            <div class="mbti-subtitle">사랑 시스템 설계형</div>
+        </div>
+        <div class="mbti-card" onclick="location.href='/mbti/ESFP'">
+            <div class="mbti-type">ESFP</div>
+            <div class="mbti-subtitle">인생 축제 에너지형</div>
+        </div>
+        <div class="mbti-card" onclick="location.href='/mbti/ISFP'">
+            <div class="mbti-type">ISFP</div>
+            <div class="mbti-subtitle">감성 분위기 장인형</div>
+        </div>
+        <div class="mbti-card" onclick="location.href='/mbti/ESTP'">
+            <div class="mbti-type">ESTP</div>
+            <div class="mbti-subtitle">지금 순간 스릴형</div>
+        </div>
+        <div class="mbti-card" onclick="location.href='/mbti/ISTP'">
+            <div class="mbti-type">ISTP</div>
+            <div class="mbti-subtitle">조용히 해결 장인형</div>
+        </div>
+        <div class="mbti-card" onclick="location.href='/mbti/ESFJ'">
+            <div class="mbti-type">ESFJ</div>
+            <div class="mbti-subtitle">다정 성실 케어형</div>
+        </div>
+        <div class="mbti-card" onclick="location.href='/mbti/ISFJ'">
+            <div class="mbti-type">ISFJ</div>
+            <div class="mbti-subtitle">조용하고 따스한 온기형</div>
+        </div>
+        <div class="mbti-card" onclick="location.href='/mbti/ESTJ'">
+            <div class="mbti-type">ESTJ</div>
+            <div class="mbti-subtitle">확실한 현실 설계형</div>
+        </div>
+        <div class="mbti-card" onclick="location.href='/mbti/ISTJ'">
+            <div class="mbti-type">ISTJ</div>
+            <div class="mbti-subtitle">원칙 신뢰 기둥형</div>
+        </div>
+    </div>
+</main>
+
+</body>
+</html>

@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MBTI 궁합 분석</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: white;
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px 70px 20px;
+            background-color: #FFF6F6;
+            min-height: auto;
+        }
+
+        .title {
+            text-align: center;
+            font-size: 36px;
+            font-weight: bold;
+            margin-bottom: 30px;
+            color: #333;
+        }
+
+        .compatibility-header {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .selected-mbti {
+            font-size: 36px;
+            font-weight: bold;
+            color: #333;
+            min-width: 100px;
+            text-align: center;
+        }
+
+        .heart-icon {
+            color: #ff69b4;
+            font-size: 36px;
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 30px;
+            margin: 0 auto 40px auto;
+            max-width: 900px;
+        }
+
+        .mbti-card {
+            background-color: white;
+            border: 2px solid #F699A4;
+            border-radius: 20px;
+            width: 100%;
+            height: 200px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            user-select: none;
+        }
+
+        .mbti-card:hover {
+            background-color: #FFCAD4;
+            border-color: #FF9EBC;
+            color: white;
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(255, 105, 180, 0.3);
+        }
+
+        .mbti-card.selected {
+            background-color: #FFCAD4;
+            border-color: #FF9EBC;
+            color: white;
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(255, 105, 180, 0.3);
+        }
+
+        .mbti-card.selected-duplicate {
+            background-color: #F4ACAE;
+            border: none;
+            color: white;
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(244, 172, 174, 0.3);
+        }
+
+        .mbti-type {
+            font-size: 32px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .mbti-subtitle {
+            font-size: 16px;
+            color: #666;
+            padding: 0 10px;
+        }
+
+        .mbti-card:hover .mbti-subtitle,
+        .mbti-card.selected .mbti-subtitle,
+        .mbti-card.selected-duplicate .mbti-subtitle {
+            color: white;
+        }
+
+        .button-container {
+            text-align: center;
+        }
+
+        .check-button {
+            width: 250px;
+            height: 60px;
+            background-color: #F69DA6;
+            border: none;
+            border-radius: 15px;
+            color: white;
+            font-size: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .check-button:hover:not(:disabled) {
+            background-color: #FF7D8C;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .check-button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+
+        /* 에러 메시지 */
+        .error-message {
+            display: none;
+            background-color: #ffe5e5;
+            border: 2px solid #ff6b6b;
+            color: #d63031;
+            padding: 15px 20px;
+            border-radius: 10px;
+            margin: 0 auto 20px auto;
+            max-width: 600px;
+            text-align: center;
+            font-weight: 500;
+        }
+
+        .error-message.active {
+            display: block;
+            animation: slideDown 0.3s ease;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* 로딩 오버레이 */
+        .loading-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .loading-overlay.active {
+            display: flex;
+        }
+
+        .loading-spinner {
+            background-color: white;
+            padding: 40px 60px;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #ff69b4;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .loading-text {
+            color: #333;
+            font-size: 18px;
+            font-weight: bold;
+            line-height: 1.6;
+        }
+
+        /* 반응형 */
+        @media (max-width: 1024px) {
+            .grid-container {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .title {
+                font-size: 28px;
+            }
+
+            .selected-mbti {
+                font-size: 28px;
+            }
+
+            .grid-container {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 20px;
+            }
+
+            .mbti-card {
+                height: 150px;
+            }
+
+            .mbti-type {
+                font-size: 24px;
+            }
+
+            .mbti-subtitle {
+                font-size: 14px;
+            }
+
+            .check-button {
+                width: 200px;
+                height: 50px;
+                font-size: 18px;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1 class="title">MBTI 궁합 분석</h1>
+
+    <!-- 에러 메시지 -->
+    <div class="error-message" id="errorMessage"></div>
+
+    <div class="compatibility-header">
+        <div class="selected-mbti" id="mbti1">?</div>
+        <div class="heart-icon">♥</div>
+        <div class="selected-mbti" id="mbti2">?</div>
+    </div>
+
+    <div class="grid-container" id="grid">
+        <!-- MBTI 카드들이 JavaScript로 생성됩니다 -->
+    </div>
+
+    <div class="button-container">
+        <button class="check-button" id="analyzeButton" disabled>궁합 분석하기</button>
+    </div>
+</div>
+
+<!-- 로딩 오버레이 -->
+<div class="loading-overlay" id="loadingOverlay">
+    <div class="loading-spinner">
+        <div class="spinner"></div>
+        <div class="loading-text">
+            AI가 두 분의 궁합을 분석중입니다...<br>
+            잠시만 기다려주세요 💕
+        </div>
+    </div>
+</div>
+
+<script>
+    const mbtiTypes = [
+        'ENFP', 'INFP', 'ENTP', 'INTP',
+        'ENFJ', 'INFJ', 'ENTJ', 'INTJ',
+        'ESFP', 'ISFP', 'ESTP', 'ISTP',
+        'ESFJ', 'ISFJ', 'ESTJ', 'ISTJ'
+    ];
+
+    const subtitles = [
+        '재기발랄 자유 영혼형', '조용 이상주의형', '재치 토론 아이디어형', '논리 감정 분석형',
+        '사람 비전 리드형', '미래 통찰 공감형', '목표 실행 통솔형', '사랑 시스템 설계형',
+        '인생 축제 에너지형', '감성 분위기 장인형', '지금 순간 스릴형', '조용히 해결 장인형',
+        '다정 성실 케어형', '조용하고 따스한 온기형', '확실한 현실 설계형', '원칙 신뢰 기둥형'
+    ];
+
+    let selectedCards = [];
+    let selectedMbtis = [];
+
+    const grid = document.getElementById('grid');
+    const analyzeButton = document.getElementById('analyzeButton');
+    const loadingOverlay = document.getElementById('loadingOverlay');
+    const errorMessage = document.getElementById('errorMessage');
+
+    // MBTI 카드 생성
+    mbtiTypes.forEach((type, index) => {
+        const card = document.createElement('div');
+        card.className = 'mbti-card';
+        card.dataset.mbti = type;
+        card.innerHTML = `
+                <div class="mbti-type">${type}</div>
+                <div class="mbti-subtitle">${subtitles[index]}</div>
+            `;
+
+        card.addEventListener('click', () => {
+            // 2개가 이미 선택되어 있으면 초기화하고 새로 시작
+            if (selectedCards.length >= 2) {
+                // 모든 선택 초기화
+                selectedCards.forEach(c => c.classList.remove('selected', 'selected-duplicate'));
+                selectedCards = [];
+                selectedMbtis = [];
+            }
+
+            // 새로 선택
+            // 이미 한 번 선택된 MBTI인지 확인 (중복 선택)
+            const isDuplicate = selectedMbtis.includes(type);
+
+            if (isDuplicate) {
+                card.classList.add('selected-duplicate');
+            } else {
+                card.classList.add('selected');
+            }
+
+            selectedCards.push(card);
+            selectedMbtis.push(type);
+
+            // UI 업데이트
+            updateUI();
+        });
+
+        grid.appendChild(card);
+    });
+
+    // UI 업데이트
+    function updateUI() {
+        document.getElementById('mbti1').textContent = selectedMbtis[0] || '?';
+        document.getElementById('mbti2').textContent = selectedMbtis[1] || '?';
+
+        // 버튼 활성화/비활성화
+        analyzeButton.disabled = selectedMbtis.length !== 2;
+    }
+
+    // 궁합 분석하기 버튼 클릭
+    analyzeButton.addEventListener('click', async () => {
+        if (selectedMbtis.length !== 2) {
+            showError('두 개의 MBTI를 선택해주세요.');
+            return;
+        }
+
+        // 로딩 시작
+        showLoading();
+        hideError();
+
+        try {
+            console.log('API 호출 시작:', {
+                mbti1: selectedMbtis[0],
+                mbti2: selectedMbtis[1]
+            });
+
+            const response = await fetch('/mbti/analyze', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    mbti1: selectedMbtis[0],
+                    mbti2: selectedMbtis[1]
+                })
+            });
+
+            console.log('Response status:', response.status);
+            console.log('Response ok:', response.ok);
+
+            const result = await response.json();
+            console.log('API Response:', result);
+            console.log('Result data:', result.data);
+            console.log('Result ID:', result.data?.id);
+
+            if (!response.ok || !result.success) {
+                throw new Error(result.message || '서버 오류가 발생했습니다.');
+            }
+
+            // 결과 페이지로 이동
+            const redirectUrl = `/mbti/result/${result.data.id}`;
+            console.log('Redirecting to:', redirectUrl);
+            window.location.href = redirectUrl;
+
+        } catch (error) {
+            console.error('Error:', error);
+            hideLoading();
+            showError(error.message || '궁합 분석 중 오류가 발생했습니다. 다시 시도해주세요.');
+        }
+    });
+
+    // 로딩 표시
+    function showLoading() {
+        loadingOverlay.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+
+    // 로딩 숨김
+    function hideLoading() {
+        loadingOverlay.classList.remove('active');
+        document.body.style.overflow = '';
+    }
+
+    // 에러 메시지 표시
+    function showError(message) {
+        errorMessage.textContent = message;
+        errorMessage.classList.add('active');
+
+        setTimeout(() => {
+            hideError();
+        }, 5000);
+    }
+
+    // 에러 메시지 숨김
+    function hideError() {
+        errorMessage.classList.remove('active');
+    }
+</script>
+</body>
+</html>
