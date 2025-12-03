@@ -4,88 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MBTI 분석</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+    <link rel="stylesheet" th:href="@{/css/header.css}">
+    <link rel="stylesheet" th:href="@{/css/footer.css}">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
             background-color: white;
             margin: 0;
-            padding: 0;
         }
-
-        header {
-            background-color: white;
-            padding: 15px 40px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-        }
-
-        .logo {
-            font-size: 24px;
-            font-weight: bold;
-            color: #ff6b9d;
-        }
-
-        .logo::before {
-            content: '❤️ ';
-        }
-
-        nav {
-            display: flex;
-            gap: 40px;
-        }
-
-        nav a {
-            text-decoration: none;
-            color: #333;
-            font-size: 16px;
-            transition: color 0.3s;
-        }
-
-        nav a:hover {
-            color: #ff6b9d;
-        }
-
-        .header-buttons {
-            display: flex;
-            gap: 15px;
-        }
-
-        .btn-login {
-            padding: 8px 20px;
-            border: 1px solid #ff6b9d;
-            background-color: white;
-            color: #ff6b9d;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .btn-login:hover {
-            background-color: #fff0f5;
-        }
-
-        .btn-register {
-            padding: 8px 20px;
-            border: none;
-            background-color: #ff9ebc;
-            color: white;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .btn-register:hover {
-            background-color: #ff6b9d;
-        }
-
         main {
             width: 1400px;
             margin: 0 auto;
@@ -110,59 +40,53 @@
 
         .mbti-card {
             background-color: white;
-            border: 2px solid #F699A4;
+            border: 2px solid #f6bac1;
             border-radius: 20px;
-            padding: 30px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.3s;
-            width: 200px;
+            width: 100%;
             height: 200px;
             display: flex;
             flex-direction: column;
-            justify-content: center;
             align-items: center;
+            justify-content: center;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            user-select: none;
         }
 
         .mbti-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-            border-color: #ff9ebc;
-            background-color: #ffcad4;
-        }
-
-        .mbti-card:hover .mbti-type,
-        .mbti-card:hover .mbti-subtitle {
+            background-color: #FAC9CA;
+            border-color: #F699A4;
             color: white;
+            transform: translateY(-5px);
         }
 
         .mbti-type {
-            font-size: 32px;
-            font-weight: bold;
-            color: #333;
-            margin-bottom: 10px;
+            font-size: 24px;
+            font-weight: 800;
+            color: #43464D;
+            margin-bottom: 7px;
         }
 
         .mbti-subtitle {
-            font-size: 20px;
-            color: #666;
-            white-space: nowrap;
+            font-size: 16px;
+            color: #7C818C;
+            font-weight: 500;
+            padding: 0 10px;
         }
 
-        footer {
-            background-color: #4a4a4a;
+        .mbti-card:hover .mbti-subtitle,
+        .mbti-card:hover .mbti-type,
+        .mbti-card.selected .mbti-type,
+        .mbti-card.selected-duplicate .mbti-type,
+        .mbti-card.selected .mbti-subtitle,
+        .mbti-card.selected-duplicate .mbti-subtitle {
             color: white;
-            text-align: center;
-            padding: 30px;
-            font-size: 14px;
-        }
-
-        footer p:first-child {
-            margin-bottom: 5px;
         }
     </style>
 </head>
 <body>
+<nav th:replace="~{layout/header :: header-fragment}"></nav>
 <main>
     <h1>MBTI 분석</h1>
     <div class="mbti-grid">
@@ -234,5 +158,6 @@
     </div>
 </main>
 
+<div th:replace="~{layout/footer.html :: footer}"></div>
 </body>
 </html>
