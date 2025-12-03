@@ -74,42 +74,42 @@ public class PostService {
                 .map(PostResponse::new)
                 .toList();
     }
-        /** 게시글 단건 조회 (수정 페이지용) */
-        public PostResponse getPost(Long id) {
-            Post post = postRepository.findById(id)
-                    .orElseThrow(() -> new IllegalArgumentException("게시글이 존재하지 않습니다."));
-            return new PostResponse(post);
+    /** 게시글 단건 조회 (수정 페이지용) */
+    public PostResponse getPost(Long id) {
+        Post post = postRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("게시글이 존재하지 않습니다."));
+        return new PostResponse(post);
+    }
+
+    /** 게시글 수정 */
+    public void updatePost(Long id, PostRequest request, Long userId) {
+
+        Post post = postRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("게시글이 존재하지 않습니다."));
+
+        if (!post.getUser().getId().equals(userId)) {
+            throw new IllegalStateException("게시글 수정 권한이 없습니다.");
         }
 
-        /** 게시글 수정 */
-        public void updatePost(Long id, PostRequest request, Long userId) {
+        post.setTitle(request.getTitle());
+        post.setContent(request.getContent());
 
-            Post post = postRepository.findById(id)
-                    .orElseThrow(() -> new IllegalArgumentException("게시글이 존재하지 않습니다."));
+        // Trouble enum 은 request 가 String이므로 매핑
+        post.setTrouble(Trouble.fromValue(request.getTrouble()));
 
-            if (!post.getUser().getId().equals(userId)) {
-                throw new IllegalStateException("게시글 수정 권한이 없습니다.");
-            }
+        postRepository.save(post);
+    }
 
-            post.setTitle(request.getTitle());
-            post.setContent(request.getContent());
+    public void deletePost(Long id, Long userId) {
+        Post post = postRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("게시글이 존재하지 않습니다."));
 
-            // Trouble enum 은 request 가 String이므로 매핑
-            post.setTrouble(Trouble.fromValue(request.getTrouble()));
-
-            postRepository.save(post);
+        if(!post.getUser().getId().equals(userId)) {
+            throw new IllegalStateException("게시글 삭제 권한이 없습니다.");
         }
 
-        public void deletePost(Long id, Long userId) {
-            Post post = postRepository.findById(id)
-                    .orElseThrow(() -> new IllegalArgumentException("게시글이 존재하지 않습니다."));
-
-            if(!post.getUser().getId().equals(userId)) {
-                throw new IllegalStateException("게시글 삭제 권한이 없습니다.");
-            }
-
-            postRepository.delete(post);
-        }
+        postRepository.delete(post);
+    }
     }
 
 

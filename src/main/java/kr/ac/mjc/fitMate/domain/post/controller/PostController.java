@@ -124,8 +124,7 @@ public class PostController {
 
         model.addAttribute("postId", id);
 
-        //return "redirect:/post";
-        return "redirect:/";
+        return "redirect:/post";
     }
 
 }
