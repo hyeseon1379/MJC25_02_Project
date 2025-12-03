@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>궁합 분석 결과</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+    <link rel="stylesheet" th:href="@{/css/header.css}">
+    <link rel="stylesheet" th:href="@{/css/footer.css}">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Malgun Gothic', sans-serif;
+            background-color: #fafafa;
+        }
+
+        .result-container {
+            max-width: 480px;
+            margin: 50px auto;
+            padding: 0 20px;
+        }
+
+        .result-card {
+            background: white;
+            padding: 35px;
+            border-radius: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+        }
+
+        .result-main {
+            background: linear-gradient(to bottom, #fff5f6 0%, white 60%);
+        }
+
+        .result-title {
+            text-align: center;
+            color: #ff6b7a;
+            font-size: 15px;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .result-subtitle {
+            text-align: center;
+            color: #999;
+            font-size: 12px;
+            margin-bottom: 30px;
+        }
+
+        .couple-display {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 25px;
+            margin-bottom: 35px;
+        }
+
+        .person-circle {
+            text-align: center;
+        }
+
+        .avatar {
+            width: 65px;
+            height: 65px;
+            background: #ffccd0;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            margin: 0 auto 10px;
+        }
+
+        .person-name {
+            font-weight: 600;
+            color: #333;
+            font-size: 13px;
+            margin-bottom: 3px;
+        }
+
+        .person-birth {
+            color: #aaa;
+            font-size: 11px;
+        }
+
+        .heart-icon-result {
+            font-size: 45px;
+            color: #ffb8c1;
+        }
+
+        .temperature-bar {
+            width: 100%;
+            height: 20px;
+            background: linear-gradient(to right, #f0f8ff 0%, #ffd4d8 50%, #ff8a95 100%);
+            border-radius: 10px;
+            position: relative;
+            margin: 25px 0 15px 0;
+        }
+
+        .temperature-indicator {
+            position: absolute;
+            top: -30px;
+            left: 60%;
+            transform: translateX(-50%);
+            font-size: 22px;
+        }
+
+        .temperature-value {
+            text-align: center;
+            font-size: 30px;
+            font-weight: bold;
+            color: #ff6b7a;
+            margin-top: 5px;
+        }
+
+        .section-title {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 18px;
+        }
+
+        .description-text {
+            color: #666;
+            line-height: 1.7;
+            font-size: 12px;
+            margin-bottom: 18px;
+        }
+
+        .tag-group {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .tag {
+            padding: 7px 16px;
+            background: #fff0f2;
+            border-radius: 20px;
+            font-size: 11px;
+            color: #ff6b7a;
+            font-weight: 500;
+        }
+
+        .tip-section {
+            margin-bottom: 25px;
+        }
+
+        .tip-box {
+            border-left: 3px solid #5eb3ff;
+            padding-left: 15px;
+            margin-bottom: 20px;
+        }
+
+        .tip-box.blue {
+            border-color: #5eb3ff;
+        }
+
+        .tip-box.pink {
+            border-color: #ffb8c1;
+        }
+
+        .tip-title {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            font-size: 13px;
+        }
+
+        .tip-title.blue {
+            color: #5eb3ff;
+        }
+
+        .tip-title.pink {
+            color: #ff6b7a;
+        }
+
+        .tip-content {
+            font-size: 11px;
+            color: #666;
+            line-height: 1.7;
+        }
+
+        .tip-content li {
+            margin-bottom: 4px;
+            list-style: none;
+            position: relative;
+            padding-left: 10px;
+        }
+
+        .tip-content li:before {
+            content: "•";
+            position: absolute;
+            left: 0;
+        }
+
+        .advice-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        .advice-box {
+            padding: 18px;
+            background: #fafafa;
+            border-radius: 12px;
+        }
+
+        .advice-icon {
+            font-size: 15px;
+            margin-right: 5px;
+        }
+
+        .advice-title {
+            font-weight: 600;
+            font-size: 12px;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .advice-content {
+            font-size: 11px;
+            color: #666;
+            line-height: 1.6;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 30px;
+        }
+
+        .btn-secondary {
+            padding: 12px 28px;
+            background: white;
+            color: #666;
+            border: 1px solid #ddd;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        .btn-primary {
+            padding: 12px 28px;
+            background: #ffb8c1;
+            color: white;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 500;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="result-container" id="resultPage">
+    <div class="result-card result-main">
+        <div class="result-headline" th:text="${result.headline}">"사랑과 무뚱뚱을 채워주는 완벽한 보석 같은!"</div>
+        <div class="result-subtitle" th:text="${result.subtitle}">둘은 그야말로 완벽한 조합!</div>
+
+        <div class="couple-display">
+            <div class="person-circle">
+                <div class="avatar" th:text="${result.userAvatar}">🐻</div>
+                <div class="person-name" th:text="${result.userName}">나</div>
+                <div class="person-birth" th:text="${result.userGender} + ' / ' + ${result.userBirth}">M / 2004. 06. 04</div>
+            </div>
+
+            <div class="heart-icon-result">💗</div>
+
+            <div class="person-circle">
+                <div class="avatar" th:text="${result.partnerAvatar}">🐻</div>
+                <div class="person-name" th:text="${result.partnerName}">상대방</div>
+                <div class="person-birth" th:text="${result.partnerGender} + ' / ' + ${result.partnerBirth}">W / 2006. 03. 15</div>
+            </div>
+        </div>
+
+        <div class="temperature-bar">
+            <div class="temperature-indicator">❤️</div>
+        </div>
+
+        <div class="temperature-value" th:text="${result.compatibilityScore} + '°C'">80°C</div>
+    </div>
+
+    <div class="result-card">
+        <div class="section-title">📝 특징 한마디</div>
+        <div class="description-text" th:text="${result.featureSummary}">
+            두 사람은 서로를 보완할 수 있어요...
+        </div>
+        <div class="tag-group">
+            <span class="tag" th:each="tag : ${result.tags}" th:text="${tag}">#궁합대박</span>
+        </div>
+    </div>
+
+    <div class="result-card">
+        <div class="section-title">⭐ 중요시할 수 좋은 포인트</div>
+        <div class="tip-section" th:each="tip : ${result.tips}">
+            <div class="tip-box" th:classappend="${tip['type']}">
+                <div class="tip-title" th:classappend="${tip['type']}" th:text="${tip['title']}"></div>
+                <ul class="tip-content" th:each="content : ${tip['contents']}">
+                    <li th:text="${content}"></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="result-card">
+        <div class="section-title">🌱 관계 발전 팁</div>
+        <div class="advice-grid">
+            <div class="advice-box" th:each="advice : ${result.advices}">
+                <div class="advice-title">
+                    <span class="advice-icon" th:text="${advice.icon}">⚠️</span>
+                    <span th:text="${advice.title}">자존심 보장하기</span>
+                </div>
+                <div class="advice-content" th:text="${advice.content}">
+                    갈등이 있을 때는 비난보다는 이해를 해주세요...
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="button-group">
+        <button class="btn-secondary" onclick="showInput()">다시 분석하기</button>
+        <button class="btn-primary">공유하기</button>
+    </div>
+</div>
+
+<script>
+    function showInput() {
+        document.getElementById('resultPage').style.display = 'none';
+        document.getElementById('inputPage').style.display = 'block';
+        window.scrollTo(0, 0);
+    }
+</script>
+
+</body>
+</html>
