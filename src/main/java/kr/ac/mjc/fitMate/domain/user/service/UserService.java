@@ -61,7 +61,7 @@ public class UserService {
 //        }
 
         if (!userRepository.existsByPassword(request.getPassword())) {
-            throw new IllegalArgumentException("이미 존재하는 비밀번호입니다.");
+            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다");
         }
 
         return UserResponse.builder()

@@ -9,4 +9,14 @@ public class DialogController {
     public String dialog() {
         return "dialog";
     }
+
+    @GetMapping("/dialog/group")
+    public String dialog_group() {
+        return "dialog_group";
+    }
+
+    @GetMapping("/dialog/danger")
+    public String dialog_danger() {
+        return "dialog_danger";
+    }
 }
