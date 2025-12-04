@@ -14,13 +14,17 @@ import lombok.RequiredArgsConstructor;
 
 import java.util.Map;
 
-@RestController
+@Controller
 @RequestMapping("/api/chemistry")
 @CrossOrigin(origins = "*") // CORS 설정
 public class ChemistryController {
 
     private final GeminiService geminiService;
 
+    @GetMapping
+    public String asdf() {
+        return "chemistry-form";
+    }
     @Autowired
     public ChemistryController(GeminiService geminiService) {
         this.geminiService = geminiService;
@@ -38,6 +42,12 @@ public class ChemistryController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("{\"error\": \"궁합 분석 중 오류가 발생했습니다.\"}");
         }
+    }
+
+    @GetMapping
+    public String chemistry(Model model) {
+
+        return "chemistry-result";
     }
 
     private String buildPrompt(Map<String, String> request) {
