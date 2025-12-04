@@ -44,9 +44,8 @@ public class ChemistryController {
         }
     }
 
-    @GetMapping
-    public String chemistry(Model model) {
-
+    @GetMapping("/result")
+    public String chemistry() {
         return "chemistry-result";
     }
 
