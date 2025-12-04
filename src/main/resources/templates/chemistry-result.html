@@ -3,13 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>궁합 분석 결과</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" th:href="@{/css/main.css}">
-    <link rel="stylesheet" th:href="@{/css/header.css}">
-    <link rel="stylesheet" th:href="@{/css/footer.css}">
+    <title>궁합 분석 결과 - Chemistry ON</title>
     <style>
         * {
             margin: 0;
@@ -19,48 +13,116 @@
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Malgun Gothic', sans-serif;
-            background-color: #fafafa;
+            background-color: #FFF6F6;
         }
 
-        .result-container {
-            max-width: 480px;
+        /* Header */
+        header {
+            background-color: white;
+            padding: 20px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .header-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 40px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            font-size: 24px;
+            font-weight: 700;
+            color: #333;
+        }
+
+        .logo::before {
+            content: "❤️";
+            margin-right: 8px;
+            font-size: 22px;
+        }
+
+        nav {
+            display: flex;
+            gap: 60px;
+            margin-left: 80px;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: #333;
+            font-size: 16px;
+            font-weight: 500;
+        }
+
+        .header-buttons {
+            display: flex;
+            gap: 12px;
+        }
+
+        .btn-login {
+            padding: 11px 26px;
+            border: 1px solid #ffb8c1;
+            background: white;
+            color: #ff7a8a;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .btn-signup {
+            padding: 11px 26px;
+            background: #ffb8c1;
+            color: white;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        /* Main Content */
+        .main-container {
+            max-width: 820px;
             margin: 50px auto;
             padding: 0 20px;
         }
 
+        /* Result Card */
         .result-card {
             background: white;
-            padding: 35px;
-            border-radius: 20px;
-            margin-bottom: 20px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.06);
-        }
-
-        .result-main {
-            background: linear-gradient(to bottom, #fff5f6 0%, white 60%);
+            padding: 50px 40px;
+            border-radius: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
         }
 
         .result-title {
             text-align: center;
-            color: #ff6b7a;
-            font-size: 15px;
-            margin-bottom: 8px;
-            font-weight: 600;
+            color: #FF7D8C;
+            font-size: 20px;
+            margin-bottom: 10px;
+            font-weight: 700;
         }
 
         .result-subtitle {
             text-align: center;
             color: #999;
-            font-size: 12px;
-            margin-bottom: 30px;
+            font-size: 13px;
+            margin-bottom: 40px;
         }
 
         .couple-display {
             display: flex;
             justify-content: center;
             align-items: center;
-            gap: 25px;
-            margin-bottom: 35px;
+            gap: 30px;
+            margin-bottom: 40px;
         }
 
         .person-circle {
@@ -68,116 +130,146 @@
         }
 
         .avatar {
-            width: 65px;
-            height: 65px;
-            background: #ffccd0;
+            width: 80px;
+            height: 80px;
+            background: #ffdfe1;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 28px;
-            margin: 0 auto 10px;
+            font-size: 40px;
+            margin: 0 auto 12px;
         }
 
         .person-name {
-            font-weight: 600;
+            font-weight: 700;
             color: #333;
-            font-size: 13px;
-            margin-bottom: 3px;
+            font-size: 15px;
+            margin-bottom: 5px;
         }
 
         .person-birth {
-            color: #aaa;
-            font-size: 11px;
+            color: #999;
+            font-size: 12px;
         }
 
         .heart-icon-result {
-            font-size: 45px;
+            font-size: 50px;
             color: #ffb8c1;
         }
 
+        .lover-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 6px 16px;
+            background: white;
+            border: 1px solid #ffb8c1;
+            border-radius: 20px;
+            color: #ff6b7a;
+            font-size: 13px;
+            font-weight: 600;
+            margin: 0 auto 30px;
+            display: block;
+            width: fit-content;
+        }
+
+        .lover-badge::before {
+            content: "💕";
+        }
+
+        .temperature-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
         .temperature-bar {
-            width: 100%;
-            height: 20px;
-            background: linear-gradient(to right, #f0f8ff 0%, #ffd4d8 50%, #ff8a95 100%);
-            border-radius: 10px;
+            flex: 1;
+            height: 22px;
+            background: linear-gradient(to right, #FFC1C0 0%, #FFC1C0 60%, #EAEAEA 60%, #EAEAEA 100%);
+            border-radius: 11px;
             position: relative;
-            margin: 25px 0 15px 0;
         }
 
         .temperature-indicator {
             position: absolute;
-            top: -30px;
+            top: -8px;
             left: 60%;
             transform: translateX(-50%);
-            font-size: 22px;
+            font-size: 30px;
         }
 
         .temperature-value {
-            text-align: center;
-            font-size: 30px;
+            font-size: 32px;
             font-weight: bold;
-            color: #ff6b7a;
-            margin-top: 5px;
+            color: #F78D8A;
+            flex-shrink: 0;
         }
 
-        .section-title {
+        /* Section */
+        .section-header {
             display: flex;
             align-items: center;
-            gap: 8px;
-            font-size: 14px;
-            font-weight: 600;
+            gap: 10px;
+            font-size: 17px;
+            font-weight: 700;
             color: #333;
-            margin-bottom: 18px;
+            margin-bottom: 25px;
         }
 
         .description-text {
-            color: #666;
-            line-height: 1.7;
-            font-size: 12px;
-            margin-bottom: 18px;
+            color: #555;
+            line-height: 1.8;
+            font-size: 14px;
+            margin-bottom: 20px;
         }
 
         .tag-group {
             display: flex;
-            gap: 8px;
+            gap: 10px;
             flex-wrap: wrap;
         }
 
         .tag {
-            padding: 7px 16px;
-            background: #fff0f2;
+            padding: 9px 18px;
+            background: #ffe8eb;
             border-radius: 20px;
-            font-size: 11px;
+            font-size: 13px;
             color: #ff6b7a;
-            font-weight: 500;
+            font-weight: 600;
         }
 
-        .tip-section {
-            margin-bottom: 25px;
+        /* Tips Section */
+        .tips-wrapper {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-top: 25px;
         }
 
         .tip-box {
-            border-left: 3px solid #5eb3ff;
-            padding-left: 15px;
-            margin-bottom: 20px;
+            padding: 25px;
+            border-radius: 15px;
         }
 
         .tip-box.blue {
-            border-color: #5eb3ff;
+            background: #f0f8ff;
         }
 
         .tip-box.pink {
-            border-color: #ffb8c1;
+            background: #fff0f2;
         }
 
         .tip-title {
             display: flex;
             align-items: center;
-            gap: 6px;
-            font-weight: 600;
-            margin-bottom: 10px;
-            font-size: 13px;
+            gap: 8px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            font-size: 14px;
         }
 
         .tip-title.blue {
@@ -189,165 +281,336 @@
         }
 
         .tip-content {
-            font-size: 11px;
-            color: #666;
-            line-height: 1.7;
+            font-size: 12px;
+            color: #555;
+            line-height: 1.8;
         }
 
         .tip-content li {
-            margin-bottom: 4px;
+            margin-bottom: 6px;
             list-style: none;
             position: relative;
-            padding-left: 10px;
+            padding-left: 12px;
         }
 
         .tip-content li:before {
             content: "•";
             position: absolute;
             left: 0;
+            font-weight: bold;
         }
 
+        /* Advice Grid */
         .advice-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 12px;
-            margin-top: 20px;
+            gap: 18px;
+            margin-top: 25px;
         }
 
         .advice-box {
-            padding: 18px;
-            background: #fafafa;
-            border-radius: 12px;
+            padding: 22px;
+            background: #FFFAF1;
+            border-radius: 15px;
         }
 
         .advice-icon {
-            font-size: 15px;
-            margin-right: 5px;
+            font-size: 18px;
+            margin-right: 6px;
         }
 
         .advice-title {
-            font-weight: 600;
-            font-size: 12px;
+            font-weight: 700;
+            font-size: 14px;
             color: #333;
-            margin-bottom: 10px;
+            margin-bottom: 12px;
         }
 
         .advice-content {
-            font-size: 11px;
-            color: #666;
-            line-height: 1.6;
+            font-size: 12px;
+            color: #555;
+            line-height: 1.7;
         }
 
+        /* Bottom Buttons */
         .button-group {
             display: flex;
-            gap: 10px;
+            gap: 15px;
             justify-content: center;
-            margin-top: 30px;
+            margin-top: 50px;
         }
 
         .btn-secondary {
-            padding: 12px 28px;
+            padding: 14px 35px;
             background: white;
-            color: #666;
-            border: 1px solid #ddd;
+            color: #F699A4;
+            border: 1px solid #F699A4;
             border-radius: 25px;
             cursor: pointer;
-            font-size: 13px;
-            font-weight: 500;
+            font-size: 14px;
+            font-weight: 600;
         }
 
         .btn-primary {
-            padding: 12px 28px;
-            background: #ffb8c1;
+            padding: 14px 35px;
+            background: #F699A4;
             color: white;
             border: none;
             border-radius: 25px;
             cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        /* Footer */
+        footer {
+            background: #3d3d3d;
+            color: #8a8a8a;
+            text-align: center;
+            padding: 35px 20px;
+            margin-top: 80px;
             font-size: 13px;
-            font-weight: 500;
+            line-height: 1.8;
+        }
+
+        footer div:last-child {
+            margin-top: 5px;
         }
     </style>
 </head>
-
 <body>
+<!-- Header -->
+<header>
+    <div class="header-container">
+        <div class="logo">ON</div>
+        <nav>
+            <a href="#">대화</a>
+            <a href="#">궁합</a>
+            <a href="#">MBTI</a>
+            <a href="#">고민 상담소</a>
+        </nav>
+        <div class="header-buttons">
+            <button class="btn-login">로그인</button>
+            <button class="btn-signup">회원가입</button>
+        </div>
+    </div>
+</header>
 
-<div class="result-container" id="resultPage">
-    <div class="result-card result-main">
-        <div class="result-headline" th:text="${result.headline}">"사랑과 무뚱뚱을 채워주는 완벽한 보석 같은!"</div>
-        <div class="result-subtitle" th:text="${result.subtitle}">둘은 그야말로 완벽한 조합!</div>
+<!-- Main Content -->
+<div class="main-container">
+    <!-- Main Result Card -->
+    <div class="result-card">
+        <div class="result-title">"사토르의 부족함을 채워주는 완벽한 보석 관계"</div>
+        <div class="result-subtitle">둘은 궁합도를 보여요 있어요!</div>
 
         <div class="couple-display">
             <div class="person-circle">
-                <div class="avatar" th:text="${result.userAvatar}">🐻</div>
-                <div class="person-name" th:text="${result.userName}">나</div>
-                <div class="person-birth" th:text="${result.userGender} + ' / ' + ${result.userBirth}">M / 2004. 06. 04</div>
+                <div class="avatar">👧</div>
+                <div class="person-name">나</div>
+                <div class="person-birth">남 / 1995.03.15</div>
             </div>
 
             <div class="heart-icon-result">💗</div>
 
             <div class="person-circle">
-                <div class="avatar" th:text="${result.partnerAvatar}">🐻</div>
-                <div class="person-name" th:text="${result.partnerName}">상대방</div>
-                <div class="person-birth" th:text="${result.partnerGender} + ' / ' + ${result.partnerBirth}">W / 2006. 03. 15</div>
+                <div class="avatar">👧</div>
+                <div class="person-name">상대방</div>
+                <div class="person-birth">여 / 1997.08.23</div>
             </div>
         </div>
 
-        <div class="temperature-bar">
-            <div class="temperature-indicator">❤️</div>
-        </div>
+        <div class="lover-badge">연인</div>
 
-        <div class="temperature-value" th:text="${result.compatibilityScore} + '°C'">80°C</div>
+        <div class="temperature-wrapper">
+            <div class="temperature-bar">
+                <div class="temperature-indicator">❤️</div>
+            </div>
+            <div class="temperature-value">80°C</div>
+        </div>
     </div>
 
+    <!-- Feature Description -->
     <div class="result-card">
-        <div class="section-title">📝 특징 한마디</div>
-        <div class="description-text" th:text="${result.featureSummary}">
-            두 사람은 서로를 보완할 수 있어요...
+        <div class="section-header">📝 핵심 한인</div>
+        <div class="description-text">
+            두 사람은 사르을 주드로 리료의 리르, 곤간 능력이 뛰이나 성서의 안정감이 높습니다. 또한 상담원의 분석 결과 성향 담당이면서 선각 특성를 지니고 있어, 한 사람의 작당을 다른 사람이 자연스럽게 헤아다는 관계입니다. 특히 아차는늘 협식의 유사여와 으막개 조력가 작요,
+            시츠이 담장을 잘 이해할 수 있는 조합니다.
         </div>
         <div class="tag-group">
-            <span class="tag" th:each="tag : ${result.tags}" th:text="${tag}">#궁합대박</span>
+            <span class="tag">#보완적 관계</span>
+            <span class="tag">#자연 조화성</span>
+            <span class="tag">#성향 파트너</span>
         </div>
     </div>
 
+    <!-- Tips Section -->
     <div class="result-card">
-        <div class="section-title">⭐ 중요시할 수 좋은 포인트</div>
-        <div class="tip-section" th:each="tip : ${result.tips}">
-            <div class="tip-box" th:classappend="${tip['type']}">
-                <div class="tip-title" th:classappend="${tip['type']}" th:text="${tip['title']}"></div>
-                <ul class="tip-content" th:each="content : ${tip['contents']}">
-                    <li th:text="${content}"></li>
+        <div class="section-header">⚠️ 주의사항 & 충돌 포인트</div>
+
+        <div class="tips-wrapper">
+            <div class="tip-box blue">
+                <div class="tip-title blue">✨ 자꺔와 할 약속</div>
+                <ul class="tip-content">
+                    <li>경가사의 대혜 시간 : 두 1 업 언서 감이는는 대리도 공부할 나노셕으</li>
+                    <li>선택한 존중 : 상애벙의 결 업의 생각 언전이 인해벙으 녀형산석</li>
+                    <li>간혈 동의의 생물 : 선량한 긍리적 롱시도리 림고 관분산석</li>
+                    <li>재간 시간 분류 : 감사안의 시스의 공디칠 존동알셔도</li>
+                </ul>
+            </div>
+
+            <div class="tip-box pink">
+                <div class="tip-title pink">💬 갈등 가능성이 높은 상황</div>
+                <ul class="tip-content">
+                    <li>계책 관리 : 국토 시복 슈르고를 추산물의 자이가 힘열 수 있습니다</li>
+                    <li>의사결정 속도 : 한 사본의 신속함, 다른 시분은 재빠정을 수 있어</li>
+                    <li>감정 표현 방식 : 객롱의 느 산정벽 태양 서이로 오해가 생길 수 있습니다</li>
                 </ul>
             </div>
         </div>
     </div>
 
+    <!-- Advice Section -->
     <div class="result-card">
-        <div class="section-title">🌱 관계 발전 팁</div>
+        <div class="section-header">🌱 관계 발전 팁</div>
+
         <div class="advice-grid">
-            <div class="advice-box" th:each="advice : ${result.advices}">
-                <div class="advice-title">
-                    <span class="advice-icon" th:text="${advice.icon}">⚠️</span>
-                    <span th:text="${advice.title}">자존심 보장하기</span>
-                </div>
-                <div class="advice-content" th:text="${advice.content}">
-                    갈등이 있을 때는 비난보다는 이해를 해주세요...
-                </div>
+            <div class="advice-box">
+                <div class="advice-title"><span class="advice-icon">💕</span>사소한 정찬하기</div>
+                <div class="advice-content">상애의 사소한 버화가 너룩한고 정경하맛르샬 늘샬. "스느러 버특하다", "정가지 정바 고마워" 같은 말을 해주 갈 하니다.</div>
+            </div>
+
+            <div class="advice-box">
+                <div class="advice-title"><span class="advice-icon">🔍</span>공동 목표 설정</div>
+                <div class="advice-content">3개엘이나 작복 여행은 길은 공동 목포를 정리데요. 리를 기가, 새부운 소를를 배워주 길진토 마어이 배속기 업로션 티 단독산이미니다.</div>
+            </div>
+
+            <div class="advice-box">
+                <div class="advice-title"><span class="advice-icon">🎪</span>데이트 의식 만들기</div>
+                <div class="advice-content">주 1회는 "무관의 무기관 시간을 가사데요. 핀드 영성는 미야트안 술맛저 미예인 않리안 나내는 간단한 면손야미니다.</div>
+            </div>
+
+            <div class="advice-box">
+                <div class="advice-title"><span class="advice-icon">🎁</span>감사 표현하기</div>
+                <div class="advice-content">마을 감사의 오늘 산태벙이 해석 것 출 거츠는 키 리안마 감하데요. 작은 음술이 멘하산 버운은 감사의 배속을 티 단독산이미니다.</div>
             </div>
         </div>
     </div>
 
+    <!-- Bottom Buttons -->
     <div class="button-group">
-        <button class="btn-secondary" onclick="showInput()">다시 분석하기</button>
-        <button class="btn-primary">공유하기</button>
+        <button class="btn-secondary">다시 분석하기</button>
+        <button class="btn-primary">결과 저장</button>
     </div>
 </div>
 
+<!-- Footer -->
+<footer>
+    <div>© 2024 Mind:ON. All rights reserved.</div>
+    <div>Relationship Temperature Analysis Service</div>
+</footer>
+
 <script>
-    function showInput() {
-        document.getElementById('resultPage').style.display = 'none';
-        document.getElementById('inputPage').style.display = 'block';
-        window.scrollTo(0, 0);
+    // 페이지 로드 시 결과 데이터 가져오기
+    window.addEventListener('DOMContentLoaded', function() {
+        const resultData = JSON.parse(localStorage.getItem('chemistryResult'));
+        const inputData = JSON.parse(localStorage.getItem('chemistryInput'));
+
+        if (!resultData || !inputData) {
+            alert('분석 결과가 없습니다.');
+            window.location.href = '/chemistry-form.html';
+            return;
+        }
+
+        // 데이터 렌더링
+        renderResult(resultData, inputData);
+    });
+
+    function renderResult(result, input) {
+        // 제목과 부제목
+        document.querySelector('.result-title').textContent = `"${result.title}"`;
+        document.querySelector('.result-subtitle').textContent = result.subtitle;
+
+        // 이름과 생년월일
+        const personNames = document.querySelectorAll('.person-name');
+        const personBirths = document.querySelectorAll('.person-birth');
+        personNames[0].textContent = input.myName;
+        personNames[1].textContent = input.partnerName;
+
+        // 생년월일 포맷 변경 (YYYY-MM-DD -> YYYY.MM.DD)
+        const myBirthFormatted = input.myBirth.replace(/-/g, '.');
+        const partnerBirthFormatted = input.partnerBirth.replace(/-/g, '.');
+
+        personBirths[0].textContent = `${input.myGender === '남성' ? '남' : '여'} / ${myBirthFormatted}`;
+        personBirths[1].textContent = `${input.partnerGender === '남성' ? '남' : '여'} / ${partnerBirthFormatted}`;
+
+        // 관계 뱃지
+        document.querySelector('.lover-badge').textContent = input.relationship;
+
+        // 온도
+        document.querySelector('.temperature-value').textContent = `${result.temperature}°C`;
+
+        // 온도계 바 업데이트
+        const percentage = result.temperature;
+        const tempBar = document.querySelector('.temperature-bar');
+        tempBar.style.background =
+            `linear-gradient(to right, #FFC1C0 0%, #FFC1C0 ${percentage}%, #EAEAEA ${percentage}%, #EAEAEA 100%)`;
+        document.querySelector('.temperature-indicator').style.left = `${percentage}%`;
+
+        // 설명
+        document.querySelector('.description-text').textContent = result.description;
+
+        // 태그
+        const tagGroup = document.querySelector('.tag-group');
+        tagGroup.innerHTML = '';
+        result.tags.forEach(tag => {
+            const tagSpan = document.createElement('span');
+            tagSpan.className = 'tag';
+            tagSpan.textContent = tag;
+            tagGroup.appendChild(tagSpan);
+        });
+
+        // 팁 (파란색)
+        const blueTipsList = document.querySelector('.tip-box.blue .tip-content');
+        blueTipsList.innerHTML = '';
+        result.blueTips.forEach(tip => {
+            const li = document.createElement('li');
+            li.textContent = tip;
+            blueTipsList.appendChild(li);
+        });
+
+        // 팁 (핑크색)
+        const pinkTipsList = document.querySelector('.tip-box.pink .tip-content');
+        pinkTipsList.innerHTML = '';
+        result.pinkTips.forEach(tip => {
+            const li = document.createElement('li');
+            li.textContent = tip;
+            pinkTipsList.appendChild(li);
+        });
+
+        // 관계 발전 팁
+        const adviceGrid = document.querySelector('.advice-grid');
+        adviceGrid.innerHTML = '';
+        result.advices.forEach(advice => {
+            const adviceBox = document.createElement('div');
+            adviceBox.className = 'advice-box';
+            adviceBox.innerHTML = `
+                <div class="advice-title"><span class="advice-icon">${advice.emoji}</span>${advice.title}</div>
+                <div class="advice-content">${advice.content}</div>
+            `;
+            adviceGrid.appendChild(adviceBox);
+        });
     }
+
+    // 다시 분석하기 버튼
+    document.querySelector('.btn-secondary').addEventListener('click', function() {
+        window.location.href = '/chemistry-form.html';
+    });
+
+    // 결과 저장 버튼
+    document.querySelector('.btn-primary').addEventListener('click', function() {
+        alert('결과가 저장되었습니다!');
+        // 여기에 실제 저장 로직 추가 가능
+    });
 </script>
 
 </body>
