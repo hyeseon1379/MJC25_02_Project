@@ -304,9 +304,11 @@
         const partnerGenderMale = document.getElementById('partnerMale');
         const partnerGender = partnerGenderMale.classList.contains('active') ? '남성' : '여성';
 
-        // 관계 타입 추출 (이모지 제거)
+        // 관계 타입 추출 (이모지와 텍스트 분리)
         const relationshipText = document.querySelector('.filter-btn.active').textContent.trim();
-        const relationship = relationshipText.replace(/[💕🎨📚]/g, '').trim();
+        const parts = relationshipText.split(' ');
+        const emoji = parts[0]; // 💕 또는 😊 또는 🏢
+        const relationship = parts[1]; // 연인 또는 친구 또는 동료
 
         // 유효성 검사
         if (!myName || !myBirth || !partnerName || !partnerBirth) {
@@ -354,7 +356,8 @@
                 localStorage.setItem('chemistryInput', JSON.stringify({
                     myName, myBirth, myGender,
                     partnerName, partnerBirth, partnerGender,
-                    relationship
+                    relationship: relationship,
+                    emoji: emoji
                 }));
 
                 // 결과 페이지로 이동

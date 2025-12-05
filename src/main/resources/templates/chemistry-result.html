@@ -104,10 +104,6 @@
             width: fit-content;
         }
 
-        .lover-badge::before {
-            content: "💕";
-        }
-
         .temperature-wrapper {
             display: flex;
             align-items: center;
@@ -438,7 +434,7 @@
         personBirths[1].textContent = `${input.partnerGender === '남성' ? '남' : '여'} / ${partnerBirthFormatted}`;
 
         // 관계 뱃지
-        document.querySelector('.lover-badge').textContent = input.relationship;
+        document.querySelector('.lover-badge').innerHTML = `${input.emoji} ${input.relationship}`;
 
         // 온도
         document.querySelector('.temperature-value').textContent = `${result.temperature}°C`;
