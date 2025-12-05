@@ -15,11 +15,11 @@ public class PostResponse {
     private String title;               // 게시글 제목
     private String content;             // 게시글 내용
     private String writer;              // 게시글 작성자
-    private Long userId;                // 게시글 작성자 User ID
     private LocalDateTime createdAt;    // 게시글 작성 시간
     private int viewCount;              // 게시글 조회수
     private int commentCount;           // 게시글 댓글수
     private String trouble;            // 게시글 카테고리
+    private Long userId;
 
 
     public PostResponse(Post post) {

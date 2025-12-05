@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MBTI 궁합 결과</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+    <link rel="stylesheet" th:href="@{/css/header.css}">
+    <link rel="stylesheet" th:href="@{/css/footer.css}">
+    <style>
+        body {
+            background-color: white;
+            color: #333;
+            margin: 0;
+        }
+
+        /* 중앙 컨테이너: 1200px + 양쪽 260px 흰색 여백 = 총 1720px */
+        .page-wrapper {
+            max-width: 1720px;
+            margin: 0 auto;
+            background-color: white;
+            min-height: 100vh;
+        }
+
+        .main-content {
+            width: 1200px;
+            margin: 0 auto;
+            padding: 40px 0;
+            background-color: #FFF6F6;
+            min-height: 100vh;
+        }
+
+        .result-header {
+            background: white;
+            border-radius: 20px;
+            padding: 60px 40px 100px 40px;
+            margin: 0 40px 40px 40px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .result-title {
+            color: #FF7D8C;
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            text-align: center;
+            line-height: 1.4;
+        }
+
+        .result-subtitle {
+            color: #999;
+            font-size: 18px;
+            text-align: center;
+        }
+
+        /* MBTI Match Section */
+        .match-section {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 80px;
+            margin: 50px 0 40px 0;
+        }
+
+        .mbti-type-box {
+            text-align: center;
+        }
+
+        .mbti-label {
+            font-size: 32px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        .mbti-name {
+            font-size: 14px;
+            color: #999;
+        }
+
+        .heart-icon {
+            font-size: 50px;
+            animation: heartbeat 1.5s ease-in-out infinite;
+        }
+
+        @keyframes heartbeat {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        /* Temperature Bar Container */
+        .temperature-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin: 30px auto 0 auto;
+        }
+
+        /* Temperature Bar */
+        .temperature-bar {
+            position: relative;
+            width: 500px;
+            height: 10px;
+            border-radius: 10px;
+            background: #EAEAEA;
+        }
+
+        .temperature-indicator {
+            position: absolute;
+            transform: translateX(-50%);
+            top: -13px;
+            font-size: 35px;
+            line-height: 1;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+        }
+
+        .temperature-label {
+            color: #F78D8A;
+            font-weight: bold;
+            font-size: 32px;
+            white-space: nowrap;
+        }
+
+        /* Content Box */
+        .content-box {
+            background: white;
+            border-radius: 15px;
+            padding: 40px 20px;
+            margin: 0 40px 20px 40px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            position: relative;
+        }
+
+        .box-title {
+            font-size: 24px;
+            font-weight: bold;
+            margin: 0 30px 20px 30px;
+            padding: 0 40px 20px 40px;
+            border-bottom: 1px solid #f0f0f0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            position: relative;
+        }
+
+        .box-text {
+            color: #666;
+            line-height: 1.8;
+            font-size: 18px;
+            margin-bottom: 25px;
+            padding: 0 70px;
+            white-space: pre-line;
+        }
+
+        .tag-container {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            padding: 0 70px;
+        }
+
+        .tag::before {
+            content: '# ';
+            margin-right: 3px;
+            font-size: 16px;
+        }
+
+        .tag {
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #FACDC9 0%, #F699A4 100%);
+            color: white;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: 700;
+            border: none;
+        }
+
+        /* Traits Section */
+        .traits-section {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            margin: 20px 0;
+            padding: 0 70px;
+        }
+
+        .trait-card {
+            flex: 1;
+            min-width: 0;
+            background: #F1FBFF;
+            border: 2px solid #8AC0D8;
+            padding: 25px;
+            border-radius: 12px;
+        }
+
+        .trait-card.caution {
+            background: #FFF1F4;
+            border: 2px solid #E79BB1;
+        }
+
+        .trait-title {
+            font-weight: bold;
+            font-size: 20px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #333;
+        }
+
+        .trait-text {
+            font-size: 16px;
+            color: #666;
+            line-height: 1.6;
+            white-space: pre-line;
+        }
+
+        .warning-box {
+            background: #fff;
+            border-left: 4px solid #F699A4;
+            padding: 25px;
+            margin: 20px 70px 0 70px;
+            border-radius: 5px;
+        }
+
+        .warning-text {
+            font-size: 20px;
+            color: #666;
+            line-height: 1.8;
+            white-space: pre-line;
+        }
+
+        /* Tips List - AI 조언용 */
+        .tips-list {
+            list-style: none;
+            padding: 0 70px;
+        }
+
+        .tips-list li {
+            padding: 15px 0;
+            font-size: 18px;
+            color: #7C818C;
+            line-height: 1.8;
+        }
+
+        .tips-list li::before {
+            content: "• ";
+            color: #43464D;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        .tips-list li strong {
+            color: #333;
+        }
+
+        /* Development Tips Grid */
+        .development-tips-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            padding: 0 70px;
+            list-style: none;
+        }
+
+        .development-tips-grid li {
+            background: #FFFAF1;
+            border: 2px solid #F4DAAA;
+            border-radius: 12px;
+            padding: 25px;
+            font-size: 18px;
+            color: #666;
+            line-height: 1.8;
+        }
+
+        .development-tips-grid li strong {
+            display: block;
+            font-size: 20px;
+            color: #333;
+            margin-bottom: 12px;
+        }
+
+        .development-tips-grid li::before {
+            content: none;
+        }
+
+        /* Bottom Buttons */
+        .bottom-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin: 80px 40px;
+        }
+
+        .btn-large {
+            padding: 12px 30px;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            border: 1px solid #ffb3ba;
+            background: white;
+            color: #ffb3ba;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s;
+        }
+
+        .btn-large:hover {
+            background: #ffb3ba;
+            color: white;
+        }
+
+        .btn-large.primary {
+            background: linear-gradient(135deg, #ffb3ba 0%, #ff9a9e 100%);
+            color: white;
+            border: none;
+        }
+
+        .btn-large.primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        /* 반응형 */
+        @media (max-width: 1200px) {
+            .page-wrapper {
+                max-width: 100%;
+            }
+
+            .main-content {
+                width: 100%;
+                padding: 40px 20px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .result-header {
+                margin: 0 20px 30px 20px;
+                padding: 40px 20px 60px 20px;
+            }
+
+            .result-title {
+                font-size: 24px;
+            }
+
+            .match-section {
+                gap: 40px;
+            }
+
+            .mbti-label {
+                font-size: 28px;
+            }
+
+            .temperature-bar {
+                width: 300px;
+            }
+
+            .content-box {
+                margin: 0 20px 20px 20px;
+                padding: 30px 15px;
+            }
+
+            .box-title {
+                font-size: 24px;
+                padding: 0 20px 15px 20px;
+                margin: 0 10px 15px 10px;
+            }
+
+            .box-text, .warning-text {
+                font-size: 16px;
+                padding: 0 30px;
+            }
+
+            .tag-container {
+                padding: 0 30px;
+            }
+
+            .traits-section {
+                flex-direction: column;
+                padding: 0 30px;
+            }
+
+            .tips-list {
+                padding: 0 30px;
+            }
+
+            .tips-list li {
+                font-size: 16px;
+            }
+
+            .development-tips-grid {
+                grid-template-columns: 1fr;
+                padding: 0 30px;
+            }
+
+            .development-tips-grid li {
+                font-size: 16px;
+            }
+
+            .development-tips-grid li strong {
+                font-size: 20px;
+            }
+
+            .warning-box {
+                margin: 20px 30px 0 30px;
+            }
+
+            .bottom-buttons {
+                margin: 40px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+<nav th:replace="~{layout/header :: header-fragment}"></nav>
+<div class="page-wrapper">
+    <div class="main-content">
+        <!-- Result Header -->
+        <div class="result-header">
+            <h1 class="result-title" th:text="${result.title}">궁합 타이틀</h1>
+            <p class="result-subtitle" th:text="${result.subtitle}">궁합 설명</p>
+
+            <!-- MBTI Match -->
+            <div class="match-section">
+                <div class="mbti-type-box">
+                    <div class="mbti-label" th:text="${result.mbti1}">MBTI1</div>
+                    <div class="mbti-name">나</div>
+                </div>
+                <div class="heart-icon"><img th:src="@{/image/logo_icon.png}" width="41px" height="35px"></div>
+                <div class="mbti-type-box">
+                    <div class="mbti-label" th:text="${result.mbti2}">MBTI2</div>
+                    <div class="mbti-name">상대방</div>
+                </div>
+            </div>
+
+            <!-- Temperature Bar -->
+            <div class="temperature-container">
+                <div class="temperature-bar" id="temperatureBar">
+                    <div class="temperature-indicator" id="temperatureIndicator">❤️</div>
+                </div>
+                <span class="temperature-label" th:text="${result.temperature} + '°C'">0°C</span>
+            </div>
+        </div>
+
+        <!-- 종합 분석 -->
+        <div class="content-box">
+            <h2 class="box-title">📊 종합 분석</h2>
+            <p class="box-text" th:text="${result.overallAnalysis}">
+                종합 분석 내용이 표시됩니다.
+            </p>
+            <div class="tag-container">
+                <button class="tag" th:each="tag : ${result.tags}" th:text="${tag}">태그</button>
+            </div>
+        </div>
+
+        <!-- 상호 보완 & 충돌 지점 -->
+        <div class="content-box">
+            <h2 class="box-title">⚖️ 상호 보완 & 충돌 지점</h2>
+
+            <div class="traits-section">
+                <div class="trait-card">
+                    <div class="trait-title">✨ 시너지 포인트</div>
+                    <p class="trait-text" th:text="${result.synergyPoint}">
+                        시너지 포인트 내용이 표시됩니다.
+                    </p>
+                </div>
+
+                <div class="trait-card caution">
+                    <div class="trait-title">⚠️ 주의 포인트</div>
+                    <p class="trait-text" th:text="${result.cautionPoint}">
+                        주의 포인트 내용이 표시됩니다.
+                    </p>
+                </div>
+            </div>
+
+            <div class="warning-box">
+                <p class="warning-text" th:text="${result.warningText}">
+                    경고 텍스트가 표시됩니다.
+                </p>
+            </div>
+        </div>
+
+        <!-- AI 커플 밸런스 조언 -->
+        <div class="content-box">
+            <h2 class="box-title">💡 AI 기반 맞춤 조언</h2>
+            <p class="box-text">
+                두 분이 장기적으로 안정적인 관계를 유지하기 위해 반드시 지켜야 할 약속들입니다.
+            </p>
+
+            <ul class="tips-list">
+                <li th:each="advice : ${result.aiAdvice}">
+                    <strong th:text="${advice.target} + ':'">대상:</strong>
+                    <span th:text="${advice.advice}">조언 내용</span>
+                </li>
+            </ul>
+        </div>
+
+        <!-- 관계 발전 팁 -->
+        <div class="content-box">
+            <h2 class="box-title">🌱 관계 발전 팁</h2>
+            <ul class="development-tips-grid">
+                <li th:each="tip : ${result.developmentTips}">
+                    <strong>
+                        <span th:text="${tip.icon}">🎁</span>
+                        <span th:text="${tip.title}">팁 제목</span>
+                    </strong>
+                    <span th:text="${tip.content}">팁 내용</span>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Bottom Buttons -->
+        <div class="bottom-buttons">
+            <a th:href="@{/mbti/chemistry}" class="btn-large">다시 분석하기</a>
+        </div>
+    </div>
+</div>
+
+<script th:inline="javascript">
+    // Thymeleaf에서 전달받은 온도 값
+    /*<![CDATA[*/
+    const temperature = /*[[${result.temperature}]]*/ 0;
+    /*]]>*/
+
+    // 온도 바 업데이트 함수
+    function updateTemperature(temp) {
+        const percentage = Math.min(Math.max(temp, 0), 100);
+        const temperatureBar = document.getElementById('temperatureBar');
+        const temperatureIndicator = document.getElementById('temperatureIndicator');
+
+        // 온도 바 그라데이션
+        temperatureBar.style.background = `linear-gradient(to right, #FFC1C0 0%, #FFC1C0 ${percentage}%, #EAEAEA ${percentage}%, #EAEAEA 100%)`;
+
+        // 하트 위치
+        temperatureIndicator.style.left = `${percentage}%`;
+    }
+
+    // 페이지 로드 시 온도 적용
+    document.addEventListener('DOMContentLoaded', function() {
+        updateTemperature(temperature);
+    });
+</script>
+
+<div th:replace="~{layout/footer.html :: footer}"></div>
+</body>
+</html>

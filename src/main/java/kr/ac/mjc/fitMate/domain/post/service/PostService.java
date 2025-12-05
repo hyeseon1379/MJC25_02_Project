@@ -1,6 +1,6 @@
 package kr.ac.mjc.fitMate.domain.post.service;
 
-import org.springframework.transaction.annotation.Transactional;
+import jakarta.transaction.Transactional;
 import kr.ac.mjc.fitMate.domain.post.dto.PostRequest;
 import kr.ac.mjc.fitMate.domain.post.dto.PostResponse;
 import kr.ac.mjc.fitMate.domain.post.entity.Post;
@@ -11,7 +11,7 @@ import kr.ac.mjc.fitMate.global.entity.Trouble;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -55,38 +55,59 @@ public class PostService {
         return new PostResponse(post);
     }
 
-    // 게시글 수정 기능
-    @Transactional
-    public void updatePost(Long postId, PostRequest dto) {
-        Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new IllegalArgumentException("수정할 게시글을 찾을 수 없습니다."));
-
-        post.setTitle(dto.getTitle());
-        post.setContent(dto.getContent());
-        post.setTrouble(Trouble.fromValue(dto.getTrouble()));
+    // 🔥 전체 게시글 목록 조회
+    public List<PostResponse> getPostList() {
+        return postRepository.findAllByOrderByIdDesc()
+                .stream()
+                .map(PostResponse::new)   // new PostResponse(post)
+                .toList();
     }
 
-    // 게시글 삭제 기능
-    @Transactional
-    public void deletePost(Long postId) {
-        if (!postRepository.existsById(postId)) {
-            throw new IllegalArgumentException("삭제할 게시글을 찾을 수 없습니다.");
-        }
-        postRepository.deleteById(postId);
+    // 🔥 trouble 기준 게시글 목록 조회
+    public List<PostResponse> getPostListByTrouble(String trouble) {
+
+        Trouble troubleEnum = Trouble.fromValue(trouble);   // 문자열 → enum으로 변환
+
+        return postRepository.findByTroubleOrderByCreateAtDesc(troubleEnum)
+                .stream()
+                .map(PostResponse::new)
+                .toList();
+    }
+    /** 게시글 단건 조회 (수정 페이지용) */
+    public PostResponse getPost(Long id) {
+        Post post = postRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("게시글이 존재하지 않습니다."));
+        return new PostResponse(post);
     }
 
-    // 게시글 권한 확인
-    @Transactional(readOnly = true)
-    public boolean isPostAuthor(Long postId, Long userId) {
-        Optional<Post> postOpt = postRepository.findById(postId);
+    /** 게시글 수정 */
+    public void updatePost(Long id, PostRequest request, Long userId) {
 
-        if (postOpt.isEmpty()) {
-            return false;
+        Post post = postRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("게시글이 존재하지 않습니다."));
+
+        if (!post.getUser().getId().equals(userId)) {
+            throw new IllegalStateException("게시글 수정 권한이 없습니다.");
         }
 
-        Post post = postOpt.get();
+        post.setTitle(request.getTitle());
+        post.setContent(request.getContent());
 
-        return post.getUser().getId().equals(userId);
+        // Trouble enum 은 request 가 String이므로 매핑
+        post.setTrouble(Trouble.fromValue(request.getTrouble()));
+
+        postRepository.save(post);
+    }
+
+    public void deletePost(Long id, Long userId) {
+        Post post = postRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("게시글이 존재하지 않습니다."));
+
+        if(!post.getUser().getId().equals(userId)) {
+            throw new IllegalStateException("게시글 삭제 권한이 없습니다.");
+        }
+
+        postRepository.delete(post);
     }
 
     // 게시글 댓글수 증가
@@ -112,3 +133,6 @@ public class PostService {
         }
     }
 }
+
+
+

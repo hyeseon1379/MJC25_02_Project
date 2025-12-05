@@ -11,10 +11,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-
-import java.util.List;
+import org.springframework.web.bind.annotation.RequestParam;  // 🔥 추가
+import java.util.List;                                  // 🔥 추가
 
 @Controller
 @RequiredArgsConstructor
@@ -46,16 +47,7 @@ public class PostController {
         return "post-form"; // templates/post-form.html
     }
 
-//    @PostMapping("/post/new")
-//    public String createPost(PostRequest dto, Model model) {
-//        Long savedId = postService.savePost(dto);
-//        // postService.savePost(dto);
-//        model.addAttribute("dto", dto);
-//        // return "post-success";
-//        return "redirect:/post/" + savedId;
-//    }
-
-    // 게시글 조회 기능 - 지성재
+    // 게시글 상세 조회
     @GetMapping("/post/{postId}")
     public String viewPostForm(@PathVariable("postId") Long postId, Model model, HttpSession session) {
         PostResponse viewPost = postService.viewPostForm(postId);
@@ -68,8 +60,81 @@ public class PostController {
         model.addAttribute("post", viewPost);
         model.addAttribute("comments", comments);
         model.addAttribute("currentUserId", currentUserId);
-        return "post-view";// templates에 나중에 post-view.html 추가
+        return "post-view";
     }
 
-    // 수정 기능 추가
+    // ✅ 수정 기능 추가: 고민 목록 조회 (전체 + trouble별)
+    /*
+     *  - /post                 → 전체 목록
+     *  - /post?trouble=연애   → trouble=연애인 글만
+     */
+    @GetMapping("/post")
+    public String listPosts(
+            @RequestParam(required = false) String trouble,
+            Model model) {
+
+        List<PostResponse> posts;
+
+        if (trouble == null || trouble.isBlank()) {
+            posts = postService.getPostList();               // 전체 조회
+        } else {
+            posts = postService.getPostListByTrouble(trouble); // trouble별 조회
+        }
+
+        model.addAttribute("posts", posts);
+        model.addAttribute("trouble", trouble);
+
+        return "consult-list";  // templates/consult-list.html
+    }
+
+    @GetMapping("/post/update")
+    public String updatePost() {
+        return "post-update";
+    }
+
+    /**
+     * 수정 페이지 이동
+     */
+    @GetMapping("/post/{id}/edit")
+    public String editPage(@PathVariable Long id, Model model) {
+        PostResponse post = postService.getPost(id);
+        model.addAttribute("post", post); // 기존 데이터 전달
+        return "post-update"; // 수정 화면
+    }
+
+    /**
+     * 수정 처리
+     */
+    @PostMapping("/post/{id}/edit")
+    public String update(
+            @PathVariable Long id,
+            @ModelAttribute PostRequest request, HttpSession session
+    ) {
+        UserResponse loginUser = (UserResponse) session.getAttribute("loginUser");
+
+        if (loginUser == null) {
+            throw new IllegalStateException("로그인이 필요합니다.");
+        }
+
+        Long userId = loginUser.getId();
+        postService.updatePost(id, request, userId);
+
+        return "redirect:/post/" + id; // 수정 후 상세 페이지로 이동
+    }
+
+    @PostMapping("/post/{id}/delete")
+    public String delete(@PathVariable Long id, HttpSession session, Model model) {
+        UserResponse loginUser = (UserResponse) session.getAttribute("loginUser");
+        if (loginUser == null) {
+            throw new IllegalStateException("로그인이 필요합니다.");
+        }
+
+        Long userId = loginUser.getId();
+        postService.deletePost(id, userId);
+
+        model.addAttribute("postId", id);
+
+        return "redirect:/post";
+    }
+
 }

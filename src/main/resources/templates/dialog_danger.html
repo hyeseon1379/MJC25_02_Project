@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>개인 호감도 분석</title>
+    <title>관계 위험도 분석</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
@@ -17,7 +17,7 @@
         }
 
         .header {
-            background: linear-gradient(180deg, #FFE8E8 0%, #FFD4D4 100%);
+            background: linear-gradient(180deg, #E7F7FD 0%, #cbebfa 100%);
             padding: 15px 50px;
             display: flex;
             align-items: center;
@@ -50,7 +50,7 @@
         }
 
         .chat-container {
-            background: linear-gradient(180deg, #FFE8E8 0%, #FFD4D4 100%);
+            background: linear-gradient(180deg, #E7F7FD 0%, #cbebfa 100%);
             flex: 1;
             padding: 20px 250px;
             overflow-y: auto;
@@ -93,7 +93,7 @@
         .avatar {
             width: 45px;
             height: 45px;
-            background: linear-gradient(135deg, #FFB8B8 0%, #FFA0A0 100%);
+            background: linear-gradient(135deg, #C9E5FA 0%, #99CBF6 100%);
             border-radius: 50%;
             display: flex;
             align-items: center;
@@ -117,7 +117,7 @@
         }
 
         .message.user .bubble {
-            background: #FFB8B8;
+            background: #96C7FF;
             color: white;
         }
 
@@ -223,7 +223,7 @@
         .result-title {
             font-size: 14px;
             font-weight: 700;
-            color: #FF9999;
+            color: #96C7FF;
             margin-bottom: 10px;
         }
 
@@ -253,21 +253,21 @@
 
         .btn-outline {
             background: white;
-            color: #FF9999;
-            border: 2px solid #FF9999;
+            color: #96C7FF;
+            border: 2px solid #96C7FF;
         }
 
         .btn-outline:hover {
-            background: #FFF0F0;
+            background: #f0fbff;
         }
 
         .btn-primary {
-            background: #FF9999;
+            background: #8ED2F3;
             color: white;
         }
 
         .btn-primary:hover {
-            background: #FF7777;
+            background: #6fc3f3;
         }
 
         .input-area {
@@ -308,7 +308,7 @@
         }
 
         .upload-btn:hover {
-            background: #FFE8E8;
+            background: #e8faff;
         }
 
         .upload-btn:disabled {
@@ -329,7 +329,7 @@
         .send-btn {
             width: 40px;
             height: 40px;
-            background: #FF9999;
+            background: #8ED2F3;
             border: none;
             border-radius: 50%;
             cursor: pointer;
@@ -342,7 +342,7 @@
         }
 
         .send-btn:hover {
-            background: #FF7777;
+            background: #6fc3f3;
             transform: scale(1.05);
         }
 
@@ -351,7 +351,7 @@
         }
 
         .error-message {
-            background: #FFE8E8;
+            background: #e8f6ff;
             color: #D32F2F;
             padding: 15px 20px;
             border-radius: 20px;
@@ -363,7 +363,7 @@
 <nav th:replace="~{layout/header :: header-fragment}"></nav>
 <div class="header">
     <button class="back-btn">←</button>
-    <div class="header-title">개인 호감도 분석</div>
+    <div class="header-title">관계 위험도 분석</div>
     <button class="menu-btn">☰</button>
 </div>
 
@@ -389,7 +389,7 @@
     }, 500);
 
     setTimeout(() => {
-        addBotMessage('대화 캡쳐 이미지를 업로드해주시면 상대방과의 호감도를 분석해드릴게요!');
+        addBotMessage('대화 캡쳐 이미지를 업로드해주시면 상대방과의 관계 위험도를 분석해드릴게요!');
     }, 1500);
 
     function addBotMessage(text) {
@@ -487,11 +487,11 @@
                 이 이미지와 대화 내용은 개인정보가 포함되어 있습니다.
                 분석 목적 외에는 절대로 사용하지 말고, 어떤 형태로도 학습·저장·재사용·보관하지 마세요.
 
-                이 대화 이미지를 분석해서 상대방의 호감도를 0-100 사이의 숫자로 평가해주세요.
+                이 대화 이미지를 분석해서 상대방과의 관계 위험도를 0-100 사이의 숫자로 평가해주세요.
 
                 다음 형식으로 정확하게 답변해주세요:
 
-                호감도: [0-100 사이의 숫자]
+                위험도: [0-100 사이의 숫자]
 
                 AI 총평:
                 [전반적인 대화 분석 2-3문장]
@@ -532,7 +532,7 @@
 
     function parseAIResponse(response) {
         // 호감도 추출 (숫자만)
-        const tempMatch = response.match(/호감도[:\s]*(\d+)/i) ||
+        const tempMatch = response.match(/위험도[:\s]*(\d+)/i) ||
             response.match(/(\d+)[°도℃]/);
         const temperature = tempMatch ? parseInt(tempMatch[1]) : 50;
 
