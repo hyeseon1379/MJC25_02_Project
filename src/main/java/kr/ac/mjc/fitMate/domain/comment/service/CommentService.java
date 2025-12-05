@@ -120,11 +120,16 @@ public class CommentService {
                 // 부모 ID가 있으면 부모를 찾아서 replies 리스트에 자식을 추가
                 CommentResponse parent = map.get(response.getParentId());
                 if (parent != null) {
-                    // 부모 DTO의 replies 리스트에 자식 DTO를 추가
                     if (parent.getReplies() == null) {
                         parent.setReplies(new ArrayList<>());
                     }
-                    parent.getReplies().add(response);
+                    try {
+                        parent.getReplies().add(response);
+                    } catch (UnsupportedOperationException e) {
+                        List<CommentResponse> mutableReplies = new ArrayList<>(parent.getReplies());
+                        mutableReplies.add(response);
+                        parent.setReplies(mutableReplies);
+                    }
                 }
             }
         }

@@ -1,6 +1,8 @@
 package kr.ac.mjc.fitMate.domain.post.service;
 
 import jakarta.transaction.Transactional;
+import kr.ac.mjc.fitMate.domain.comment.entity.Comment;
+import kr.ac.mjc.fitMate.domain.comment.repository.CommentRepository;
 import kr.ac.mjc.fitMate.domain.post.dto.PostRequest;
 import kr.ac.mjc.fitMate.domain.post.dto.PostResponse;
 import kr.ac.mjc.fitMate.domain.post.entity.Post;
@@ -19,6 +21,7 @@ public class PostService {
 
     private final PostRepository postRepository;
     private final UserRepository userRepository;
+    private final CommentRepository commentRepository;
 
     public Long savePost(PostRequest dto, Long userId) {
         User user = userRepository.findById(userId)
@@ -103,9 +106,13 @@ public class PostService {
         Post post = postRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("게시글이 존재하지 않습니다."));
 
-        if(!post.getUser().getId().equals(userId)) {
+        if (!post.getUser().getId().equals(userId)) {
             throw new IllegalStateException("게시글 삭제 권한이 없습니다.");
         }
+
+        // 게시글 삭제 시 댓글 삭제 후 게시글 삭제
+        List<Comment> commentsToDelete = commentRepository.findAllByPost_Id(post.getId());
+        commentRepository.deleteAll(commentsToDelete);
 
         postRepository.delete(post);
     }

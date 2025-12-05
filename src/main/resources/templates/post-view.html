@@ -584,13 +584,6 @@
                             <span class="text-secondary"><i class="far fa-eye me-1"></i> <span th:text="${post.viewCount}">123</span></span>
                                 <span class="text-secondary"><i class="far fa-comment-dots me-1"></i> <span th:text="${post.commentCount}">57</span></span>
                         </div>
-
-                        <div class="post-edit-delete-buttons" th:if="${post.userId == currentUserId}">
-                            <a th:href="@{/post/edit/{id}(id=${post.id})}" class="edit-btn"><i class="fas fa-edit"></i></a>
-                            <form th:action="@{/post/delete/{id}(id=${post.id})}" method="post" style="display: inline;">
-                                <button type="submit" class="delete-btn" onclick="return confirm('정말로 이 게시글을 삭제하시겠습니까?');"><i class="fas fa-trash-alt"></i></button>
-                            </form>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -628,6 +621,7 @@
 
                 <div th:each="comment : ${comments}" th:if="${comments != null and not #lists.isEmpty(comments)}">
                     <div class="comment-list-item">
+
                         <div class="comment-display-mode" th:id="|displayMode${comment.id}|">
                             <div class="comment-item">
                                 <div class="comment-meta">
@@ -635,9 +629,9 @@
                                         <img class="profile-img-comment" src="https://img.freepik.com/free-photo/photo-wall-texture-pattern_58702-15193.jpg?semt=ais_hybrid&w=740&q=80" alt="프로필 사진">
                                         <span class="comment-name"
                                               th:classappend="${comment.writer == post.writer} ? 'comment-writer-custom'">
-                                            <span th:text="${comment.writer}">익명의 복</span>
-                                            <span th:if="${comment.writer == post.writer}" th:text="| (작성자)|"> (작성자)</span>
-                                        </span> </div>
+                                    <span th:text="${comment.writer}">익명의 복</span>
+                                    <span th:if="${comment.writer == post.writer}" th:text="| (작성자)|"> (작성자)</span>
+                                </span> </div>
 
                                     <div class="comment-date-action">
                                         <span th:text="${#temporals.format(comment.createAt, 'yy.MM.dd HH:mm')}">3분 전</span>
@@ -648,13 +642,13 @@
                                 <p class="comment-body" th:text="${comment.content}"></p>
 
                                 <div class="comment-actions">
-                                    <span th:if="${comment.userId == currentUserId}">
-                                        <a href="#" class="edit-toggle-btn" th:data-comment-id="${comment.id}" style="margin-right: 10px; color: #444;">수정</a>
-                                        <form th:action="@{/comment/delete/{id}(id=${comment.id}, postId=${post.id})}" method="post" style="display: inline;">
-                                            <button type="submit" style="background: none; border: none; padding: 0; color: #ff5270; cursor: pointer; font-size: 0.8rem; vertical-align: middle;"
-                                                    onclick="return confirm('정말로 이 댓글을 삭제하시겠습니까?');">삭제</button>
-                                        </form>
-                                    </span>
+                            <span th:if="${comment.userId == currentUserId}">
+                                <a href="#" class="edit-toggle-btn" th:data-comment-id="${comment.id}" style="margin-right: 10px; color: #444;">수정</a>
+                                <form th:action="@{/comment/delete/{id}(id=${comment.id}, postId=${post.id})}" method="post" style="display: inline;">
+                                    <button type="submit" style="background: none; border: none; padding: 0; color: #ff5270; cursor: pointer; font-size: 0.8rem; vertical-align: middle;"
+                                            onclick="return confirm('정말로 이 댓글을 삭제하시겠습니까?');">삭제</button>
+                                </form>
+                            </span>
 
                                     <a href="#"><i class="far fa-thumbs-up me-1"></i> 1</a>
                                     <a href="#" class="reply-toggle-btn" th:data-comment-id="${comment.id}"
@@ -662,6 +656,7 @@
                                 </div>
                             </div>
                         </div>
+
                         <div class="comment-edit-mode" th:id="|editMode${comment.id}|"
                              style="display: none; padding: 10px 0;">
 
@@ -669,46 +664,6 @@
                                 <input type="hidden" name="postId" th:value="${post.id}">
                                 <input type="hidden" name="commentId" th:value="${comment.id}">
 
-                        <div class="reply-list-item">
-                            <div class="comment-item">
-                                <div class="comment-meta">
-                                    <div class="comment-writer-info">
-                                        <img class="profile-img-comment" src="https://img.freepik.com/free-photo/photo-wall-texture-pattern_58702-15193.jpg?semt=ais_hybrid&w=740&q=80" alt="작성자 프로필 사진">
-                                        <span class="comment-name comment-writer-custom">익명의 나비 (작성자)</span>
-                                    </div>
-                                    <div class="comment-date-action">
-                                        <span class="me-2">3분 전</span>
-                                    </div>
-                                </div>
-                                <p class="comment-body">조언 감사합니다! 솔직하게 말해주는 게 맞는 것 같아요. 용기내서 얘기해볼게요 ㅎㅎ</p>
-                                <div class="comment-actions">
-                                    <a href="#"><i class="far fa-thumbs-up me-1"></i> 0</a>
-                                    <a href="#">답글</a>
-                                </div>
-                            </div>
-                        </div>
-                            </form>
-                    </div>
-                </div>
-
-                <div class="comment-list-item">
-                    <div class="comment-item">
-                        <div class="comment-meta">
-                            <div class="comment-writer-info">
-                                <img class="profile-img-comment" src="https://img.freepik.com/free-photo/photo-wall-texture-pattern_58702-15193.jpg?semt=ais_hybrid&w=740&q=80" alt="프로필 사진">
-                                <span class="comment-name">익명의 꽃</span>
-                            </div>
-                            <div class="comment-date-action">
-                                <span class="me-2">5분 전</span>
-                            </div>
-                        </div>
-                        <p class="comment-body">저도 비슷한 경험이 있어요. 제 경우엔 일단 솔직하게 지금 감정이 명확하지 않다고 말씀드렸어요. 그리고 시간을 가지면서 데이트를 해 봤는데, 그러고 보니 제 감정을 더 명확하게 알 수 있었어요. 급하게 결정하시지 마시고 천천히 마음을 확인해보는 것도 좋을 것 같아요!</p>
-                        <div class="comment-actions">
-                            <a href="#"><i class="far fa-thumbs-up me-1"></i> 1</a>
-                            <a href="#"><i class="far fa-comment me-1"></i> 답글</a>
-                        </div>
-                    </div>
-                </div>
                                 <textarea class="edit-textarea" name="content"
                                           th:text="${comment.content}"
                                           style="width: 100%; height: 100px; padding: 8px; border: 1px solid #ff9d9d; border-radius: 4px; resize: vertical;" required></textarea>
@@ -724,7 +679,8 @@
                                 </div>
                             </form>
                         </div>
-                        <div th:if="${comment.replies != null and not #lists.isEmpty(comment.replies)}">
+
+                        <div th:if="${!#lists.isEmpty(comment.replies)}">
                             <div class="reply-list-item" th:each="reply : ${comment.replies}">
 
                                 <div class="comment-display-mode" th:id="|displayMode${reply.id}|">
@@ -733,10 +689,10 @@
                                             <div class="comment-writer-info">
                                                 <img class="profile-img-comment" src="https://img.freepik.com/free-photo/photo-wall-texture-pattern_58702-15193.jpg?semt=ais_hybrid&w=740&q=80" alt="작성자 프로필 사진">
                                                 <span class="comment-name"
-                                                      th:classappend="${comment.writer == post.writer} ? 'comment-writer-custom'">
-                                                    <span th:text="${comment.writer}">익명의 복</span>
-                                                    <span th:if="${comment.writer == post.writer}" th:text="| (작성자)|"> (작성자)</span>
-                                                </span>
+                                                      th:classappend="${reply.writer == post.writer} ? 'comment-writer-custom'">
+                                            <span th:text="${reply.writer}">익명의 복</span>
+                                            <span th:if="${reply.writer == post.writer}" th:text="| (작성자)|"> (작성자)</span>
+                                        </span>
                                             </div>
 
                                             <div class="comment-date-action">
@@ -749,17 +705,18 @@
                                             감사합니다!</p>
 
                                         <div class="comment-actions">
-                                            <span th:if="${reply.userId == currentUserId}">
-                                                <a href="#" class="edit-toggle-btn" th:data-comment-id="${reply.id}" style="margin-right: 10px; color: #444;">수정</a>
-                                                <form th:action="@{/comment/delete/{id}(id=${reply.id}, postId=${post.id})}" method="post" style="display: inline;">
-                                                    <button type="submit" style="background: none; border: none; padding: 0; color: #ff5270; cursor: pointer; font-size: 0.8rem; vertical-align: middle;"
-                                                            onclick="return confirm('이 답글을 삭제하시겠습니까?');">삭제</button>
-                                                </form>
-                                            </span>
+                                    <span th:if="${reply.userId == currentUserId}">
+                                        <a href="#" class="edit-toggle-btn" th:data-comment-id="${reply.id}" style="margin-right: 10px; color: #444;">수정</a>
+                                        <form th:action="@{/comment/delete/{id}(id=${reply.id}, postId=${post.id})}" method="post" style="display: inline;">
+                                            <button type="submit" style="background: none; border: none; padding: 0; color: #ff5270; cursor: pointer; font-size: 0.8rem; vertical-align: middle;"
+                                                    onclick="return confirm('이 답글을 삭제하시겠습니까?');">삭제</button>
+                                        </form>
+                                    </span>
                                             <a href="#"><i class="far fa-thumbs-up me-1"></i> 0</a>
                                         </div>
                                     </div>
                                 </div>
+
                                 <div class="comment-edit-mode" th:id="|editMode${reply.id}|" style="display: none; padding: 10px 0;">
                                     <form th:action="@{/comment/edit/{id}(id=${reply.id})}" method="post">
                                         <input type="hidden" name="postId" th:value="${post.id}">
@@ -799,6 +756,8 @@
                         </form>
                     </div>
                 </div>
+            </div>
+        </div>
             </div>
         </div>
     </div>
