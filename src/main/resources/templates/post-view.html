@@ -30,14 +30,16 @@
             color: inherit;
         }
 
-        /* 🌟 메인 영역 */
+
+        /* 메인 영역 */
+
         .content { /* 메인 콘텐츠 영역 (배경색) */
             flex-grow: 1;
             padding: 30px 20px 60px 20px;
             background-color: #fff5f7;
         }
 
-        /* 🌟 분리된 컨테이너 스타일 */
+        /* 분리된 컨테이너 스타일 */
         .content-container { /* 게시글 전체 박스(목록, 본문, 댓글)의 최대 너비 제한 */
             max-width: 1000px;
             margin: 0 auto;
@@ -47,40 +49,35 @@
             background: white;
             border-radius: 20px;
             padding: 30px 40px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
             margin-bottom: 20px;
         }
 
 
-        /* ⭐ 개별 댓글 항목 컨테이너 스타일 */
+        /* 개별 댓글 항목 컨테이너 스타일 */
         .comment-list-item { /* 댓글 박스 */
             background-color: #fcfcfc;
             border-radius: 20px;
-            box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
             margin-bottom: 15px;
             padding: 15px 25px;
             border: 1px solid #eee;
         }
 
-
-        /* ⭐ 대댓글 박스 스타일 (댓글 박스 내부에 들어감) */
+        /* 대댓글 박스 스타일 (댓글 박스 내부에 들어감) */
         .reply-list-item {
             background-color: white; /* 댓글 박스와 구분되는 흰색 배경 */
             border-radius: 12px;
             padding: 10px 15px;
             margin-top: 15px;
             border: 1px solid #f5f5f5;
-            box-shadow: 0 0 5px rgba(0,0,0,0.03);
+            box-shadow: -7px 0 0 0 #ff9d9d !important;
         }
-
-
 
         /* 목록으로 버튼 섹션 */
         .back-to-list-section { /* 목록 버튼을 감싸는 영역의 마진 */
             margin-bottom: 30px;
         }
-
-
 
         /* ---------------------------------------------------- */
 
@@ -103,14 +100,47 @@
             margin-right: 5px;
         }
 
-
-
         /* ---------------------------------------------------- */
 
         /* --- 게시글 본문 스타일 --- */
         .post-header { /* 제목, 메타 정보 영역의 하단 패딩 */
             padding-bottom: 5px;
+            position: relative;
         }
+
+        /* 게시글 수정/삭제 버튼 컨테이너 */
+        .post-edit-delete-buttons {
+            position: absolute;
+            top: 25px;
+            right: 0;
+            display: flex;
+            gap: 5px;
+        }
+
+        /* 게시글 수정/삭제 버튼 공통 스타일 */
+        .post-edit-delete-buttons a, .post-edit-delete-buttons form button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            color: white;
+            font-size: 0.8rem;
+            transition: opacity 0.2s;
+            cursor: pointer;
+            border: none;
+            padding: 0;
+        }
+
+        .post-edit-delete-buttons .edit-btn {
+            background-color: #38a1f8;
+        }
+
+        .post-edit-delete-buttons .delete-btn {
+            background-color: #ff5270;
+        }
+
 
         .post-info-meta { /* 작성자, 시간, 조회수 등을 포함하는 메타 정보 영역 */
             display: flex;
@@ -121,18 +151,14 @@
             padding-top: 10px;
         }
 
-
-
-        /* ⭐ 1. 프로필 사진과 상세 정보를 가로로 배치 */
+        /* 1. 프로필 사진과 상세 정보를 가로로 배치 */
         .post-meta-text { /* 프로필 사진(왼쪽)과 상세 정보(오른쪽)를 감싸는 컨테이너 */
             display: flex;
             align-items: center; /* 이미지와 텍스트를 수직 중앙 정렬 */
             color: #888;
         }
 
-
-
-        /* ⭐ 2. 원형 프로필 이미지 스타일 */
+        /* 2. 원형 프로필 이미지 스타일 */
         .profile-img-small { /* 작성자 프로필 이미지 스타일 */
             width: 36px;
             height: 36px;
@@ -140,18 +166,14 @@
             object-fit: cover;
         }
 
-
-
-        /* ⭐ 3. 작성자 이름과 날짜/시간을 수직으로 담는 컨테이너 */
+        /* 3. 작성자 이름과 날짜/시간을 수직으로 담는 컨테이너 */
         .post-writer-details {
             display: flex;
             flex-direction: column; /* 세로 정렬 */
             margin-left: 8px; /* 프로필 사진과의 간격 */
         }
 
-
-
-        /* ⭐ 4. 날짜와 작성 시간을 담는 컨테이너 */
+        /* 4. 날짜와 작성 시간을 담는 컨테이너 */
         .post-date-time {
             display: flex;
             margin-top: 2px; /* 작성자 이름과의 세로 간격 */
@@ -162,8 +184,6 @@
         .post-date-time span { /* 날짜와 시간 항목 */
             margin-right: 10px;
         }
-
-
 
         /* --- 기존에 쓰던 스타일 중 일부 --- */
         .post-title-area { /* 뱃지, 제목 영역 */
@@ -211,11 +231,11 @@
 
         .post-body p { /* 본문 문단 마진 */
             margin-bottom: 1rem;
+            word-break: break-all;
         }
 
-
-
         /* --- 댓글 영역 스타일 --- */
+
         .comment-box { /* 댓글 전체 박스 스타일 */
             padding: 20px 40px;
         }
@@ -256,7 +276,6 @@
             font-size: 0.9rem;
         }
 
-
         .comment-btn-container { /* 댓글 작성 버튼 컨테이너 */
             text-align: right;
         }
@@ -281,28 +300,31 @@
             font-size: 0.85rem; /* 크기 조정 */
         }
 
+        /* 작성자 댓글 강조 */
+        .comment-writer-custom { /* 작성자가 쓴 댓글 이름 강조 */
+            color: #ff5270;
+            font-weight: bold;
+        }
 
-        /* ⭐ 개별 댓글 항목 컨테이너 스타일 (추가) */
+        /* 개별 댓글 항목 컨테이너 스타일 (추가) */
         .comment-list-item {
             background-color: #fcfcfc; /* 박스 배경색: fcfcfc로 수정 */
             border-radius: 20px; /* 반경 20px로 수정 */
-            box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
             margin-bottom: 15px;
             padding: 15px 25px;
             border: 1px solid #eee; /* 테두리 #eee로 수정 */
         }
 
-
-        /* ⭐ 대댓글 박스 스타일 (추가) */
+        /* 대댓글 박스 스타일 (추가) */
         .reply-list-item {
             background-color: white; /* 배경: 흰색 */
             border-radius: 20px;
             padding: 10px 15px;
             margin-top: 15px;
             border: 1px solid #f5f5f5;
-            box-shadow: -3px 0 0 0 #ff9d9d;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.03);
         }
-
 
         /* 각 항목의 내부 패딩/마진 조정 */
         .comment-list-item .comment-item {
@@ -320,7 +342,6 @@
             border-bottom: none;
         }
 
-
         /* 개별 댓글 */
         .comment-item { /* 개별 댓글 항목 구분선 */
             padding: 15px 0;
@@ -334,16 +355,13 @@
             margin-bottom: 8px;
         }
 
-
-        /* ⭐ 5. 댓글 프로필 이미지와 이름을 감싸는 컨테이너 (추가) */
+        /* 5. 댓글 프로필 이미지와 이름을 감싸는 컨테이너 (추가) */
         .comment-writer-info {
             display: flex;
             align-items: center; /* 이미지와 이름을 수직 중앙 정렬 */
         }
 
-
-
-        /* ⭐ 6. 댓글 프로필 이미지 스타일 (추가) */
+        /* 6. 댓글 프로필 이미지 스타일 (추가) */
         .profile-img-comment {
             width: 30px; /* 게시글 본문보다 약간 작게 */
             height: 30px;
@@ -376,9 +394,8 @@
         .comment-actions a { /* 댓글 좋아요/답글 링크 스타일 */
             color: #999;
             margin-left: 15px;
+            vertical-align: middle;
         }
-
-
 
         /* 작성자 댓글 강조 */
         .comment-writer-custom { /* 작성자가 쓴 댓글 이름 강조 */
@@ -386,7 +403,26 @@
             font-weight: bold;
         }
 
+        /* textarea 포커스 스타일 */
+        textarea:focus {
+            border-color: #ff9d9d !important; /* 포커스 시 테두리 색상 변경 */
+            outline: none; /* 기본 아웃라인 제거 */
+        }
 
+        /* 댓글/답글 수정/삭제 버튼 폰트 크기 통일 */
+        .comment-actions a, .comment-actions button {
+            font-size: 0.8rem; /* 통일된 글자 크기 */
+            text-decoration: none;
+            vertical-align: middle;
+        }
+
+        .comment-actions button {
+            /* button 태그는 기본 padding이 있어 inline-block으로 처리 */
+            display: inline-block;
+            vertical-align: middle;
+            line-height: normal; /* 텍스트 정렬 보정 */
+            margin-right: 15px; /* 버튼 간격 보정 */
+        }
 
         /* 대댓글 */
         .reply-item { /* 대댓글 들여쓰기 구분선 */
@@ -395,9 +431,9 @@
             margin-top: 15px;
             margin-left: 15px;
         }
-
     </style>
 </head>
+
 <body>
 <nav th:replace="~{layout/header :: header-fragment}"></nav>
 
@@ -424,7 +460,9 @@
 
                 <div class="post-info-meta">
                     <div class="post-meta-text">
-                        <img class="profile-img-small" src="https://img.freepik.com/free-photo/photo-wall-texture-pattern_58702-15193.jpg?semt=ais_hybrid&w=740&q=80" alt="프로필 사진">
+                        <img class="profile-img-small"
+                             src="https://img.freepik.com/free-photo/photo-wall-texture-pattern_58702-15193.jpg?semt=ais_hybrid&w=740&q=80"
+                             alt="프로필 사진">
 
                         <div class="post-writer-details">
                             <span class="fw-bold" th:text="${post.writer}">익명의 나비</span>
@@ -435,9 +473,19 @@
                             </div>
                         </div>
                     </div>
-                    <div class="post-counts">
-                        <span class="text-secondary"><i class="far fa-eye me-1"></i> <span th:text="${post.viewCount}">123</span></span>
-                        <span class="text-secondary"><i class="far fa-comment-dots me-1"></i> <span th:text="${post.commentCount}">57</span></span>
+
+                    <div class="post-actions-meta">
+                        <div class="post-counts">
+                            <span class="text-secondary"><i class="far fa-eye me-1"></i> <span th:text="${post.viewCount}">123</span></span>
+                                <span class="text-secondary"><i class="far fa-comment-dots me-1"></i> <span th:text="${post.commentCount}">57</span></span>
+                        </div>
+
+                        <div class="post-edit-delete-buttons" th:if="${post.userId == currentUserId}">
+                            <a th:href="@{/post/edit/{id}(id=${post.id})}" class="edit-btn"><i class="fas fa-edit"></i></a>
+                            <form th:action="@{/post/delete/{id}(id=${post.id})}" method="post" style="display: inline;">
+                                <button type="submit" class="delete-btn" onclick="return confirm('정말로 이 게시글을 삭제하시겠습니까?');"><i class="fas fa-trash-alt"></i></button>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -450,7 +498,8 @@
                     <br><br>
                     선배는 정말 좋은 사람이에요. 항상 배려해주고 매번도, 말 들어주고, 같이 있으면 편안하거든요. 그리고 친구분께서 분석한 결과, 어떤 이성에게든 감정만은 표현 안 해요.
                     <br><br>
-                    그런데 제가 이 분과 당장 연애를 할 시간을 당장 이라는 시간을 가지고 있는 것도 아니고, 바쁘다면서 연애는 안된다고 하네요. 거절하자니 지금 놓치면 좋은 관계가 멀어질까봐 두렵고, 그렇다고 확실하지 않은 마음으로 사귀자고 하는 것도, 미안하게 될까봐 망설입니다.
+                    그런데 제가 이 분과 당장 연애를 할 시간을 당장 이라는 시간을 가지고 있는 것도 아니고, 바쁘다면서 연애는 안된다고 하네요. 거절하자니 지금 놓치면 좋은 관계가 멀어질까봐
+                    두렵고, 그렇다고 확실하지 않은 마음으로 사귀자고 하는 것도, 미안하게 될까봐 망설입니다.
                     <br><br>
                     비슷한 경험 있으신 분 계신가요? 어떻게 하면 좋을까요? 조언 부탁드립니다ㅠㅠ
                 </p>
@@ -459,69 +508,155 @@
 
         <div class="comment-box">
             <div class="comments-section">
-                <h5 class="comment-header"><i class="far fa-comment-dots me-2"></i> 댓글 <span style="color: #ff9d9d" th:text="${post.commentCount}">57</span></h5>
+                <h5 class="comment-header"><i class="far fa-comment-dots me-2"></i> 댓글 <span style="color: #ff9d9d"
+                                                                                             th:text="${post.commentCount}">57</span>
+                </h5>
 
-                <div class="comment-input-box">
-                    <textarea class="comment-textarea" placeholder="따뜻한 조언을 남겨주세요. (익명으로 작성됩니다.)"></textarea>
-                    <div class="comment-btn-container">
-                        <button class="comment-submit-btn">댓글 작성</button>
+                <form th:action="@{/comment}" method="post">
+                    <div class="comment-input-box">
+                        <input type="hidden" name="postId" th:value="${post.id}">
+
+                        <textarea class="comment-textarea" name="content" placeholder="따뜻한 조언을 남겨주세요. (익명으로 작성됩니다)"
+                                  required></textarea>
+                        <div class="comment-btn-container">
+                            <button type="submit" class="comment-submit-btn">댓글 작성</button>
+                        </div>
                     </div>
-                </div>
+                </form>
 
-                <div class="comment-list-item">
-                    <div class="comment-item">
-                        <div class="comment-meta">
-                            <div class="comment-writer-info">
-                                <img class="profile-img-comment" src="https://img.freepik.com/free-photo/photo-wall-texture-pattern_58702-15193.jpg?semt=ais_hybrid&w=740&q=80" alt="프로필 사진">
-                                <span class="comment-name">익명의 복</span>
-                            </div>
-                            <div class="comment-date-action">
-                                <span class="me-2">3분 전</span>
-                            </div>
-                        </div>
-                        <p class="comment-body">저도 비슷한 경험이 있어요. 제 경우엔 일단 솔직하게 지금 감정이 명확하지 않다고 말씀드렸어요. 그리고 시간을 가지면서 데이트를 해 봤는데, 그러고 보니 제 감정을 더 명확하게 알 수 있었어요. 급하게 결정하시지 마시고 천천히 마음을 확인해보는 것도 좋을 것 같아요!</p>
-                        <div class="comment-actions">
-                            <a href="#"><i class="far fa-thumbs-up me-1"></i> 1</a>
-                            <a href="#"><i class="far fa-comment me-1"></i> 답글</a>
-                        </div>
-
-                        <div class="reply-list-item">
+                <div th:each="comment : ${comments}" th:if="${comments != null and not #lists.isEmpty(comments)}">
+                    <div class="comment-list-item">
+                        <div class="comment-display-mode" th:id="|displayMode${comment.id}|">
                             <div class="comment-item">
                                 <div class="comment-meta">
                                     <div class="comment-writer-info">
-                                        <img class="profile-img-comment" src="https://img.freepik.com/free-photo/photo-wall-texture-pattern_58702-15193.jpg?semt=ais_hybrid&w=740&q=80" alt="작성자 프로필 사진">
-                                        <span class="comment-name comment-writer-custom">익명의 나비 (작성자)</span>
-                                    </div>
+                                        <img class="profile-img-comment" src="https://img.freepik.com/free-photo/photo-wall-texture-pattern_58702-15193.jpg?semt=ais_hybrid&w=740&q=80" alt="프로필 사진">
+                                        <span class="comment-name"
+                                              th:classappend="${comment.writer == post.writer} ? 'comment-writer-custom'">
+                                            <span th:text="${comment.writer}">익명의 복</span>
+                                            <span th:if="${comment.writer == post.writer}" th:text="| (작성자)|"> (작성자)</span>
+                                        </span> </div>
+
                                     <div class="comment-date-action">
-                                        <span class="me-2">3분 전</span>
+                                        <span th:text="${#temporals.format(comment.createAt, 'yy.MM.dd HH:mm')}">3분 전</span>
+                                        <a href="#" style="margin-left: 10px;">신고</a>
                                     </div>
                                 </div>
-                                <p class="comment-body">조언 감사합니다! 솔직하게 말해주는 게 맞는 것 같아요. 용기내서 얘기해볼게요 ㅎㅎ</p>
+
+                                <p class="comment-body" th:text="${comment.content}"></p>
+
                                 <div class="comment-actions">
-                                    <a href="#"><i class="far fa-thumbs-up me-1"></i> 0</a>
-                                    <a href="#">답글</a>
+                                    <span th:if="${comment.userId == currentUserId}">
+                                        <a href="#" class="edit-toggle-btn" th:data-comment-id="${comment.id}" style="margin-right: 10px; color: #444;">수정</a>
+                                        <form th:action="@{/comment/delete/{id}(id=${comment.id}, postId=${post.id})}" method="post" style="display: inline;">
+                                            <button type="submit" style="background: none; border: none; padding: 0; color: #ff5270; cursor: pointer; font-size: 0.8rem; vertical-align: middle;"
+                                                    onclick="return confirm('정말로 이 댓글을 삭제하시겠습니까?');">삭제</button>
+                                        </form>
+                                    </span>
+
+                                    <a href="#"><i class="far fa-thumbs-up me-1"></i> 1</a>
+                                    <a href="#" class="reply-toggle-btn" th:data-comment-id="${comment.id}"
+                                       style="margin-left: 15px;"><i class="far fa-comment me-1"></i> 답글</a>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </div> <div class="comment-list-item">
-                <div class="comment-item">
-                    <div class="comment-meta">
-                        <div class="comment-writer-info">
-                            <img class="profile-img-comment" src="https://img.freepik.com/free-photo/photo-wall-texture-pattern_58702-15193.jpg?semt=ais_hybrid&w=740&q=80" alt="프로필 사진">
-                            <span class="comment-name">익명의 꽃</span>
+                        <div class="comment-edit-mode" th:id="|editMode${comment.id}|"
+                             style="display: none; padding: 10px 0;">
+
+                            <form th:action="@{/comment/edit/{id}(id=${comment.id})}" method="post">
+                                <input type="hidden" name="postId" th:value="${post.id}">
+                                <input type="hidden" name="commentId" th:value="${comment.id}">
+
+                                <textarea class="edit-textarea" name="content"
+                                          th:text="${comment.content}"
+                                          style="width: 100%; height: 100px; padding: 8px; border: 1px solid #ff9d9d; border-radius: 4px; resize: vertical;" required></textarea>
+
+                                <div class="comment-btn-container" style="margin-top: 10px; text-align: right;">
+                                    <button type="button" class="btn btn-cancel-edit" th:data-comment-id="${comment.id}"
+                                            style="background-color: #ddd; color: #333; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer;">취소
+                                    </button>
+                                    <button type="submit" class="btn btn-submit-edit"
+                                            style="background-color: #ff9d9d; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer;">
+                                        수정 완료
+                                    </button>
+                                </div>
+                            </form>
                         </div>
-                        <div class="comment-date-action">
-                            <span class="me-2">5분 전</span>
+                        <div th:if="${comment.replies != null and not #lists.isEmpty(comment.replies)}">
+                            <div class="reply-list-item" th:each="reply : ${comment.replies}">
+
+                                <div class="comment-display-mode" th:id="|displayMode${reply.id}|">
+                                    <div class="comment-item" style="border-bottom: none; padding: 5px 0;">
+                                        <div class="comment-meta">
+                                            <div class="comment-writer-info">
+                                                <img class="profile-img-comment" src="https://img.freepik.com/free-photo/photo-wall-texture-pattern_58702-15193.jpg?semt=ais_hybrid&w=740&q=80" alt="작성자 프로필 사진">
+                                                <span class="comment-name"
+                                                      th:classappend="${comment.writer == post.writer} ? 'comment-writer-custom'">
+                                                    <span th:text="${comment.writer}">익명의 복</span>
+                                                    <span th:if="${comment.writer == post.writer}" th:text="| (작성자)|"> (작성자)</span>
+                                                </span>
+                                            </div>
+
+                                            <div class="comment-date-action">
+                                                <span th:text="${#temporals.format(reply.createAt, 'yy.MM.dd HH:mm')}">3분 전</span>
+                                                <a href="#" style="margin-left: 10px;">신고</a>
+                                            </div>
+                                        </div>
+
+                                        <p class="comment-body" style="font-size: 0.9rem;" th:text="${reply.content}">조언
+                                            감사합니다!</p>
+
+                                        <div class="comment-actions">
+                                            <span th:if="${reply.userId == currentUserId}">
+                                                <a href="#" class="edit-toggle-btn" th:data-comment-id="${reply.id}" style="margin-right: 10px; color: #444;">수정</a>
+                                                <form th:action="@{/comment/delete/{id}(id=${reply.id}, postId=${post.id})}" method="post" style="display: inline;">
+                                                    <button type="submit" style="background: none; border: none; padding: 0; color: #ff5270; cursor: pointer; font-size: 0.8rem; vertical-align: middle;"
+                                                            onclick="return confirm('이 답글을 삭제하시겠습니까?');">삭제</button>
+                                                </form>
+                                            </span>
+                                            <a href="#"><i class="far fa-thumbs-up me-1"></i> 0</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="comment-edit-mode" th:id="|editMode${reply.id}|" style="display: none; padding: 10px 0;">
+                                    <form th:action="@{/comment/edit/{id}(id=${reply.id})}" method="post">
+                                        <input type="hidden" name="postId" th:value="${post.id}">
+                                        <input type="hidden" name="commentId" th:value="${reply.id}">
+
+                                        <textarea class="edit-textarea" name="content" th:text="${reply.content}" style="width: 100%; height: 100px; padding: 8px; border: 1px solid #ff9d9d; border-radius: 4px; resize: vertical;" required></textarea>
+
+                                        <div class="comment-btn-container" style="margin-top: 10px; text-align: right;">
+                                            <button type="button" class="btn btn-cancel-edit" th:data-comment-id="${reply.id}" style="background-color: #ddd; color: #333; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer;">취소
+                                            </button>
+                                            <button type="submit" class="btn btn-submit-edit" style="background-color: #ff9d9d; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer;">수정 완료
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                    <p class="comment-body">저도 비슷한 경험이 있어요. 제 경우엔 일단 솔직하게 지금 감정이 명확하지 않다고 말씀드렸어요. 그리고 시간을 가지면서 데이트를 해 봤는데, 그러고 보니 제 감정을 더 명확하게 알 수 있었어요. 급하게 결정하시지 마시고 천천히 마음을 확인해보는 것도 좋을 것 같아요!</p>
-                    <div class="comment-actions">
-                        <a href="#"><i class="far fa-thumbs-up me-1"></i> 1</a>
-                        <a href="#"><i class="far fa-comment me-1"></i> 답글</a>
+
+                        <form th:action="@{/comment}" method="post">
+                            <div class="reply-input-box" style="display: none;" th:id="|replyForm${comment.id}|">
+                                <input type="hidden" name="postId" th:value="${post.id}">
+                                <input type="hidden" name="parentId" th:value="${comment.id}">
+
+                                <textarea class="reply-textarea-small" name="content"
+                                          placeholder="답글을 입력해주세요. (익명으로 작성됩니다)" required></textarea>
+
+                                <div class="comment-btn-container">
+                                    <button type="button" class="btn btn-cancel-reply"
+                                            th:data-comment-id="${comment.id}"
+                                            style="background-color: #ddd; color: #333; border: none; padding: 5px 12px; border-radius: 20px; cursor: pointer; margin-right: 8px;">
+                                        취소
+                                    </button>
+
+                                    <button type="submit" class="reply-submit-btn-small">답글 작성</button>
+                                </div>
+                            </div>
+                        </form>
                     </div>
                 </div>
-            </div>
             </div>
         </div>
 
@@ -544,13 +679,11 @@
         const badge = document.getElementById('categoryBadge');
         const emoji = categoryEmojis[categoryName] || '💭';
 
-        badge.innerHTML = `
-            <span class="badge-emoji">${emoji}</span>
-            <span>${categoryName}</span>
-        `;
+        badge.innerHTML = `<span class="badge-emoji">${emoji}</span><span>${categoryName}</span>`;
     }
 
     const category = document.getElementById('categoryBadge').dataset.category;
+
     setCategoryBadge(category);
 
     // 시간 계산 함수
@@ -563,7 +696,6 @@
         }
 
         const diffInSeconds = Math.floor((now - past) / 1000);
-
         if (diffInSeconds < 60) {
             return '방금 전';
         }
@@ -604,14 +736,96 @@
     }
 
     // 페이지 로드 시 실행
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
         updateAllTimes();
 
-        // 1분마다 시간 업데이트
+// 1분마다 시간 업데이트
         setInterval(updateAllTimes, 60000);
+
+// 댓글 수정 모드
+        function toggleEditMode(commentId, mode) {
+            const displayMode = document.getElementById(`displayMode${commentId}`);
+            const editMode = document.getElementById(`editMode${commentId}`);
+            const replyForm = document.getElementById(`replyForm${commentId}`);
+
+            if (!displayMode || !editMode) return;
+
+            if (mode === 'edit') {
+// 수정 모드 활성화 시, 표시 모드를 숨기고 수정 모드를 표시
+                displayMode.style.display = 'none';
+                editMode.style.display = 'block';
+
+// 만약 답글 폼이 열려있다면 닫기
+                if (replyForm && replyForm.style.display === 'block') {
+                    replyForm.style.display = 'none';
+                }
+            } else if (mode === 'display') {
+// 취소 버튼 클릭 시, 수정 모드를 숨기고 표시 모드를 복구
+                displayMode.style.display = 'block';
+                editMode.style.display = 'none';
+            }
+        }
+
+// 답글 폼 토글
+        function toggleReplyForm(commentId) {
+            const replyForm = document.getElementById(`replyForm${commentId}`);
+            const editMode = document.getElementById(`editMode${commentId}`);
+
+            if (!replyForm) return;
+
+// 답글 폼을 열 때, 수정 폼이 열려있다면 닫기
+            if (editMode && editMode.style.display === 'block') {
+                editMode.style.display = 'none';
+                document.getElementById(`displayMode${commentId}`).style.display = 'block';
+            }
+
+// display 상태를 토글합니다.
+            if (replyForm.style.display === 'none' || replyForm.style.display === '') {
+                replyForm.style.display = 'block';
+            } else {
+                replyForm.style.display = 'none';
+            }
+        }
+
+// "수정" 버튼 클릭 시
+        document.querySelectorAll('.edit-toggle-btn').forEach(button => {
+            button.addEventListener('click', function (event) {
+                event.preventDefault();
+                const commentId = this.getAttribute('data-comment-id');
+                toggleEditMode(commentId, 'edit');
+            });
+        });
+
+// "취소" 버튼 클릭 시
+        document.querySelectorAll('.btn-cancel-edit').forEach(button => {
+            button.addEventListener('click', function (event) {
+                event.preventDefault();
+                const commentId = this.getAttribute('data-comment-id');
+                toggleEditMode(commentId, 'display');
+            });
+        });
+
+// "답글" 버튼 클릭 시
+        document.querySelectorAll('.reply-toggle-btn').forEach(button => {
+            button.addEventListener('click', function (event) {
+                event.preventDefault();
+                const commentId = this.getAttribute('data-comment-id');
+                toggleReplyForm(commentId);
+            });
+        });
+
+// 답글 "취소" 버튼 클릭 시
+        document.querySelectorAll('.btn-cancel-reply').forEach(button => {
+            button.addEventListener('click', function (event) {
+                event.preventDefault();
+// 답글 폼을 닫기 위해 toggleReplyForm 함수를 재활용
+                const commentId = this.getAttribute('data-comment-id');
+                toggleReplyForm(commentId);
+            });
+        });
     });
 </script>
 
-
 </body>
+
 </html>
