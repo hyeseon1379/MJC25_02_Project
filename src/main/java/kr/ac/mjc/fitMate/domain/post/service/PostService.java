@@ -139,6 +139,16 @@ public class PostService {
             post.setCommentCount(currentCount - 1);
         }
     }
+
+    public List<PostResponse> getMyPosts(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
+
+        return postRepository.findByUserOrderByIdDesc(user)
+                .stream()
+                .map(PostResponse::new)
+                .toList();
+    }
 }
 
 

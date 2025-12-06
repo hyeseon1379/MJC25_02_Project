@@ -170,4 +170,14 @@ public class CommentService {
         // 댓글 작성자 ID와 로그인 사용자 ID를 비교하여 일치하면 true 반환
         return comment.getUser().getId().equals(userId);
     }
+
+    public List<CommentResponse> getMyComments(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
+
+        return commentRepository.findByUserOrderByIdDesc(user)
+                .stream()
+                .map(CommentResponse::new)
+                .toList();
+    }
 }
