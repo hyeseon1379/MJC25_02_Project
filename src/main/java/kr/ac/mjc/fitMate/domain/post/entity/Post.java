@@ -34,5 +34,7 @@ public class Post extends BaseEntity {
     private User user;
 
     private int viewCount;
+
+    private int commentCount;
 }
 

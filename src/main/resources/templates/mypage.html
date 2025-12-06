@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mind:ON - 마이페이지</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+    <link rel="stylesheet" th:href="@{/css/header.css}">
+    <link rel="stylesheet" th:href="@{/css/footer.css}">
+    <style>
+        body {
+            background: #FFF6F6;
+        }
+
+        .mypage-container {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 20px 0;
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+        }
+
+        .page-title {
+            font-size: 32px;
+            font-weight: 700;
+            color: #2D3436;
+        }
+
+        .content-wrapper {
+            display: grid;
+            grid-template-columns: 320px 1fr;
+            gap: 30px;
+        }
+
+        .profile-section {
+            position: sticky;
+            top: 40px;
+            height: fit-content;
+        }
+
+        .profile-card {
+            background: white;
+            border-radius: 24px;
+            padding: 40px;
+            box-shadow: 0 10px 40px rgba(231,216,216,1);
+            text-align: center;
+        }
+
+        .profile-avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #F699A4, #F4AEAC);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 56px;
+            margin: 0 auto 24px;
+            box-shadow: 0 8px 24px rgba(246, 153, 164, 0.3);
+        }
+
+        .profile-name {
+            font-size: 24px;
+            font-weight: 700;
+            color: #2D3436;
+            margin-bottom: 8px;
+        }
+
+        .profile-nickname {
+            font-size: 16px;
+            color: #636E72;
+            margin-bottom: 20px;
+        }
+
+        .profile-info-list {
+            list-style: none;
+            text-align: left;
+            margin-bottom: 24px;
+        }
+
+        .profile-info-item {
+            padding: 12px 0;
+            border-bottom: 1px solid #F0F0F0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .profile-info-item:last-child {
+            border-bottom: none;
+        }
+
+        .info-label {
+            font-size: 14px;
+            color: #636E72;
+            font-weight: 500;
+        }
+
+        .info-value {
+            font-size: 15px;
+            color: #2D3436;
+            font-weight: 600;
+        }
+
+        .mbti-badge {
+            display: inline-block;
+            padding: 6px 14px;
+            background: linear-gradient(135deg, #F699A4, #F4AEAC);
+            color: white;
+            border-radius: 16px;
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        .concern-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
+        .concern-tag {
+            padding: 4px 12px;
+            background: #FFF8F8;
+            border: 1px solid #F4AEAC;
+            border-radius: 12px;
+            font-size: 13px;
+            color: #F699A4;
+            font-weight: 600;
+        }
+
+        .edit-profile-btn {
+            width: 100%;
+            padding: 14px;
+            border: 2px solid #F4AEAC;
+            background: white;
+            border-radius: 12px;
+            font-size: 15px;
+            font-weight: 600;
+            color: #F699A4;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 20px;
+        }
+
+        .edit-profile-btn:hover {
+            background: #F699A4;
+            color: white;
+        }
+
+        .main-content {
+            background: white;
+            border-radius: 24px;
+            padding: 40px;
+            box-shadow: 0 10px 20px rgba(231,216,216,1);
+            min-height: 600px;
+        }
+
+        .tabs-nav {
+            display: flex;
+            gap: 8px;
+            border-bottom: 2px solid #F0F0F0;
+            margin-bottom: 32px;
+        }
+
+        .tab-btn {
+            padding: 14px 24px;
+            border: none;
+            background: none;
+            font-size: 16px;
+            font-weight: 600;
+            color: #B2BEC3;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s;
+            position: relative;
+            top: 2px;
+        }
+
+        .tab-btn.active {
+            color: #F699A4;
+            border-bottom-color: #F699A4;
+        }
+
+        .tab-btn:hover {
+            color: #F699A4;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.4s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .content-list {
+            list-style: none;
+        }
+
+        .content-item {
+            padding: 20px;
+            border: 2px solid #F0F0F0;
+            border-radius: 16px;
+            margin-bottom: 16px;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .content-item:hover {
+            border-color: #F699A4;
+            background: #FFF8F8;
+            transform: translateX(5px);
+        }
+
+        .item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .item-category {
+            display: inline-block;
+            padding: 6px 14px;
+            background: linear-gradient(135deg, rgba(246, 153, 164, 0.1), rgba(168, 218, 255, 0.1));
+            border-radius: 12px;
+            font-size: 13px;
+            color: #F699A4;
+            font-weight: 600;
+        }
+
+        .item-date {
+            font-size: 13px;
+            color: #B2BEC3;
+        }
+
+        .item-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #2D3436;
+            margin-bottom: 8px;
+        }
+
+        .item-preview {
+            font-size: 15px;
+            color: #636E72;
+            line-height: 1.6;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .item-footer {
+            display: flex;
+            gap: 16px;
+            margin-top: 12px;
+            font-size: 14px;
+            color: #B2BEC3;
+        }
+
+        .item-stat {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 80px 20px;
+        }
+
+        .empty-icon {
+            font-size: 64px;
+            margin-bottom: 20px;
+            opacity: 0.5;
+        }
+
+        .empty-text {
+            font-size: 18px;
+            color: #636E72;
+            margin-bottom: 24px;
+        }
+
+        .empty-btn {
+            display: inline-block;
+            padding: 12px 30px;
+            background: linear-gradient(135deg, #F699A4, #F4AEAC);
+            color: white;
+            border: none;
+            border-radius: 20px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        .empty-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(246, 153, 164, 0.4);
+        }
+
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            color: #2D3436;
+            margin-bottom: 8px;
+        }
+
+        .form-input, .form-select {
+            width: 100%;
+            padding: 14px;
+            border: 2px solid #DFE6E9;
+            border-radius: 12px;
+            font-size: 15px;
+            transition: all 0.3s;
+        }
+
+        .form-input:focus, .form-select:focus {
+            outline: none;
+            border-color: #F699A4;
+            box-shadow: 0 0 0 4px rgba(246, 153, 164, 0.1);
+        }
+
+        .form-input:disabled {
+            background: #F8F9FA;
+            color: #B2BEC3;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 32px;
+        }
+
+        .form-btn {
+            flex: 1;
+            padding: 14px;
+            border: none;
+            border-radius: 12px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .form-btn.primary {
+            background: linear-gradient(135deg, #F699A4, #F4AEAC);
+            color: white;
+        }
+
+        .form-btn.primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(246, 153, 164, 0.4);
+        }
+
+        .form-btn.secondary {
+            background: white;
+            color: #636E72;
+            border: 2px solid #DFE6E9;
+        }
+
+        .form-btn.secondary:hover {
+            border-color: #F699A4;
+            color: #F699A4;
+        }
+
+        .error-message {
+            background: #FFE8E8;
+            color: #D32F2F;
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid #D32F2F;
+        }
+
+        @media (max-width: 968px) {
+            .content-wrapper {
+                grid-template-columns: 1fr;
+            }
+
+            .profile-section {
+                position: relative;
+                top: 0;
+            }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 20px 16px;
+            }
+
+            .page-header {
+                flex-direction: column;
+                gap: 20px;
+                align-items: flex-start;
+            }
+
+            .profile-card,
+            .main-content {
+                padding: 24px;
+            }
+
+            .page-title {
+                font-size: 28px;
+            }
+        }
+    </style>
+</head>
+<body>
+<nav th:replace="~{layout/header :: header-fragment}"></nav>
+<div class="mypage-container">
+    <div class="page-header">
+        <h1 class="page-title">마이페이지</h1>
+    </div>
+
+    <div class="content-wrapper">
+        <!-- 왼쪽: 프로필 섹션 -->
+        <aside class="profile-section">
+            <div class="profile-card">
+                <div class="profile-avatar">👤</div>
+                <h2 class="profile-name" th:text="${userInfo.username}">사용자</h2>
+                <div class="profile-nickname" th:text="'@' + ${userInfo.nickname}">@nickname</div>
+
+                <ul class="profile-info-list">
+                    <li class="profile-info-item">
+                        <span class="info-label">이메일</span>
+                        <span class="info-value" th:text="${userInfo.email}">email</span>
+                    </li>
+                    <li class="profile-info-item">
+                        <span class="info-label">성별</span>
+                        <span class="info-value" th:text="${userInfo.gender != null ? userInfo.gender.displayName : '미설정'}">성별</span>
+                    </li>
+                    <li class="profile-info-item">
+                        <span class="info-label">생년월일</span>
+                        <span class="info-value" th:text="${userInfo.birth != null ? #temporals.format(userInfo.birth, 'yyyy.MM.dd') : '미설정'}">생년월일</span>
+                    </li>
+                    <li class="profile-info-item">
+                        <span class="info-label">MBTI</span>
+                        <span class="mbti-badge" th:text="${userInfo.mbti != null ? userInfo.mbti : '미설정'}">MBTI</span>
+                    </li>
+                    <li class="profile-info-item">
+                        <span class="info-label">주요 고민</span>
+                        <div class="concern-tags">
+                            <span class="concern-tag" th:text="${userInfo.trouble != null ? userInfo.trouble.displayName : '미설정'}">고민</span>
+                        </div>
+                    </li>
+                </ul>
+
+                <button class="edit-profile-btn" th:classappend="${currentTab == 'edit' ? 'active' : ''}" onclick="showTab('edit')">
+                    ✏️ 프로필 수정
+                </button>
+            </div>
+        </aside>
+
+        <!-- 오른쪽: 메인 콘텐츠 -->
+        <main class="main-content">
+            <!-- 탭 네비게이션 -->
+            <div class="tabs-nav">
+                <button class="tab-btn" th:classappend="${currentTab == 'posts' ? 'active' : ''}" onclick="loadMyPosts()">
+                    📝 내가 쓴 글
+                </button>
+                <button class="tab-btn" th:classappend="${currentTab == 'comments' ? 'active' : ''}" onclick="loadMyComments()">
+                    💬 내가 쓴 댓글
+                </button>
+                <button class="tab-btn" th:classappend="${currentTab == 'edit' ? 'active' : ''}" onclick="showTab('edit')">
+                    ⚙️ 정보 수정
+                </button>
+            </div>
+
+            <!-- 탭1: 내가 쓴 글 -->
+            <div id="tab-posts" class="tab-content" th:classappend="${currentTab == 'posts' ? 'active' : ''}">
+                <ul class="content-list" th:if="${myPosts != null and !myPosts.isEmpty()}">
+                    <li class="content-item" th:each="post : ${myPosts}"
+                        th:onclick="|location.href='/post/${post.id}'|">
+                        <div class="item-header">
+                            <span class="item-category" th:text="${post.trouble}">카테고리</span>
+                            <span class="item-date" th:text="${#temporals.format(post.createdAt, 'yyyy.MM.dd')}">날짜</span>
+                        </div>
+                        <h3 class="item-title" th:text="${post.title}">제목</h3>
+                        <p class="item-preview" th:text="${post.content}">내용 미리보기</p>
+                        <div class="item-footer">
+                            <span class="item-stat" th:text="'👁️ ' + ${post.viewCount}">조회수</span>
+                            <span class="item-stat" th:text="'💬 ' + ${post.commentCount}">댓글수</span>
+                        </div>
+                    </li>
+                </ul>
+
+                <div class="empty-state" th:if="${myPosts == null or myPosts.isEmpty()}">
+                    <div class="empty-icon">📝</div>
+                    <p class="empty-text">아직 작성한 글이 없습니다</p>
+                    <a href="/post/new" class="empty-btn">첫 글 작성하기</a>
+                </div>
+            </div>
+
+            <!-- 탭2: 내가 쓴 댓글 -->
+            <div id="tab-comments" class="tab-content" th:classappend="${currentTab == 'comments' ? 'active' : ''}">
+                <ul class="content-list" th:if="${myComments != null and !myComments.isEmpty()}">
+                    <li class="content-item" th:each="comment : ${myComments}"
+                        th:onclick="|location.href='/post/${comment.postId}'|">
+                        <div class="item-header">
+                            <span class="item-category">내 댓글</span>
+                            <span class="item-date" th:text="${#temporals.format(comment.createAt, 'yyyy.MM.dd')}">날짜</span>
+                        </div>
+                        <h3 class="item-title">Re: 게시글 댓글</h3>
+                        <p class="item-preview" th:text="${comment.content}">댓글 내용</p>
+                        <div class="item-footer">
+                            <span class="item-stat">원글 보기 →</span>
+                        </div>
+                    </li>
+                </ul>
+
+                <div class="empty-state" th:if="${myComments == null or myComments.isEmpty()}">
+                    <div class="empty-icon">💬</div>
+                    <p class="empty-text">아직 작성한 댓글이 없습니다</p>
+                    <a href="/post" class="empty-btn">게시글 둘러보기</a>
+                </div>
+            </div>
+
+            <!-- 탭3: 정보 수정 -->
+            <div id="tab-edit" class="tab-content" th:classappend="${currentTab == 'edit' ? 'active' : ''}">
+                <!-- 에러 메시지 표시 -->
+                <div class="error-message" th:if="${error}" th:text="${error}"></div>
+
+                <form th:action="@{/mypage/edit}" method="post" th:object="${updateRequest}">
+                    <div class="form-group">
+                        <label class="form-label">이메일</label>
+                        <input type="email" class="form-input" th:value="${userInfo.email}" disabled>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">이름</label>
+                        <input type="text" class="form-input" th:value="${userInfo.username}" disabled>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">닉네임 *</label>
+                        <input type="text" name="nickname" class="form-input"
+                               th:value="${userInfo.nickname}"
+                               placeholder="닉네임을 입력하세요" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">생년월일</label>
+                        <input type="date" name="birth" class="form-input"
+                               th:value="${userInfo.birth}">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">성별</label>
+                        <select name="gender" class="form-select">
+                            <option value="">선택하세요</option>
+                            <option value="MALE" th:selected="${userInfo.gender?.name() == 'MALE'}">남성</option>
+                            <option value="FEMALE" th:selected="${userInfo.gender?.name() == 'FEMALE'}">여성</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">MBTI</label>
+                        <select name="mbti" class="form-select">
+                            <option value="">선택하세요</option>
+                            <option th:each="mbtiType : ${T(kr.ac.mjc.fitMate.global.entity.Mbti).values()}"
+                                    th:value="${mbtiType}"
+                                    th:text="${mbtiType}"
+                                    th:selected="${userInfo.mbti?.name() == mbtiType.name()}">
+                            </option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">주요 고민</label>
+                        <select name="trouble" class="form-select">
+                            <option value="">선택하세요</option>
+                            <option th:each="troubleType : ${T(kr.ac.mjc.fitMate.global.entity.Trouble).values()}"
+                                    th:value="${troubleType.name()}"
+                                    th:text="${troubleType.displayName}"
+                                    th:selected="${userInfo.trouble?.name() == troubleType.name()}">
+                            </option>
+                        </select>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="button" class="form-btn secondary" onclick="cancelEdit()">취소</button>
+                        <button type="submit" class="form-btn primary">저장하기</button>
+                    </div>
+                </form>
+            </div>
+        </main>
+    </div>
+</div>
+
+
+<script>
+    function showTab(tabName) {
+        // 모든 탭 버튼 비활성화
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.classList.remove('active');
+        });
+
+        // 모든 탭 콘텐츠 숨기기
+        document.querySelectorAll('.tab-content').forEach(content => {
+            content.classList.remove('active');
+        });
+
+        // 선택한 탭 활성화
+        event.target.classList.add('active');
+        document.getElementById('tab-' + tabName).classList.add('active');
+    }
+
+    function loadMyPosts() {
+        window.location.href = '/myposts';
+    }
+
+    function loadMyComments() {
+        window.location.href = '/mycomments';
+    }
+
+    function cancelEdit() {
+        if (confirm('변경사항을 취소하시겠습니까?')) {
+            window.location.href = '/mypage';
+        }
+    }
+
+</script>
+</body><div th:replace="~{layout/footer.html :: footer}"></div>
+</html>
