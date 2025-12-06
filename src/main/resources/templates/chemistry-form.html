@@ -123,7 +123,7 @@
         }
 
         input[type="text"]::placeholder {
-            color: #43464D;
+            color: #D9D9D9;
         }
 
         input[type="date"] {
@@ -211,17 +211,16 @@
 
             <div class="form-group">
                 <div class="form-row">
-                    <label class="form-label">이름</label>
+                    <label class="form-label">닉네임</label>
                     <div class="input-wrapper">
-                        <input type="text" placeholder="홍길동" id="myName">
+                        <input type="text" placeholder="닉네임을 입력해주세요" id="myName">
                     </div>
                 </div>
 
                 <div class="form-row">
                     <label class="form-label">생년월일</label>
                     <div class="input-wrapper">
-                        <input type="date" value="2004-06-04" id="myBirth">
-                        <span class="calendar-icon">📅</span>
+                        <input type="date" id="myBirth">
                     </div>
                 </div>
 
@@ -244,24 +243,23 @@
 
             <div class="form-group">
                 <div class="form-row">
-                    <label class="form-label">이름</label>
+                    <label class="form-label">닉네임</label>
                     <div class="input-wrapper">
-                        <input type="text" placeholder="마음을 담아보세요" id="partnerName">
+                        <input type="text" placeholder="닉네임을 입력해주세요" id="partnerName" required>
                     </div>
                 </div>
 
                 <div class="form-row">
                     <label class="form-label">생년월일</label>
                     <div class="input-wrapper">
-                        <input type="date" placeholder="2004-06-04" id="partnerBirth">
-                        <span class="calendar-icon">📅</span>
+                        <input type="date" id="partnerBirth" required>
                     </div>
                 </div>
 
                 <div class="form-row">
                     <label class="form-label">성별</label>
                     <div class="gender-buttons">
-                        <button class="gender-btn" id="partnerMale">남성</button>
+                        <button class="gender-btn active" id="partnerMale">남성</button>
                         <button class="gender-btn" id="partnerFemale">여성</button>
                     </div>
                 </div>
