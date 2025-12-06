@@ -2,15 +2,22 @@ package kr.ac.mjc.fitMate.domain.comment.controller;
 
 import jakarta.servlet.http.HttpSession;
 import kr.ac.mjc.fitMate.domain.comment.dto.CommentRequest;
+import kr.ac.mjc.fitMate.domain.comment.dto.CommentResponse;
 import kr.ac.mjc.fitMate.domain.comment.service.CommentService;
 import kr.ac.mjc.fitMate.domain.post.service.PostService;
 import kr.ac.mjc.fitMate.domain.user.dto.UserResponse;
+import kr.ac.mjc.fitMate.domain.user.dto.UserUpdateRequest;
+import kr.ac.mjc.fitMate.domain.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
@@ -18,6 +25,7 @@ public class CommentController {
 
     private final CommentService commentService;
     private final PostService postService;
+    private final UserService userService;
 
     @PostMapping("/comment")
     public String createComment(CommentRequest dto, HttpSession session) {
@@ -104,5 +112,28 @@ public class CommentController {
         rttr.addFlashAttribute("message", "댓글이 삭제되었습니다.");
 
         return "redirect:/post/" + postId;
+    }
+
+    @GetMapping("/mycomments")
+    public String viewMyComments(HttpSession session, Model model) {
+        UserResponse loginUser = (UserResponse) session.getAttribute("loginUser");
+
+        if (loginUser == null) {
+            return "redirect:/login";
+        }
+
+        Long userId = loginUser.getId();
+
+        // 사용자 정보도 함께 전달
+        UserResponse userInfo = userService.getUserInfo(userId);
+        model.addAttribute("userInfo", userInfo);
+        model.addAttribute("updateRequest", new UserUpdateRequest());
+
+        List<CommentResponse> myComments = commentService.getMyComments(userId);
+        model.addAttribute("myComments", myComments);
+        model.addAttribute("currentTab", "comments");
+        model.addAttribute("myPosts", null);
+
+        return "mypage";
     }
 }

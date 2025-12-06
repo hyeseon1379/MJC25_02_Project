@@ -7,6 +7,8 @@ import kr.ac.mjc.fitMate.domain.post.dto.PostRequest;
 import kr.ac.mjc.fitMate.domain.post.dto.PostResponse;
 import kr.ac.mjc.fitMate.domain.post.service.PostService;
 import kr.ac.mjc.fitMate.domain.user.dto.UserResponse;
+import kr.ac.mjc.fitMate.domain.user.dto.UserUpdateRequest;
+import kr.ac.mjc.fitMate.domain.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -24,6 +26,7 @@ public class PostController {
     private final PostService postService;
 
     private final CommentService commentService;
+    private final UserService userService;
 
     @PostMapping("/post/new")
     public String createPost(PostRequest dto, HttpSession session, Model model) {
@@ -137,4 +140,26 @@ public class PostController {
         return "redirect:/post";
     }
 
+    @GetMapping("/myposts")
+    public String viewMyPosts(HttpSession session, Model model) {
+        UserResponse loginUser = (UserResponse) session.getAttribute("loginUser");
+
+        if (loginUser == null) {
+            return "redirect:/login";
+        }
+
+        Long userId = loginUser.getId();
+
+        // 사용자 정보도 함께 전달
+        UserResponse userInfo = userService.getUserInfo(userId);
+        model.addAttribute("userInfo", userInfo);
+        model.addAttribute("updateRequest", new UserUpdateRequest());
+
+        List<PostResponse> myPosts = postService.getMyPosts(userId);
+        model.addAttribute("myPosts", myPosts);
+        model.addAttribute("currentTab", "posts");
+        model.addAttribute("myComments", null);
+
+        return "mypage";
+    }
 }
