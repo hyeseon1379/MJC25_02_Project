@@ -1,6 +1,8 @@
 package kr.ac.mjc.fitMate.domain.post.controller;
 
 import jakarta.servlet.http.HttpSession;
+import kr.ac.mjc.fitMate.domain.comment.dto.CommentResponse;
+import kr.ac.mjc.fitMate.domain.comment.service.CommentService;
 import kr.ac.mjc.fitMate.domain.post.dto.PostRequest;
 import kr.ac.mjc.fitMate.domain.post.dto.PostResponse;
 import kr.ac.mjc.fitMate.domain.post.service.PostService;
@@ -21,7 +23,8 @@ public class PostController {
 
     private final PostService postService;
 
-    // ✅ 고민 글 작성 (저장)
+    private final CommentService commentService;
+
     @PostMapping("/post/new")
     public String createPost(PostRequest dto, HttpSession session, Model model) {
 
@@ -39,18 +42,25 @@ public class PostController {
         return "redirect:/post/" + postId;
     }
 
-    // ✅ 고민 글 작성 폼
     @GetMapping("/post/new")
     public String showPostForm() {
         return "post-form"; // templates/post-form.html
     }
 
-    // ✅ 게시글 상세 조회
+    // 게시글 상세 조회
     @GetMapping("/post/{postId}")
-    public String viewPostForm(@PathVariable("postId") Long postId, Model model) {
+    public String viewPostForm(@PathVariable("postId") Long postId, Model model, HttpSession session) {
         PostResponse viewPost = postService.viewPostForm(postId);
+
+        List<CommentResponse> comments = commentService.findCommentsByPostId(postId);
+
+        UserResponse loginUser = (UserResponse) session.getAttribute("loginUser");
+        Long currentUserId = (loginUser != null) ? loginUser.getId() : null; // 로그인이 안 되어 있으면 null
+
         model.addAttribute("post", viewPost);
-        return "post-view";// templates/post-view.html (나중에 만들 것)
+        model.addAttribute("comments", comments);
+        model.addAttribute("currentUserId", currentUserId);
+        return "post-view";
     }
 
     // ✅ 수정 기능 추가: 고민 목록 조회 (전체 + trouble별)
