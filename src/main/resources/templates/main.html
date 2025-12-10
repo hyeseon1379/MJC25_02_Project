@@ -48,40 +48,14 @@
         .hero-description {
             font-size: 20px;
             color: rgba(255, 255, 255);
-            margin-bottom: 15px;
+            margin-bottom: 10px;
             font-weight: 400;
             line-height: 1.2;
-        }
-
-        .btn-start {
-            margin-top: 14px;
-            padding: 18px 45px;
-            background: white;
-            color: #FF9999;
-            border: none;
-            border-radius: 50px;
-            font-size: 18px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.3s;
-            box-shadow: 0 10px 30px #FFC0BB;
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            text-decoration: none;
-        }
-
-        .btn-start:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 15px 40px #FFC0BB;
         }
 
         .phone-mockup {
             width: 400px;
             height: 600px;
-            background: white;
-            border-radius: 40px;
-            box-shadow: 0 2px 40px #FFC0BB;
             position: relative;
             margin-left: 20px;
         }
@@ -235,104 +209,6 @@
             line-height: 1.8;
         }
 
-        /* AI 분석 섹션 */
-        .analysis-section {
-            background: linear-gradient(180deg, #FFD4D4 0%, #FFC7C7 100%);
-            padding: 100px 60px;
-            text-align: center;
-        }
-
-        .analysis-content {
-            max-width: 800px;
-            margin: 0 auto;
-        }
-
-        .analysis-header {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 15px;
-            margin-bottom: 60px;
-        }
-
-        .robot-emoji {
-            font-size: 48px;
-        }
-
-        .analysis-title {
-            font-size: 36px;
-            font-weight: 700;
-            color: white;
-        }
-
-        .chat-illustration {
-            background: linear-gradient(135deg, #FFB8B8 0%, #FF9999 100%);
-            padding: 60px;
-            border-radius: 30px;
-            margin-bottom: 40px;
-            position: relative;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.15);
-        }
-
-        .phone-screen {
-            background: #E8F4FF;
-            width: 280px;
-            height: 400px;
-            margin: 0 auto;
-            border-radius: 30px;
-            padding: 20px;
-            position: relative;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-        }
-
-        .message-bubble {
-            background: white;
-            padding: 15px 20px;
-            border-radius: 20px;
-            margin-bottom: 15px;
-            text-align: left;
-            font-size: 14px;
-            color: #333;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-
-        .message-bubble.user {
-            background: #FFE082;
-            margin-left: 40px;
-        }
-
-        .speech-bubble {
-            background: white;
-            padding: 20px;
-            border-radius: 15px;
-            text-align: center;
-            margin-bottom: 30px;
-            color: #FF6B6B;
-            font-weight: 600;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
-        }
-
-        .analysis-info {
-            background: white;
-            padding: 30px;
-            border-radius: 20px;
-            text-align: left;
-            line-height: 2;
-            color: #555;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-        }
-
-        .temperature {
-            color: #FF6B6B;
-            font-weight: 700;
-            font-size: 18px;
-        }
-
-        .stage {
-            color: #FF6B6B;
-            font-weight: 700;
-        }
-
         /* 후기 섹션 */
         .reviews-section {
             background: #FFF6F6;
@@ -401,134 +277,513 @@
             font-weight: 600;
         }
 
+        /*히어로 섹션*/
+
+        @keyframes pulse {
+            0%, 100% { transform: translate(-50%, -50%) scale(1); }
+            50% { transform: translate(-50%, -50%) scale(1.1); }
+        }
+
+        .heart-icon {
+            position: absolute;
+            top: 50%;
+            left: 30%;
+            animation: pulse 2s ease-in-out infinite;
+            z-index: 2;
+        }
+
+        @keyframes floatBubble {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-20px);
+            }
+        }
+
+        .chat-1 {
+            position: absolute;
+            top: 80px;
+            left: 100px;
+            animation: floatBubble 5s ease-in-out infinite;
+            z-index: 1;
+        }
+        .chat-2 {
+            position: absolute;
+            top: 270px;
+            left: 270px;
+            animation: floatBubble 3s ease-in-out infinite;
+            z-index: 1;
+        }
+        .chat-3 {
+            position: absolute;
+            top: 400px;
+            left: 200px;
+            animation: floatBubble 4s ease-in-out infinite;
+            z-index: 1;
+        }
+        .chat-4 {
+            position: absolute;
+            top: 120px;
+            left: -250px;
+            animation: floatBubble 5s ease-in-out infinite;
+            z-index: 1;
+        }
+        .chat-5 {
+            position: absolute;
+            top: 300px;
+            left: -350px;
+            animation: floatBubble 3s ease-in-out infinite;
+            z-index: 3;
+
+        }
+        .chat-6 {
+            position: absolute;
+            top: 370px;
+            left: -300px;
+            animation: floatBubble 4s ease-in-out infinite;
+            z-index: 1;
+        }
+
+        .bubble-1 {
+            position: absolute;
+            top: 40px;
+            left: -300px;
+            animation: floatBubble 3s ease-in-out infinite;
+            z-index: 3;
+        }
+        .bubble-2 {
+            position: absolute;
+            top: 280px;
+            left: 330px;
+            animation: floatBubble 3s ease-in-out infinite;
+            z-index: 3;
+        }
+        .bubble-3 {
+            position: absolute;
+            top: 500px;
+            left: -150px;
+            animation: floatBubble 3s ease-in-out infinite;
+            z-index: 3;
+        }
+
+        /* ai 섹션 */
+
+        .ai-section {
+            background: linear-gradient(180deg, #FFC9C9 0%, #FFB5B5 100%);
+            padding: 50px 100px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 80px;
+            align-items: center;
+        }
+
+        /* 왼쪽 콘텐츠 */
+        .left-content {
+            padding: 40px;
+        }
+
+        .ai-icon1 {
+            width: 60px;
+            height: 60px;
+            margin-bottom: 15px;
+            font-size: 40px;
+        }
+
+        .main-title {
+            font-size: 42px;
+            font-weight: 700;
+            color: white;
+            line-height: 1.4;
+            margin-bottom: 32px;
+        }
+
+        .main-description {
+            font-size: 16px;
+            color: rgba(255, 255, 255, 0.9);
+            line-height: 1.8;
+            margin-bottom: 48px;
+        }
+
+        /* 기능 리스트 */
+        .ai-list {
+            list-style: none;
+        }
+
+        .ai-item {
+            margin-bottom: 32px;
+        }
+
+        .ai-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .ai-icon {
+            font-size: 24px;
+        }
+
+        .ai-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: white;
+        }
+
+        .ai-description {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.8);
+            padding-left: 36px;
+            line-height: 1.6;
+        }
+
+        /* 오른쪽 채팅 & 결과 영역 */
+        .right-content {
+            position: relative;
+            padding: 20px;
+        }
+
+        /* 채팅 박스 */
+        .chat-demo {
+            background: rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            padding: 30px;
+            margin-bottom: 40px;
+        }
+
+        .chat-bubble {
+            padding: 14px 20px;
+            border-radius: 18px;
+            margin-bottom: 12px;
+            font-size: 15px;
+            max-width: 80%;
+            animation: fadeInUp 0.5s ease-out backwards;
+        }
+
+        .chat-bubble.received {
+            background: white;
+            color: #2D3436;
+            border-bottom-left-radius: 4px;
+            animation-delay: 0.2s;
+        }
+
+        .chat-bubble.sent {
+            background: #FFE17B;
+            color: #2D3436;
+            margin-left: auto;
+            border-bottom-right-radius: 4px;
+            animation-delay: 0.5s;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* 결과 아이콘 (삼각형) */
+        .result-arrow {
+            text-align: center;
+            margin: 30px 0;
+            font-size: 48px;
+            color: rgba(255, 153, 153, 0.6);
+            animation: bounceDown 2s ease-in-out infinite;
+        }
+
+        @keyframes bounceDown {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(10px);
+            }
+        }
+
+        /* AI 결과 카드 */
+        .result-card {
+            background: white;
+            border-radius: 20px;
+            padding: 32px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            animation: fadeInUp 0.6s ease-out 0.8s backwards;
+        }
+
+        .result-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 24px;
+        }
+
+        .result-icon {
+            font-size: 20px;
+        }
+
+        .result-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #2D3436;
+        }
+
+        .temperature-display {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .temperature-value {
+            font-size: 56px;
+            font-weight: 800;
+            color: #FF6B6B;
+            margin-bottom: 16px;
+        }
+
+        .result-text {
+            font-size: 14px;
+            color: #636E72;
+            line-height: 1.7;
+        }
+
+        /* 반응형 */
+        @media (max-width: 1024px) {
+            .ai-section {
+                grid-template-columns: 1fr;
+                gap: 60px;
+            }
+
+            .main-title {
+                font-size: 36px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .left-content {
+                padding: 20px;
+            }
+
+            .main-title {
+                font-size: 32px;
+            }
+
+            .chat-demo {
+                padding: 20px;
+            }
+
+            .result-card {
+                padding: 24px;
+            }
+
+            .temperature-value {
+                font-size: 48px;
+            }
+        }
     </style>
 </head>
 <body>
-    <nav th:replace="~{layout/header :: header-fragment}"></nav>
+<nav th:replace="~{layout/header :: header-fragment}"></nav>
 
-    <section class="hero">
-        <div class="hero-content">
-            <p class="hero-subtitle">대화에 숨겨진 감정의 온도</p>
-            <h1 class="hero-title">MIND:ON</h1>
-            <p class="hero-description">AI가 분석하고 전달하는</p>
-            <p class="hero-description">스마트 관계 케어 플랫폼</p>
-            <a href="#start" class="btn-start">시작하기 →</a>
+<section class="hero">
+    <div class="hero-content">
+        <p class="hero-subtitle">대화에 숨겨진 감정의 온도</p>
+        <h1 class="hero-title">MIND:ON</h1>
+        <p class="hero-description">AI가 분석하고 전달하는</p>
+        <p class="hero-description">스마트 관계 케어 플랫폼</p>
+    </div>
+    <div class="hero-image">
+        <div class="phone-mockup">
+            <div class="heart-icon"><img th:src="@{/image/hero/main_heart.png}" width="378px" height="327px"></div>
+
+            <div class="chat-1"><img th:src="@{/image/hero/chat1.png}" width="388px" height="137px"></div>
+            <div class="chat-2"><img th:src="@{/image/hero/chat2.png}" width="203px" height="101px"></div>
+            <div class="chat-3"><img th:src="@{/image/hero/chat3.png}" width="273px" height="101px"></div>
+            <div class="chat-4"><img th:src="@{/image/hero/chat4.png}" width="203px" height="101px"></div>
+            <div class="chat-5"><img th:src="@{/image/hero/chat5.png}" width="333px" height="148px"></div>
+            <div class="chat-6"><img th:src="@{/image/hero/chat6.png}" width="366px" height="161px"></div>
+
+            <div class="bubble-1"><img th:src="@{/image/hero/bubble_msg.png}" width="80px" height="80px"></div>
+            <div class="bubble-2"><img th:src="@{/image/hero/bubble_send.png}" width="80px" height="80px"></div>
+            <div class="bubble-3"><img th:src="@{/image/hero/bubble_graph.png}" width="80px" height="80px"></div>
         </div>
-        <div class="hero-image">
-            <div class="phone-mockup">
-                <div class="phone-notch"></div>
-            </div>
+    </div>
+</section>
+
+<!-- 고민 섹션 -->
+<section class="concern-section">
+    <h2 class="concern-title">이런 고민 있으신가요?</h2>
+    <div class="concern-grid">
+        <div class="concern-card">
+            <div class="concern-emoji">❤️</div>
+            <p class="concern-text">상대방이 나를<br>좋아하는지 모르겠어요</p>
         </div>
-    </section>
-
-    <!-- 고민 섹션 -->
-    <section class="concern-section">
-        <h2 class="concern-title">이런 고민 있으신가요?</h2>
-        <div class="concern-grid">
-            <div class="concern-card">
-                <div class="concern-emoji">❤️</div>
-                <p class="concern-text">상대방이 나를<br>좋아하는지 모르겠어요</p>
-            </div>
-            <div class="concern-card">
-                <div class="concern-emoji">💥</div>
-                <p class="concern-text">친구와 자주 싸우는<br>이유가 궁금해요</p>
-            </div>
-            <div class="concern-card">
-                <div class="concern-emoji">😳</div>
-                <p class="concern-text">다른 사람과<br>대화하기 어려워요</p>
-            </div>
-            <div class="concern-card">
-                <div class="concern-emoji">💭</div>
-                <p class="concern-text">고민 상담할 수 있는<br>곳간이 필요해요</p>
-            </div>
+        <div class="concern-card">
+            <div class="concern-emoji">💥</div>
+            <p class="concern-text">친구와 자주 싸우는<br>이유가 궁금해요</p>
         </div>
-    </section>
-
-    <!-- 마음 온도 섹션 -->
-    <section class="features-section">
-        <h2 class="features-title">당신의 마음 온도를 측정하세요</h2>
-        <div class="features-grid">
-            <div class="feature-item">
-                <div class="feature-icon"><img th:src="@{/image/Bar_chart.png}" width="70" height="70"></div>
-                <h3 class="feature-title">대화 분석</h3>
-                <p class="feature-description">카톡 대화 내용만 업로드하세요.<br>AI가 대화 속 감정의 온도를 분석<br>하여 리포트합니다.</p>
-            </div>
-            <div class="feature-item">
-                <div class="feature-icon"><img th:src="@{/image/Two_hearts.png}" width="70" height="70"></div>
-                <h3 class="feature-title">궁합 분석</h3>
-                <p class="feature-description">두 사람의 관계 세부지표를 측정하여<br>제공. AI가 생일만의 분석이야 공<br>한 맞춤 리포트를 제공합니다.</p>
-            </div>
-            <div class="feature-item">
-                <div class="feature-icon"><img th:src="@{/image/Brain.png}" width="70" height="70"></div>
-                <h3 class="feature-title">MBTI 분석</h3>
-                <p class="feature-description">16가지 MBTI 유형별 데이터 및 다<br>인 관계 성향을 심층 분석합니다.</p>
-            </div>
-            <div class="feature-item">
-                <div class="feature-icon"><img th:src="@{/image/Left_speech_bubble.png}" width="70" height="70"></div>
-                <h3 class="feature-title">고민 상담소</h3>
-                <p class="feature-description">다양한 대인 관계 고민을 익명으<br>로 공유하고, 서로자들의 조언과<br>공감을 얻을 수 있습니다.</p>
-            </div>
+        <div class="concern-card">
+            <div class="concern-emoji">😳</div>
+            <p class="concern-text">다른 사람과<br>대화하기 어려워요</p>
         </div>
-    </section>
+        <div class="concern-card">
+            <div class="concern-emoji">💭</div>
+            <p class="concern-text">고민 상담할 수 있는<br>곳간이 필요해요</p>
+        </div>
+    </div>
+</section>
 
-    <!-- AI 분석 섹션 -->
-    <section class="analysis-section">
-        <div class="analysis-content">
-            <div class="analysis-header">
-                <span class="robot-emoji">🤖</span>
-                <h2 class="analysis-title">AI가 당신의 고민을 해결해드립니다</h2>
-            </div>
+<!-- 마음 온도 섹션 -->
+<section class="features-section">
+    <h2 class="features-title">당신의 마음 온도를 측정하세요</h2>
+    <div class="features-grid">
+        <div class="feature-item">
+            <div class="feature-icon"><img th:src="@{/image/Bar_chart.png}" width="70" height="70"></div>
+            <h3 class="feature-title">대화 분석</h3>
+            <p class="feature-description">카톡 대화 내용만 업로드하세요.<br>AI가 대화 속 감정의 온도를 분석<br>하여 리포트합니다.</p>
+        </div>
+        <div class="feature-item">
+            <div class="feature-icon"><img th:src="@{/image/Two_hearts.png}" width="70" height="70"></div>
+            <h3 class="feature-title">궁합 분석</h3>
+            <p class="feature-description">두 사람의 관계 세부지표를 측정하여<br>제공. AI가 생일만의 분석이야 공<br>한 맞춤 리포트를 제공합니다.</p>
+        </div>
+        <div class="feature-item">
+            <div class="feature-icon"><img th:src="@{/image/Brain.png}" width="70" height="70"></div>
+            <h3 class="feature-title">MBTI 분석</h3>
+            <p class="feature-description">16가지 MBTI 유형별 데이터 및 다<br>인 관계 성향을 심층 분석합니다.</p>
+        </div>
+        <div class="feature-item">
+            <div class="feature-icon"><img th:src="@{/image/Left_speech_bubble.png}" width="70" height="70"></div>
+            <h3 class="feature-title">고민 상담소</h3>
+            <p class="feature-description">다양한 대인 관계 고민을 익명으<br>로 공유하고, 서로자들의 조언과<br>공감을 얻을 수 있습니다.</p>
+        </div>
+    </div>
+</section>
 
-            <div class="chat-illustration">
-                <div class="phone-screen">
-                    <div class="message-bubble">안녕하세요</div>
-                    <div class="message-bubble user">안녕</div>
-                    <div class="message-bubble">오늘 날씨 좋네요</div>
-                    <div class="message-bubble user">그러게요</div>
+<!-- AI 분석 섹션 -->
+<section class="ai-section">
+    <!-- 왼쪽 콘텐츠 -->
+    <div class="left-content">
+        <div class="ai-icon1">🤖</div>
+
+        <h2 class="main-title">
+            AI가 당신의 고민을<br>
+            해결해드립니다
+        </h2>
+
+        <p class="main-description">
+            대화 캡쳐 이미지를 업로드하면 AI가 대화 패턴, 반응 속도, 감정 표현을<br>
+            분석해 상대방과의 관계 온도를 측정합니다.
+        </p>
+
+        <ul class="ai-list">
+            <li class="ai-item">
+                <div class="ai-header">
+                    <span class="ai-icon">💛</span>
+                    <h3 class="ai-title">그룹 친밀도 분석</h3>
                 </div>
-                <div class="speech-bubble">
-                    이 사람이 나한테 호감있는지 분석해줘.
-                </div>
-            </div>
+                <p class="ai-description">
+                    단톡방에서 나와 가장 친한 사람은 누구일까요?
+                </p>
+            </li>
 
-            <div class="analysis-info">
-                분석 결과, 상대방의 호감도 온도는 <span class="temperature">78°C로 측정되었습</span>니다.<br>
-                이는 '<span class="stage">긍정적 관계 발전 가능 단계</span>'에 해당합니다.
+            <li class="ai-item">
+                <div class="ai-header">
+                    <span class="ai-icon">❤️</span>
+                    <h3 class="ai-title">개인 호감도 측정</h3>
+                </div>
+                <p class="ai-description">
+                    상대방이 나에게 느끼는 호감도를 확인해보세요
+                </p>
+            </li>
+
+            <li class="ai-item">
+                <div class="ai-header">
+                    <span class="ai-icon">💚</span>
+                    <h3 class="ai-title">관계 위험도 체크</h3>
+                </div>
+                <p class="ai-description">
+                    갈등의 신호를 미리 감지하고 대응하세요
+                </p>
+            </li>
+        </ul>
+    </div>
+
+    <!-- 오른쪽 데모 영역 -->
+    <div class="right-content">
+        <!-- 채팅 데모 -->
+        <div class="chat-demo">
+            <div class="chat-bubble received">
+                오늘 뭐 먹을까?
+            </div>
+            <div class="chat-bubble sent">
+                음.. 파스타 어때? 😊
+            </div>
+            <div class="chat-bubble received">
+                좋아! 너가 좋아하는 거 먹어야지 ㅎㅎ
+            </div>
+            <div class="chat-bubble sent">
+                고마워 ☺️
             </div>
         </div>
-    </section>
 
-    <!-- 후기 섹션 -->
-    <section class="reviews-section">
-        <h2 class="reviews-title">사용자들의 후기</h2>
-        <div class="reviews-container">
-            <div class="review-card">
-                <div class="stars">⭐⭐⭐⭐</div>
-                <p class="review-text">"미연됐던 관계가 수치로 보이니 신기하고 더 기까워졌습니다."</p>
-                <div class="reviewer">
-                    <div class="reviewer-avatar"></div>
-                    <span class="reviewer-name">김OO</span>
-                </div>
+        <!-- 결과 화살표 -->
+        <div class="result-arrow">▼</div>
+
+        <!-- AI 분석 결과 -->
+        <div class="result-card">
+            <div class="result-header">
+                <span class="result-icon">🤖</span>
+                <span class="result-title">AI 분석 결과</span>
             </div>
-            <div class="review-card">
-                <div class="stars">⭐⭐⭐⭐⭐</div>
-                <p class="review-text">"AI가 감동 원인을 정확히 찾아주어요. 저작했던 싸움이 줄었습니다."</p>
-                <div class="reviewer">
-                    <div class="reviewer-avatar"></div>
-                    <span class="reviewer-name">최OO</span>
-                </div>
+
+            <div class="temperature-display">
+                <div class="temperature-value">78°C</div>
             </div>
-            <div class="review-card">
-                <div class="stars">⭐⭐⭐</div>
-                <p class="review-text">"고민 상담소에 올렸더니 비슷한 경험 자들의 현실적인 조언을 많이 받았습니다."</p>
-                <div class="reviewer">
-                    <div class="reviewer-avatar"></div>
-                    <span class="reviewer-name">이OO</span>
-                </div>
+
+            <p class="result-text">
+                긍정적 관심 단계입니다.<br>
+                상대방이 배려하는 모습이 보이며, 대화가 자연스럽게 이어지고 있어요.
+            </p>
+        </div>
+    </div>
+</section>
+
+<!-- 후기 섹션 -->
+<section class="reviews-section">
+    <h2 class="reviews-title">사용자들의 후기</h2>
+    <div class="reviews-container">
+        <div class="review-card">
+            <div class="stars">⭐⭐⭐⭐</div>
+            <p class="review-text">"미연됐던 관계가 수치로 보이니 신기하고 더 기까워졌습니다."</p>
+            <div class="reviewer">
+                <div class="reviewer-avatar"></div>
+                <span class="reviewer-name">김OO</span>
             </div>
         </div>
-    </section>
+        <div class="review-card">
+            <div class="stars">⭐⭐⭐⭐⭐</div>
+            <p class="review-text">"AI가 감동 원인을 정확히 찾아주어요. 저작했던 싸움이 줄었습니다."</p>
+            <div class="reviewer">
+                <div class="reviewer-avatar"></div>
+                <span class="reviewer-name">최OO</span>
+            </div>
+        </div>
+        <div class="review-card">
+            <div class="stars">⭐⭐⭐</div>
+            <p class="review-text">"고민 상담소에 올렸더니 비슷한 경험 자들의 현실적인 조언을 많이 받았습니다."</p>
+            <div class="reviewer">
+                <div class="reviewer-avatar"></div>
+                <span class="reviewer-name">이OO</span>
+            </div>
+        </div>
+    </div>
+</section>
 
-    <div th:replace="~{layout/footer.html :: footer}"></div>
+<div th:replace="~{layout/footer.html :: footer}"></div>
 </body>
 </html>
