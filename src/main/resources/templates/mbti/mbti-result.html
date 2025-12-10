@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${mbti.type()} + ' 성격 유형'">MBTI 성격 유형</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+    <link rel="stylesheet" th:href="@{/css/header.css}">
+    <link rel="stylesheet" th:href="@{/css/footer.css}">
+    <style>
+        body {
+            background-color: #fff;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1920px;
+            margin: 0 auto;
+            background-color: #fff;
+        }
+
+        /* 메인 컨텐츠 */
+        .main-content {
+            max-width: 1920px;
+            margin: 0 auto;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* 분홍색 배경 래퍼 */
+        .pink-background {
+            width: 1400px;
+            background-color: #FFF6F6;
+        }
+
+        .pink-content {
+            width: 100%;
+        }
+
+        /* MBTI 섹션 */
+        .mbti-section {
+            padding: 60px 0 40px 0;
+        }
+
+        .mbti-box {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px 40px 80px 40px;
+            background-color: #fff;
+            border-radius: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            text-align: center;
+        }
+
+        .mbti-title {
+            font-size: 64px;
+            font-weight: bold;
+            color: #FF7D8C;
+            margin-bottom: 5px;
+        }
+
+        .mbti-subtitle {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        .character-container {
+            position: relative;
+            display: inline-block;
+            margin-bottom: 20px;
+        }
+
+        .character {
+            width: 150px;
+            height: 180px;
+            border-radius: 10%;
+            background-color: #f5f5f5;
+            object-fit: contain;
+        }
+
+        .tag {
+            position: absolute;
+            background: linear-gradient(135deg, #FACDC9 0%, #F699A4 100%);
+            color: #fff;
+            font-weight: 700;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            white-space: nowrap;
+        }
+
+        .tag::before {
+            content: '# ';
+            margin-right: 3px;
+            font-size: 14px;
+        }
+
+        .tag-left {
+            top: 30px;
+            left: -120px;
+        }
+
+        .tag-right-top {
+            top: 20px;
+            right: -120px;
+        }
+
+        .tag-right-bottom {
+            bottom: 40px;
+            right: -120px;
+        }
+
+        .mbti-description {
+            font-size: 16px;
+            color: #666;
+            line-height: 1.6;
+        }
+
+        /* 연애 & 친밀 섹션 */
+        .relationship-section {
+            padding: 40px 0;
+        }
+
+        .section-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px;
+            background-color: #fff;
+            border-radius: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .section-title {
+            display: flex;
+            align-items: center;
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .section-title::before {
+            content: '💕';
+            margin-right: 10px;
+            font-size: 24px;
+        }
+
+        .relationship-content {
+            padding: 30px 0;
+            margin-bottom: 30px;
+            max-width: 1060px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .relationship-content h3 {
+            color: #ffb3ba;
+            margin-bottom: 15px;
+            font-size: 20px;
+        }
+
+        .relationship-content p {
+            color: #666;
+            line-height: 1.8;
+            font-size: 18px;
+        }
+
+        .tips-grid {
+            display: grid;
+            grid-template-columns: 525px 525px;
+            gap: 10px;
+            margin-top: 20px;
+            margin-left: auto;
+            margin-right: auto;
+            width: fit-content;
+        }
+
+        .tip-card {
+            background-color: #FFFAF1;
+            padding: 20px;
+            border-radius: 15px;
+            border: 2px solid #F4DAAA;
+        }
+
+        .tip-card h4 {
+            font-size: 20px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+
+        .tip-card h4::before {
+            margin-right: 8px;
+            font-size: 20px;
+        }
+
+        .tip-card.dating h4::before {
+            content: '💭';
+        }
+
+        .tip-card.strength h4::before {
+            content: '🎁';
+        }
+
+        .tip-card ul {
+            list-style: none;
+            color: #666;
+            font-size: 16px;
+            line-height: 1.8;
+        }
+
+        .tip-card ul li::before {
+            content: '·';
+            margin-right: 8px;
+        }
+
+        /* 스트레스 & 갈등 섹션 */
+        .stress-section {
+            padding: 40px 0;
+        }
+
+        .stress-section .section-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px;
+            background-color: #fff;
+            border-radius: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .stress-section .section-title::before {
+            content: '🌧️';
+        }
+
+        .stress-grid {
+            display: grid;
+            grid-template-columns: 525px 525px;
+            gap: 10px;
+            margin-top: 20px;
+            margin-left: auto;
+            margin-right: auto;
+            width: fit-content;
+        }
+
+        .stress-card {
+            padding: 25px;
+            border-radius: 15px;
+            border: 2px solid;
+        }
+
+        .stress-card.warning {
+            background-color: #FFF1F4;
+            border-color: #E79BB1;
+        }
+
+        .stress-card.solution {
+            background-color: #F1FBFF;
+            border-color: #8AC0D8;
+        }
+
+        .stress-card h4 {
+            font-size: 20px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+
+        .stress-card.warning h4::before {
+            content: '😟';
+            margin-right: 8px;
+        }
+
+        .stress-card.solution h4::before {
+            content: '🌟';
+            margin-right: 8px;
+        }
+
+        .stress-card ul {
+            list-style: none;
+            color: #666;
+            font-size: 16px;
+            line-height: 2;
+        }
+
+        .stress-card ul li::before {
+            content: '·';
+            margin-right: 8px;
+        }
+
+        .stress-note {
+            margin-top: 20px;
+            color: #666;
+            font-size: 16px;
+            padding: 0 25px;
+        }
+
+        /* 궁합 분석 섹션 */
+        .compatibility-section {
+            padding: 40px 0 0 0;
+        }
+
+        .compatibility-section .section-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px;
+            background-color: #fff;
+            border-radius: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .compatibility-section .section-title::before {
+            content: '🍀';
+        }
+
+        .compatibility-grid {
+            display: grid;
+            grid-template-columns: 525px 525px;
+            gap: 10px;
+            margin-top: 20px;
+            margin-left: auto;
+            margin-right: auto;
+            width: fit-content;
+        }
+
+        .compatibility-card {
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            border: 2px solid;
+        }
+
+        .compatibility-card.good {
+            background-color: #F3FFF1;
+            border-color: #83C98C;
+        }
+
+        .compatibility-card.caution {
+            background-color: #FAF1FF;
+            border-color: #D69DE0;
+        }
+
+        .compatibility-card h4 {
+            font-size: 20px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .compatibility-card.good h4::before {
+            content: '💚';
+            margin-right: 8px;
+        }
+
+        .compatibility-card.caution h4::before {
+            content: '⚡';
+            margin-right: 5px;
+        }
+
+        .mbti-tags {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .mbti-tag {
+            background-color: #fff;
+            color: #83C98C;
+            padding: 8px 16px;
+            border-radius: 20px;
+            border-width: 1px;
+            border-color: #83C98C;
+            font-size: 13px;
+            font-weight: bold;
+        }
+
+        .mbti-tag2 {
+            background-color: #fff;
+            color: #D69DE0;
+            padding: 8px 16px;
+            border-radius: 20px;
+            border-width: 1px;
+            border-color: #D69DE0;
+            font-size: 13px;
+            font-weight: bold;
+        }
+
+        .compatibility-card p {
+            color: #666;
+            font-size: 16px;
+            line-height: 1.8;
+        }
+
+        /* Bottom Buttons */
+        .bottom-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin: 80px 40px;
+        }
+
+        .btn-test {
+            padding: 12px 30px;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            border: 1px solid #ffb3ba;
+            background: white;
+            color: #ffb3ba;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s;
+        }
+
+        .btn-test:hover {
+            background: #ffb3ba;
+            color: white;
+        }
+    </style>
+</head>
+<nav th:replace="~{layout/header :: header-fragment}"></nav>
+<body>
+<div class="container">
+    <!-- 메인 컨텐츠 -->
+    <div class="main-content">
+        <!-- 분홍색 배경 시작 -->
+        <div class="pink-background">
+            <div class="pink-content">
+                <!-- MBTI 섹션 -->
+                <div class="mbti-section">
+                    <div class="mbti-box">
+                        <h1 class="mbti-title" th:text="${mbti.type()}">ENFP</h1>
+                        <p class="mbti-subtitle" th:text="${mbti.subtitle()}">재기발랄한 자유로운 영혼</p>
+
+                        <div class="character-container">
+                            <div class="tag tag-left" th:text="${mbti.tag1()}">열정적인</div>
+                            <img th:src="${mbti.imageUrl()}"
+                                 th:alt="${mbti.type()} + ' 캐릭터'"
+                                 class="character">
+                            <div class="tag tag-right-top" th:text="${mbti.tag2()}">사교적인</div>
+                            <div class="tag tag-right-bottom" th:text="${mbti.tag3()}">호기심많은</div>
+                        </div>
+
+                        <p class="mbti-description" th:text="${mbti.mainDescription()}">
+                            공감능력이 뛰어나며 넓은 사교적 가능성을 향해있고,
+                            시작하자만 다 끝까지 못 이루는 경향이 있고 한계적 조절력 주의!!
+                        </p>
+                    </div>
+                </div>
+
+                <!-- 연애 & 친밀 섹션 -->
+                <div class="relationship-section">
+                    <div class="section-container">
+                        <h2 class="section-title">연애 & 친밀 성향</h2>
+
+                        <div class="relationship-content">
+                            <h3>호감 가는 상대에게 : </h3>
+                            <p th:text="${mbti.basicTendency()}">기본 성향 설명</p>
+                        </div>
+
+                        <div class="tips-grid">
+                            <div class="tip-card dating">
+                                <h4>대화 스타일</h4>
+                                <ul>
+                                    <li th:each="item : ${mbti.chatStyleList()}" th:text="${item}">
+                                        대화 스타일 항목
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="tip-card strength">
+                                <h4>애정 표현</h4>
+                                <ul>
+                                    <li th:each="item : ${mbti.loveExpressionList()}" th:text="${item}">
+                                        애정 표현 항목
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="relationship-content" style="margin-top: 20px;">
+                            <h3>친한 사람과의 관계 유지 : </h3>
+                            <p th:text="${mbti.tiredPeople()}">피곤한 관계 유형</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 스트레스 & 갈등 섹션 -->
+                <div class="stress-section">
+                    <div class="section-container">
+                        <h2 class="section-title">스트레스 & 갈등 대처법</h2>
+
+                        <div class="stress-grid">
+                            <div class="stress-card warning">
+                                <h4>스트레스 반응</h4>
+                                <ul>
+                                    <li th:each="item : ${mbti.stressReactionList()}" th:text="${item}">
+                                        스트레스 반응 항목
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="stress-card solution">
+                                <h4>회복 방법</h4>
+                                <ul>
+                                    <li th:each="item : ${mbti.recoveryMethodList()}" th:text="${item}">
+                                        회복 방법 항목
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <p class="stress-note" th:text="${mbti.stressNote()}">
+                            스트레스 관련 참고사항
+                        </p>
+                    </div>
+                </div>
+
+                <!-- 궁합 분석 섹션 -->
+                <div class="compatibility-section">
+                    <div class="section-container">
+                        <h2 class="section-title">궁합 분석</h2>
+
+                        <div class="compatibility-grid">
+                            <div class="compatibility-card good">
+                                <h4>잘 맞는 유형</h4>
+                                <div class="mbti-tags">
+                                    <span class="mbti-tag"
+                                          th:each="type : ${mbti.goodMatchList()}"
+                                          th:text="${type}">INTJ</span>
+                                </div>
+                                <p th:text="${mbti.goodMatchDescription()}">
+                                    잘 맞는 이유 설명
+                                </p>
+                            </div>
+                            <div class="compatibility-card caution">
+                                <h4>주의가 필요한 유형</h4>
+                                <div class="mbti-tags">
+                                    <span class="mbti-tag2"
+                                          th:each="type : ${mbti.cautionMatchList()}"
+                                          th:text="${type}">ISTJ</span>
+                                </div>
+                                <p th:text="${mbti.cautionMatchDescription()}">
+                                    주의가 필요한 이유 설명
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 하단 버튼 -->
+                <div class="bottom-buttons">
+                    <a th:href="@{/mbti}" class="btn-test">다시 분석하기</a>
+                </div>
+            </div>
+        </div>
+        <!-- 분홍색 배경 끝 -->
+    </div>
+</div>
+
+<script>
+    function shareResult() {
+        const url = window.location.href;
+        const text = document.querySelector('.mbti-title').textContent + ' - MBTI 연애 궁합 분석';
+
+        if (navigator.share) {
+            navigator.share({
+                title: text,
+                url: url
+            }).catch(err => console.log('공유 실패:', err));
+        } else {
+            // 공유 API 미지원 시 URL 복사
+            navigator.clipboard.writeText(url).then(() => {
+                alert('링크가 복사되었습니다!');
+            });
+        }
+    }
+</script>
+<div th:replace="~{layout/footer.html :: footer}"></div>
+</body>
+</html>

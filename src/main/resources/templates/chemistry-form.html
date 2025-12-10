@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>궁합 분석</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+    <link rel="stylesheet" th:href="@{/css/header.css}">
+    <link rel="stylesheet" th:href="@{/css/footer.css}">
+    <style>
+        body {
+            background-color: white;
+            margin: 0;
+        }
+
+        .main-container {
+            max-width: calc(100% - 520px); /* 좌우 260px */
+            margin: 60px auto;
+            padding: 0 20px;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 34px;
+            margin-bottom: 25px;
+            color: #43464D;
+            font-weight: 600;
+        }
+
+        .divider {
+            width: 100%;
+            height: 2px;
+            background: #D9D9D9;
+            margin-bottom: 50px;
+        }
+
+        /* 연인, 친구, 동료 관계 버튼 */
+        .filter-buttons {
+            display: flex;
+            gap: 18px;
+            margin-bottom: 50px;
+        }
+
+        .filter-btn {
+            padding: 12px 40px;
+            border: 2px solid #D2D5DD;
+            background: white;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #666;
+            font-weight: 500;
+        }
+
+        .filter-btn.active {
+            background: #F8A9A7;
+            color: white;
+            border-color: #F8A9A7;
+        }
+
+        /* 정보 박스 */
+        .form-wrapper {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 50px;
+            gap: 0;
+        }
+
+        .person-form {
+            flex: 1;
+            max-width: 450px;
+            background: #FFF6F6;
+            padding: 35px 30px;
+            border-radius: 20px;
+        }
+
+        .form-title {
+            color: #F6A199;
+            font-size: 18px;
+            margin-bottom: 30px;
+            font-weight: 600;
+        }
+
+        .form-group {
+            margin-bottom: 0;
+        }
+
+        .form-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            color: #43464D;
+            font-size: 15px;
+            font-weight: 600;
+            min-width: 80px;
+        }
+
+        .input-wrapper {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 13px 18px;
+            border: 1px solid #e8e8e8;
+            border-radius: 10px;
+            font-size: 14px;
+            background: white;
+        }
+
+        input[type="text"]::placeholder {
+            color: #D9D9D9;
+        }
+
+        input[type="date"] {
+            width: 100%;
+            padding: 13px 18px;
+            border: 1px solid #e8e8e8;
+            border-radius: 10px;
+            font-size: 14px;
+            background: white;
+            color: #43464D;
+        }
+
+        .calendar-icon {
+            cursor: pointer;
+            font-size: 20px;
+        }
+
+        .gender-buttons {
+            flex: 1;
+            display: flex;
+            gap: 12px;
+        }
+
+        .gender-btn {
+            flex: 1;
+            padding: 13px;
+            border: 1px solid #e8e8e8;
+            background: white;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 14px;
+            color: #7C818C;
+            font-weight: 500;
+        }
+
+        .gender-btn.active {
+            background: #F8A9A7;
+            color: white;
+            border-color: #F8A9A7;
+        }
+
+        /* Submit Button */
+        .submit-container {
+            text-align: center;
+            margin-top: 70px;
+        }
+
+        .btn-submit {
+            flex: 1;
+            padding: 18px 60px;
+            background: linear-gradient(135deg, #F6C2C6 0%, #F69DA6 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 17px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(248, 169, 167, 0.35);
+            font-weight: 600;
+        }
+
+        .btn-submit:hover {
+            background: #ff9ba3;
+            box-shadow: 0 6px 20px rgba(248, 169, 167, 0.45);
+        }
+    </style>
+</head>
+<body>
+<nav th:replace="~{layout/header :: header-fragment}"></nav>
+
+<!-- Main Content -->
+<div class="main-container">
+    <h1>궁합 분석</h1>
+    <div class="divider"></div>
+
+    <div class="filter-buttons">
+        <button class="filter-btn active">💕 연인</button>
+        <button class="filter-btn">😊 친구</button>
+        <button class="filter-btn">🏢 동료</button>
+    </div>
+
+    <div class="form-wrapper">
+        <!-- Me -->
+        <div class="person-form">
+            <div class="form-title">내 정보</div>
+
+            <div class="form-group">
+                <div class="form-row">
+                    <label class="form-label">닉네임</label>
+                    <div class="input-wrapper">
+                        <input type="text" placeholder="닉네임을 입력해주세요" id="myName">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <label class="form-label">생년월일</label>
+                    <div class="input-wrapper">
+                        <input type="date" id="myBirth">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <label class="form-label">성별</label>
+                    <div class="gender-buttons">
+                        <button class="gender-btn" id="myMale">남성</button>
+                        <button class="gender-btn active" id="myFemale">여성</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Heart Icon in Center -->
+        <div class="heart-icon"><img th:src="@{/image/logo_icon.png}" width="82px" height="71px"></div>
+
+        <!-- Partner -->
+        <div class="person-form">
+            <div class="form-title">상대 정보</div>
+
+            <div class="form-group">
+                <div class="form-row">
+                    <label class="form-label">닉네임</label>
+                    <div class="input-wrapper">
+                        <input type="text" placeholder="닉네임을 입력해주세요" id="partnerName" required>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <label class="form-label">생년월일</label>
+                    <div class="input-wrapper">
+                        <input type="date" id="partnerBirth" required>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <label class="form-label">성별</label>
+                    <div class="gender-buttons">
+                        <button class="gender-btn active" id="partnerMale">남성</button>
+                        <button class="gender-btn" id="partnerFemale">여성</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="submit-container">
+        <button class="btn-submit">궁합 예측</button>
+    </div>
+</div>
+
+<script>
+    // Gender button toggle
+    document.querySelectorAll('.gender-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const parent = this.parentElement;
+            parent.querySelectorAll('.gender-btn').forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+        });
+    });
+
+    // Filter button toggle
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+        });
+    });
+
+    // 궁합 예측 버튼 클릭
+    document.querySelector('.btn-submit').addEventListener('click', async function() {
+        // 입력값 수집
+        const myName = document.getElementById('myName').value.trim();
+        const myBirth = document.getElementById('myBirth').value;
+        const myGender = document.querySelector('#myFemale').classList.contains('active') ? '여성' : '남성';
+
+        const partnerName = document.getElementById('partnerName').value.trim();
+        const partnerBirth = document.getElementById('partnerBirth').value;
+        const partnerGenderMale = document.getElementById('partnerMale');
+        const partnerGender = partnerGenderMale.classList.contains('active') ? '남성' : '여성';
+
+        // 관계 타입 추출 (이모지와 텍스트 분리)
+        const relationshipText = document.querySelector('.filter-btn.active').textContent.trim();
+        const parts = relationshipText.split(' ');
+        const emoji = parts[0]; // 💕 또는 😊 또는 🏢
+        const relationship = parts[1]; // 연인 또는 친구 또는 동료
+
+        // 유효성 검사
+        if (!myName || !myBirth || !partnerName || !partnerBirth) {
+            alert('모든 정보를 입력해주세요.');
+            return;
+        }
+
+        // 로딩 표시
+        const submitBtn = this;
+        const originalText = submitBtn.textContent;
+        submitBtn.textContent = '분석 중...';
+        submitBtn.disabled = true;
+
+        try {
+            // API 호출
+            const response = await fetch('/chemistry/analyze', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    relationship: relationship,
+                    myName: myName,
+                    myBirthDate: myBirth,
+                    myGender: myGender,
+                    partnerName: partnerName,
+                    partnerBirthDate: partnerBirth,
+                    partnerGender: partnerGender
+                })
+            });
+
+            if (response.ok) {
+                const resultText = await response.text();
+
+                // JSON 추출 (마크다운 제거)
+                let jsonString = resultText.trim();
+                if (jsonString.includes('```json')) {
+                    jsonString = jsonString.substring(jsonString.indexOf('{'), jsonString.lastIndexOf('}') + 1);
+                }
+
+                const result = JSON.parse(jsonString);
+
+                // 결과를 localStorage에 저장
+                localStorage.setItem('chemistryResult', JSON.stringify(result));
+                localStorage.setItem('chemistryInput', JSON.stringify({
+                    myName, myBirth, myGender,
+                    partnerName, partnerBirth, partnerGender,
+                    relationship: relationship,
+                    emoji: emoji
+                }));
+
+                // 결과 페이지로 이동
+                window.location.href = '/chemistry/result';
+            } else {
+                alert('궁합 분석에 실패했습니다. 다시 시도해주세요.');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('네트워크 오류가 발생했습니다.');
+        } finally {
+            submitBtn.textContent = originalText;
+            submitBtn.disabled = false;
+        }
+    });
+</script>
+
+<div th:replace="~{layout/footer.html :: footer}"></div>
+</body>
+</html>

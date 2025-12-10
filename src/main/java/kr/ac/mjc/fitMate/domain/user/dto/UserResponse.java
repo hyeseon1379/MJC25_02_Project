@@ -4,6 +4,8 @@ import lombok.*;
 import kr.ac.mjc.fitMate.domain.user.entity.*;
 import kr.ac.mjc.fitMate.global.entity.*;
 
+import java.time.LocalDate;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -14,6 +16,7 @@ public class UserResponse {
     private String email;
     private String username;
     private String nickname;
+    private LocalDate birth;
     private Gender gender;
     private Mbti mbti;
     private Trouble trouble;

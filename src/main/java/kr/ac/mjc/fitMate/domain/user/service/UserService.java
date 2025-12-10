@@ -6,6 +6,7 @@ import kr.ac.mjc.fitMate.domain.user.repository.UserRepository;
 import kr.ac.mjc.fitMate.global.entity.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -61,7 +62,7 @@ public class UserService {
 //        }
 
         if (!userRepository.existsByPassword(request.getPassword())) {
-            throw new IllegalArgumentException("이미 존재하는 비밀번호입니다.");
+            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다");
         }
 
         return UserResponse.builder()
@@ -73,5 +74,41 @@ public class UserService {
                 .mbti(user.getMbti())
                 .trouble(user.getTrouble())
                 .build();
+    }
+
+    public UserResponse getUserInfo(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
+
+        UserResponse response = UserResponse.builder()
+                .id(user.getId())
+                .username(user.getUsername())
+                .email(user.getEmail())
+                .birth(user.getBirth())
+                .nickname(user.getNickname())
+                .gender(user.getGender())
+                .mbti(user.getMbti())
+                .trouble(user.getTrouble())
+                .build();
+
+        return response;
+    }
+
+    @Transactional
+    public void updateUserInfo(Long userId, UserUpdateRequest request) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
+
+        if (!user.getNickname().equals(request.getNickname()) && userRepository.existsByNickname(request.getNickname())) {
+            throw new IllegalStateException("이미 사용 중인 닉네임입니다.");
+        }
+
+        user.updateDetails(
+                request.getNickname(),
+                request.getBirth(),
+                request.getMbti(),
+                request.getGender(),
+                request.getTrouble()
+        );
     }
 }

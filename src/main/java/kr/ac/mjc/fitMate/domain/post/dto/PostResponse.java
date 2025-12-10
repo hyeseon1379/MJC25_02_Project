@@ -30,7 +30,7 @@ public class PostResponse {
         this.trouble = post.getTrouble().getDisplayName();
         this.createdAt = post.getCreateAt();
         this.viewCount = post.getViewCount();
-        this.commentCount = 0;
+        this.commentCount = post.getCommentCount();
         this.userId = post.getUser().getId();
     }
 
